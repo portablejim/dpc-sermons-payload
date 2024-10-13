@@ -10,12 +10,15 @@ import dotenv from 'dotenv'
 import path from 'path'
 import { buildConfig } from 'payload/config'
 
-import Categories from './collections/Categories'
-import Comments from './collections/Comments'
+import BibleBooks from './collections/BibleBooks'
+import BibleChapters from './collections/BibleChapters'
+import { CoverImages } from './collections/CoverImages'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
-import { Posts } from './collections/Posts'
-import { Projects } from './collections/Projects'
+import { TalkAudio } from './collections/TalkAudio'
+import { TalkEpisodes } from './collections/TalkEpisodes'
+import TalkSeries from './collections/TalkSeries'
+import TalkSpeakers from './collections/TalkSpeakers'
 import Users from './collections/Users'
 import BeforeDashboard from './components/BeforeDashboard'
 import BeforeLogin from './components/BeforeLogin'
@@ -66,7 +69,18 @@ export default buildConfig({
     },
   }),
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
-  collections: [Pages, Posts, Projects, Media, Categories, Users, Comments],
+  collections: [
+    BibleBooks,
+    BibleChapters,
+    CoverImages,
+    Pages,
+    Media,
+    Users,
+    TalkAudio,
+    TalkEpisodes,
+    TalkSeries,
+    TalkSpeakers,
+  ],
   globals: [Settings, Header, Footer],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
@@ -76,24 +90,25 @@ export default buildConfig({
   },
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
-  endpoints: [
-    // The seed endpoint is used to populate the database with some example data
-    // You should delete this endpoint before deploying your site to production
-    {
-      path: '/seed',
-      method: 'get',
-      handler: seed,
-    },
-  ],
+  endpoints:
+    process.env.PAYLOAD_ALLOW_SEED !== 'allow'
+      ? []
+      : [
+          {
+            path: '/seed',
+            method: 'get',
+            handler: seed,
+          },
+        ],
   plugins: [
     redirects({
-      collections: ['pages', 'posts'],
+      collections: ['pages', 'bible-books', 'bible-chapters', 'series', 'episodes'],
     }),
     nestedDocs({
       collections: ['categories'],
     }),
     seo({
-      collections: ['pages', 'posts', 'projects'],
+      collections: ['pages', 'series', 'episodes', 'speakers'],
       generateTitle,
       uploadsCollection: 'media',
     }),

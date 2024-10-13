@@ -53,6 +53,15 @@ const Users: CollectionConfig = {
         update: admins,
       },
     },
+    {
+      name: 'isConfiguringBooks',
+      type: 'checkbox',
+      access: {
+        read: admins,
+        create: admins,
+        update: admins,
+      },
+    },
   ],
   timestamps: true,
 }

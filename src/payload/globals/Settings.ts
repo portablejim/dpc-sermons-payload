@@ -13,16 +13,16 @@ export const Settings: GlobalConfig = {
   },
   fields: [
     {
-      name: 'postsPage',
+      name: 'videoSermonsPage',
       type: 'relationship',
       relationTo: 'pages',
-      label: 'Posts page',
+      label: 'Video Sermons List page',
     },
     {
-      name: 'projectsPage',
+      name: 'audioSermonsPage',
       type: 'relationship',
       relationTo: 'pages',
-      label: 'Projects page',
+      label: 'Audio Sermons List page',
     },
   ],
 }

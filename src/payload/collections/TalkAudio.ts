@@ -2,20 +2,17 @@ import { slateEditor } from '@payloadcms/richtext-slate'
 import path from 'path'
 import type { CollectionConfig } from 'payload/types'
 
-export const Media: CollectionConfig = {
-  slug: 'media',
-  labels: {
-    plural: 'Geneal Media',
-    singular: 'Geneal Media',
-  },
-  admin: {
-    group: 'Media',
-  },
+export const TalkAudio: CollectionConfig = {
+  slug: 'talk-audio',
   upload: {
-    staticDir: path.resolve(__dirname, '../../../media'),
+    staticDir: path.resolve(__dirname, '../../../talkaudio'),
+    mimeTypes: ['audio/*'],
   },
   access: {
     read: () => true,
+  },
+  admin: {
+    group: 'Media',
   },
   fields: [
     {
