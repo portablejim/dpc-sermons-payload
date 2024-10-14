@@ -53,7 +53,7 @@ const TalkSeries: CollectionConfig = {
 
             if (data.seriesDate && data.title) {
               const titleSlug = slugFormat(data.title)
-              const dateSlug = data.sermonDate.substring(2, 7)
+              const dateSlug = data.seriesDate.substring(2, 7)
               return `${dateSlug}-${titleSlug}`
             }
 

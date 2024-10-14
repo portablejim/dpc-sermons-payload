@@ -137,6 +137,10 @@ export const TalkEpisodes: CollectionConfig = {
       type: 'text',
     },
     {
+      name: 'talkOutline',
+      type: 'richText',
+    },
+    {
       name: 'slug',
       label: 'Slug',
       type: 'text',
