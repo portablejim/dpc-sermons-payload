@@ -1795,7 +1795,7 @@ type Page {
   _status: Page__status
 }
 
-union Page_Layout = Cta | Content | MediaBlock | LinkTileList
+union Page_Layout = Cta | Content | MediaBlock | LinkTileList | SeriesList
 
 type Cta {
   invertBackground: Boolean
@@ -2694,6 +2694,12 @@ input LinkTileList_Links_Link_LinkedMedia_where_or {
   OR: [LinkTileList_Links_Link_LinkedMedia_where_or]
 }
 
+type SeriesList {
+  id: String
+  blockName: String
+  blockType: String
+}
+
 type Page_Meta {
   title: String
   description: String
@@ -3384,7 +3390,7 @@ type PageVersion_Version {
   _status: PageVersion_Version__status
 }
 
-union PageVersion_Version_Layout = Cta | Content | MediaBlock | LinkTileList
+union PageVersion_Version_Layout = Cta | Content | MediaBlock | LinkTileList | SeriesList
 
 type PageVersion_Version_Meta {
   title: String
@@ -5253,6 +5259,7 @@ type Series {
   subtitle: String
   seriesDate: DateTime
   seriesImage(where: Series_SeriesImage_where): CoverImage!
+  slug: String
   meta: Series_Meta
   updatedAt: DateTime
   createdAt: DateTime
@@ -6647,12 +6654,12 @@ input Episode_sermonDate_operator {
   less_than_equal: DateTime
   less_than: DateTime
   like: DateTime
-  exists: Boolean
 }
 
 input Episode_episodeImage_operator {
   equals: String
   not_equals: String
+  exists: Boolean
 }
 
 input Episode_publishedAt_operator {
@@ -8028,12 +8035,12 @@ input versionsEpisode_version__sermonDate_operator {
   less_than_equal: DateTime
   less_than: DateTime
   like: DateTime
-  exists: Boolean
 }
 
 input versionsEpisode_version__episodeImage_operator {
   equals: String
   not_equals: String
+  exists: Boolean
 }
 
 input versionsEpisode_version__publishedAt_operator {
@@ -8279,6 +8286,7 @@ input Series_where {
   subtitle: Series_subtitle_operator
   seriesDate: Series_seriesDate_operator
   seriesImage: Series_seriesImage_operator
+  slug: Series_slug_operator
   meta__title: Series_meta__title_operator
   meta__description: Series_meta__description_operator
   meta__image: Series_meta__image_operator
@@ -8325,6 +8333,17 @@ input Series_seriesDate_operator {
 input Series_seriesImage_operator {
   equals: String
   not_equals: String
+}
+
+input Series_slug_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
 }
 
 input Series_meta__title_operator {
@@ -8389,6 +8408,7 @@ input Series_where_and {
   subtitle: Series_subtitle_operator
   seriesDate: Series_seriesDate_operator
   seriesImage: Series_seriesImage_operator
+  slug: Series_slug_operator
   meta__title: Series_meta__title_operator
   meta__description: Series_meta__description_operator
   meta__image: Series_meta__image_operator
@@ -8404,6 +8424,7 @@ input Series_where_or {
   subtitle: Series_subtitle_operator
   seriesDate: Series_seriesDate_operator
   seriesImage: Series_seriesImage_operator
+  slug: Series_slug_operator
   meta__title: Series_meta__title_operator
   meta__description: Series_meta__description_operator
   meta__image: Series_meta__image_operator
@@ -8431,6 +8452,7 @@ type SeriesDocAccessFields {
   subtitle: SeriesDocAccessFields_subtitle
   seriesDate: SeriesDocAccessFields_seriesDate
   seriesImage: SeriesDocAccessFields_seriesImage
+  slug: SeriesDocAccessFields_slug
   meta: SeriesDocAccessFields_meta
   updatedAt: SeriesDocAccessFields_updatedAt
   createdAt: SeriesDocAccessFields_createdAt
@@ -8525,6 +8547,29 @@ type SeriesDocAccessFields_seriesImage_Update {
 }
 
 type SeriesDocAccessFields_seriesImage_Delete {
+  permission: Boolean!
+}
+
+type SeriesDocAccessFields_slug {
+  create: SeriesDocAccessFields_slug_Create
+  read: SeriesDocAccessFields_slug_Read
+  update: SeriesDocAccessFields_slug_Update
+  delete: SeriesDocAccessFields_slug_Delete
+}
+
+type SeriesDocAccessFields_slug_Create {
+  permission: Boolean!
+}
+
+type SeriesDocAccessFields_slug_Read {
+  permission: Boolean!
+}
+
+type SeriesDocAccessFields_slug_Update {
+  permission: Boolean!
+}
+
+type SeriesDocAccessFields_slug_Delete {
   permission: Boolean!
 }
 
@@ -13115,6 +13160,7 @@ type SeriesFields {
   subtitle: SeriesFields_subtitle
   seriesDate: SeriesFields_seriesDate
   seriesImage: SeriesFields_seriesImage
+  slug: SeriesFields_slug
   meta: SeriesFields_meta
   updatedAt: SeriesFields_updatedAt
   createdAt: SeriesFields_createdAt
@@ -13209,6 +13255,29 @@ type SeriesFields_seriesImage_Update {
 }
 
 type SeriesFields_seriesImage_Delete {
+  permission: Boolean!
+}
+
+type SeriesFields_slug {
+  create: SeriesFields_slug_Create
+  read: SeriesFields_slug_Read
+  update: SeriesFields_slug_Update
+  delete: SeriesFields_slug_Delete
+}
+
+type SeriesFields_slug_Create {
+  permission: Boolean!
+}
+
+type SeriesFields_slug_Read {
+  permission: Boolean!
+}
+
+type SeriesFields_slug_Update {
+  permission: Boolean!
+}
+
+type SeriesFields_slug_Delete {
   permission: Boolean!
 }
 
@@ -14922,8 +14991,8 @@ input mutationEpisodeInput {
   series: Int
   biblePassageText: String
   speaker: Int
-  sermonDate: String
-  episodeImage: String!
+  sermonDate: String!
+  episodeImage: String
   publishedAt: String
   videoFormat: Episode_videoFormat_MutationInput!
   videoUrl: String
@@ -15000,6 +15069,7 @@ input mutationSeriesInput {
   subtitle: String
   seriesDate: String
   seriesImage: String!
+  slug: String
   meta: mutationSeries_MetaInput
   updatedAt: String
   createdAt: String
@@ -15016,6 +15086,7 @@ input mutationSeriesUpdateInput {
   subtitle: String
   seriesDate: String
   seriesImage: String
+  slug: String
   meta: mutationSeriesUpdate_MetaInput
   updatedAt: String
   createdAt: String

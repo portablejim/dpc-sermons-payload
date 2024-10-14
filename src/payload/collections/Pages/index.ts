@@ -6,6 +6,7 @@ import { CallToAction } from '../../blocks/CallToAction'
 import { Content } from '../../blocks/Content'
 import { LinkTileList } from '../../blocks/LinkTileList'
 import { MediaBlock } from '../../blocks/MediaBlock'
+import { SeriesList } from '../../blocks/SeriesList'
 import { slugField } from '../../fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { revalidatePage } from './hooks/revalidatePage'
@@ -51,7 +52,7 @@ export const Pages: CollectionConfig = {
       name: 'layout',
       type: 'blocks',
       required: true,
-      blocks: [CallToAction, Content, MediaBlock, LinkTileList],
+      blocks: [CallToAction, Content, MediaBlock, LinkTileList, SeriesList],
     },
     slugField(),
   ],

@@ -1,9 +1,9 @@
 'use client'
 
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import qs from 'qs'
 
-import type { Post, Project } from '../../../payload/payload-types'
+import type { Page, Series } from '../../../payload/payload-types'
 import type { ArchiveBlockProps } from '../../_blocks/ArchiveBlock/types'
 import { Card } from '../Card'
 import { Gutter } from '../Gutter'
@@ -13,7 +13,7 @@ import { Pagination } from '../Pagination'
 import classes from './index.module.scss'
 
 type Result = {
-  docs: (Post | Project | string)[]
+  docs: (Page | Series | string)[]
   hasNextPage: boolean
   hasPrevPage: boolean
   nextPage: number
@@ -24,7 +24,6 @@ type Result = {
 }
 
 export type Props = {
-  categories?: ArchiveBlockProps['categories']
   className?: string
   limit?: number
   onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
@@ -43,11 +42,8 @@ export const CollectionArchive: React.FC<Props> = props => {
     className,
     limit = 10,
     onResultChange,
-    populateBy,
     populatedDocs,
     populatedDocsTotal,
-    relationTo,
-    selectedDocs,
     showPageRange,
     sort = '-createdAt',
   } = props
@@ -75,10 +71,6 @@ export const CollectionArchive: React.FC<Props> = props => {
   const isRequesting = useRef(false)
   const [page, setPage] = useState(1)
 
-  const categories = (catsFromProps || [])
-    .map(cat => (typeof cat === 'object' ? cat.id : cat))
-    .join(',')
-
   const scrollToRef = useCallback(() => {
     const { current } = scrollRef
     if (current) {
@@ -97,7 +89,7 @@ export const CollectionArchive: React.FC<Props> = props => {
   useEffect(() => {
     let timer: NodeJS.Timeout = null
 
-    if (populateBy === 'collection' && !isRequesting.current) {
+    if (!isRequesting.current) {
       isRequesting.current = true
 
       // hydrate the block with fresh content after first render
@@ -115,29 +107,19 @@ export const CollectionArchive: React.FC<Props> = props => {
           limit,
           page,
           sort,
-          where: {
-            ...(categories
-              ? {
-                  categories: {
-                    in: categories,
-                  },
-                }
-              : {}),
-          },
+          where: {},
         },
         { encode: false },
       )
 
       const makeRequest = async () => {
         try {
-          const req = await fetch(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${relationTo}?${searchQuery}`,
-          )
+          const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/series?${searchQuery}`)
 
           const json = await req.json()
           clearTimeout(timer)
 
-          const { docs } = json as { docs: (Post | Project)[] }
+          const { docs } = json as { docs: (Page | Series)[] }
 
           if (docs && Array.isArray(docs)) {
             setResults(json)
@@ -162,7 +144,7 @@ export const CollectionArchive: React.FC<Props> = props => {
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [page, categories, relationTo, onResultChange, sort, limit, populateBy])
+  }, [page, relationTo, onResultChange, sort, limit, populateBy])
 
   return (
     <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>

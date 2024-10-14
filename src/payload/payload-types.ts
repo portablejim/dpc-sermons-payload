@@ -192,6 +192,11 @@ export interface Page {
         blockName?: string | null;
         blockType: 'link-tile-list';
       }
+    | {
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'seriesList';
+      }
   )[];
   slug?: string | null;
   meta?: {
@@ -279,8 +284,8 @@ export interface Episode {
   series?: (number | null) | Series;
   biblePassageText?: string | null;
   speaker?: (number | null) | Speaker;
-  sermonDate?: string | null;
-  episodeImage: number | CoverImage;
+  sermonDate: string;
+  episodeImage?: number | CoverImage | null;
   publishedAt?: string | null;
   videoFormat: 'embed' | 'none';
   videoUrl?: string | null;
@@ -306,6 +311,7 @@ export interface Series {
   subtitle?: string | null;
   seriesDate?: string | null;
   seriesImage: number | CoverImage;
+  slug?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;

@@ -1,4 +1,4 @@
-import { CALL_TO_ACTION, CONTENT, MEDIA_BLOCK } from './blocks'
+import { CALL_TO_ACTION, CONTENT, MEDIA_BLOCK, SERIES_LIST } from './blocks'
 import { META } from './meta'
 
 export const PAGES = `
@@ -22,6 +22,7 @@ export const PAGE = `
           ${CALL_TO_ACTION}
           ${CONTENT}
           ${MEDIA_BLOCK}
+          ${SERIES_LIST}
         }
         ${META}
       }

@@ -7,6 +7,7 @@ import { CommentsBlock, type CommentsBlockProps } from '../../_blocks/Comments/i
 import { ContentBlock } from '../../_blocks/Content'
 import { MediaBlock } from '../../_blocks/MediaBlock'
 import { RelatedPosts, type RelatedPostsProps } from '../../_blocks/RelatedPosts'
+import { SeriesList } from '../../_blocks/SeriesList'
 import { toKebabCase } from '../../_utilities/toKebabCase'
 import { BackgroundColor } from '../BackgroundColor'
 import { VerticalPadding, VerticalPaddingOptions } from '../VerticalPadding'
@@ -18,6 +19,7 @@ const blockComponents = {
   archive: ArchiveBlock,
   relatedPosts: RelatedPosts,
   comments: CommentsBlock,
+  seriesList: SeriesList,
 }
 
 export const Blocks: React.FC<{
@@ -66,7 +68,6 @@ export const Blocks: React.FC<{
               return (
                 <BackgroundColor key={index} invert={blockIsInverted}>
                   <VerticalPadding top={paddingTop} bottom={paddingBottom}>
-                    {/* @ts-expect-error */}
                     <Block id={toKebabCase(blockName)} {...block} />
                   </VerticalPadding>
                 </BackgroundColor>

@@ -83,3 +83,9 @@ export const ARCHIVE_BLOCK = `
   populatedDocsTotal
 }
 `
+
+export const SERIES_LIST = `
+...on SeriesList {
+  blockType
+}
+`
