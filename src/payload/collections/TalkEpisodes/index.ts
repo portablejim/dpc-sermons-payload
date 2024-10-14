@@ -2,7 +2,6 @@ import type { CollectionConfig } from 'payload/types'
 
 import { admins } from '../../access/admins'
 import { adminsOrPublished } from '../../access/adminsOrPublished'
-import { slugField } from '../../fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { populateAuthors } from './hooks/populateAuthors'
 import { revalidatePost } from './hooks/revalidatePost'
@@ -16,13 +15,14 @@ export const TalkEpisodes: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     group: 'Sermons',
-    defaultColumns: ['title', 'slug', 'updatedAt'],
+    defaultColumns: ['title', 'sermonDate', 'series'],
     preview: doc => {
       return `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/next/preview?url=${encodeURIComponent(
         `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/posts/${doc?.slug}`,
       )}&secret=${process.env.PAYLOAD_PUBLIC_DRAFT_SECRET}`
     },
   },
+  defaultSort: 'sermonDate',
   hooks: {
     beforeChange: [populatePublishedAt],
     afterChange: [revalidatePost],
@@ -61,6 +61,7 @@ export const TalkEpisodes: CollectionConfig = {
     {
       name: 'sermonDate',
       type: 'date',
+      required: true,
       admin: {
         date: {
           pickerAppearance: 'dayOnly',
@@ -72,7 +73,6 @@ export const TalkEpisodes: CollectionConfig = {
       label: 'Episode Image',
       type: 'upload',
       relationTo: 'cover-images',
-      required: true,
       filterOptions: {
         mimeType: { contains: 'image' },
       },
@@ -136,6 +136,36 @@ export const TalkEpisodes: CollectionConfig = {
       name: 'audioUrl',
       type: 'text',
     },
-    slugField(),
+    {
+      name: 'slug',
+      label: 'Slug',
+      type: 'text',
+      unique: true,
+      admin: {
+        position: 'sidebar',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ value, data }) => {
+            const slugFormat = (val: string): string =>
+              val
+                .replace(/ /g, '-')
+                .replace(/[^\w-]+/g, '')
+                .toLowerCase()
+            if (typeof value === 'string' && value.trim().length > 1) {
+              return slugFormat(value)
+            }
+
+            if (data.sermonDate && data.title) {
+              const titleSlug = slugFormat(data.title)
+              const dateSlug = data.sermonDate.substring(0, 10)
+              return `${dateSlug}-${titleSlug}`
+            }
+
+            return value
+          },
+        ],
+      },
+    },
   ],
 }

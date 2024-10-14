@@ -31,6 +31,37 @@ const TalkSeries: CollectionConfig = {
         mimeType: { contains: 'image' },
       },
     },
+    {
+      name: 'slug',
+      label: 'Slug',
+      type: 'text',
+      unique: true,
+      admin: {
+        position: 'sidebar',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ value, data }) => {
+            const slugFormat = (val: string): string =>
+              val
+                .replace(/ /g, '-')
+                .replace(/[^\w-]+/g, '')
+                .toLowerCase()
+            if (typeof value === 'string' && value.trim().length > 1) {
+              return slugFormat(value)
+            }
+
+            if (data.seriesDate && data.title) {
+              const titleSlug = slugFormat(data.title)
+              const dateSlug = data.sermonDate.substring(2, 7)
+              return `${dateSlug}-${titleSlug}`
+            }
+
+            return value
+          },
+        ],
+      },
+    },
   ],
 }
 
