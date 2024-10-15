@@ -1,3 +1,4 @@
+import payload from 'payload'
 import type { CollectionConfig } from 'payload/types'
 
 import { admins } from '../../access/admins'
@@ -24,6 +25,59 @@ export const TalkEpisodes: CollectionConfig = {
   },
   defaultSort: 'sermonDate',
   hooks: {
+    beforeValidate: [
+      async ({
+        data, // incoming data to update or create with
+        operation, // name of the operation ie. 'create', 'update'
+        originalDoc, // original document
+      }) => {
+        payload.logger.info(data)
+
+        if (
+          operation === 'create' ||
+          data.fullTitle == null ||
+          data.fullTitle.trim() == '' ||
+          data.title != originalDoc.title ||
+          data.series != originalDoc.series ||
+          data.biblePassageText != originalDoc.biblePassageText ||
+          data.sermonDate != originalDoc.sermonDate
+        ) {
+          let seriesTitle: null | string = null
+          if (data.series) {
+            let foundSeries = await payload.findByID({
+              collection: 'series',
+              id: data.series,
+              depth: 1,
+            })
+            payload.logger.info(foundSeries)
+            //sermonTitle = title != undefined ? title : null
+          }
+          let outputParts = []
+          if (data.sermonDate) {
+            payload.logger.info(data.sermonDate)
+            const sermonDateYear = data.sermonDate.substring(2, 4)
+            const sermonDateMonth = data.sermonDate.substring(5, 7)
+            const sermonDateDay = data.sermonDate.substring(8, 10)
+            payload.logger.info(sermonDateDay, sermonDateMonth, sermonDateYear)
+            outputParts.push(`${sermonDateDay}/${sermonDateMonth}/${sermonDateYear}`)
+          }
+          if (data.title) {
+            outputParts.push(data.title)
+          } else {
+            outputParts.push('(unknown)')
+          }
+          if (data.biblePassageText) {
+            outputParts.push(data.biblePassageText)
+          }
+          if (seriesTitle) {
+            outputParts.push(seriesTitle)
+          }
+          data.fullTitle = outputParts.join(' | ')
+        }
+
+        return data
+      },
+    ],
     beforeChange: [populatePublishedAt],
     afterChange: [revalidatePost],
     afterRead: [populateAuthors],
@@ -52,6 +106,24 @@ export const TalkEpisodes: CollectionConfig = {
       name: 'biblePassageText',
       label: 'Bible Passage (text)',
       type: 'text',
+    },
+    {
+      name: 'biblePassages',
+      labels: {
+        singular: 'Bible Passage',
+        plural: 'Bible Passage',
+      },
+      type: 'array',
+      fields: [
+        {
+          name: 'chapter',
+          type: 'relationship',
+          relationTo: 'bible-chapters',
+          admin: {
+            allowCreate: false,
+          },
+        },
+      ],
     },
     {
       name: 'speaker',
@@ -145,6 +217,7 @@ export const TalkEpisodes: CollectionConfig = {
       label: 'Slug',
       type: 'text',
       unique: true,
+      required: true,
       admin: {
         position: 'sidebar',
       },
@@ -170,6 +243,16 @@ export const TalkEpisodes: CollectionConfig = {
           },
         ],
       },
+    },
+    {
+      name: 'fullTitle',
+      label: 'Full Title',
+      type: 'text',
+      required: true,
+      admin: {
+        position: 'sidebar',
+      },
+      hooks: {},
     },
   ],
 }
