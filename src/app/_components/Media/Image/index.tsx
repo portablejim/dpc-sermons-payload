@@ -16,6 +16,7 @@ export const Image: React.FC<MediaProps> = props => {
     onClick,
     onLoad: onLoadFromProps,
     resource,
+    resourceType,
     priority,
     fill,
     src: srcFromProps,
@@ -44,6 +45,9 @@ export const Image: React.FC<MediaProps> = props => {
     const filename = fullFilename
 
     src = `${process.env.NEXT_PUBLIC_SERVER_URL}/media/${filename}`
+    if (resourceType === 'coverImage') {
+      src = `${process.env.NEXT_PUBLIC_SERVER_URL}/cover-images/${filename}`
+    }
   }
 
   // NOTE: this is used by the browser to determine which image to download at different screen sizes

@@ -6,34 +6,39 @@ import { Media } from '../Media'
 
 import classes from './index.module.scss'
 
-export const Card: React.FC<{
+export const CardSeries: React.FC<{
   alignItems?: 'center'
   className?: string
   showCategories?: boolean
   hideImagesOnMobile?: boolean
   title?: string
-  relationTo?: 'projects' | 'posts'
-  doc?: Series | Episode | Page
+  mediaType: 'video' | 'audio'
+  doc?: Series
   orientation?: 'horizontal' | 'vertical'
 }> = props => {
   const {
-    relationTo,
     showCategories,
     title: titleFromProps,
     doc,
     className,
     orientation = 'vertical',
+    mediaType,
   } = props
 
   const { slug, title, meta } = doc || {}
-  const { description, image: metaImage } = meta || {}
+  const { image: metaImage } = meta || {}
 
-  let targetImage: null | CoverImage = null
+  let targetImage: string | CoverImage = ''
+  if (doc.seriesImage) {
+    if (typeof doc.seriesImage !== 'number') {
+      targetImage = doc.seriesImage
+    }
+  }
 
   const hasCategories = false
   const titleToUse = titleFromProps || title
-  const sanitizedDescription = description?.replace(/\s/g, ' ') // replace non-breaking space with white space
-  const href = `/${relationTo}/${slug}`
+  const sanitizedDescription = doc.subtitle?.replace(/\s/g, ' ') // replace non-breaking space with white space
+  const href = `/${mediaType}/series/${slug}`
 
   return (
     <div
@@ -42,9 +47,14 @@ export const Card: React.FC<{
         .join(' ')}
     >
       <Link href={href} className={classes.mediaWrapper}>
-        {!metaImage && <div className={classes.placeholder}>No image</div>}
-        {metaImage && typeof metaImage !== 'string' && (
-          <Media imgClassName={classes.image} resource={metaImage} fill />
+        {!targetImage && <div className={classes.placeholder}>No image</div>}
+        {targetImage && typeof targetImage !== 'string' && (
+          <Media
+            imgClassName={classes.image}
+            resource={targetImage}
+            resourceType="coverImage"
+            fill
+          />
         )}
       </Link>
       <div className={classes.content}>
@@ -56,9 +66,9 @@ export const Card: React.FC<{
             </Link>
           </h4>
         )}
-        {description && (
+        {doc.subtitle && (
           <div className={classes.body}>
-            {description && <p className={classes.description}>{sanitizedDescription}</p>}
+            {doc.subtitle && <p className={classes.description}>{sanitizedDescription}</p>}
           </div>
         )}
       </div>

@@ -291,6 +291,11 @@ export interface Episode {
   videoUrl?: string | null;
   audioFormat: 'linked';
   audioUrl?: string | null;
+  talkOutline?:
+    | {
+        [k: string]: unknown;
+      }[]
+    | null;
   slug?: string | null;
   meta?: {
     title?: string | null;

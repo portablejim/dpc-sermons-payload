@@ -1,18 +1,16 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import qs from 'qs'
 
 import type { Page, Series } from '../../../payload/payload-types'
-import { CollectionArchive } from '../../_components/CollectionArchive'
+import { CardSeries } from '../../_components/CardSeries'
 import { Gutter } from '../../_components/Gutter'
-import RichText from '../../_components/RichText'
-import { SeriesListProps } from './types'
 
 import classes from './index.module.scss'
 
 type Result = {
-  docs: (Page | Series | string)[]
+  docs: (Series | string)[]
   hasNextPage: boolean
   hasPrevPage: boolean
   nextPage: number
@@ -111,20 +109,26 @@ export const SeriesList: React.FC<Props> = props => {
   }, [page, onResultChange])
 
   return (
-    <div className={classes.archiveBlock}>
-      <div className={classes.grid}>
-        {results.docs?.map((result, index) => {
-          if (typeof result === 'object' && result !== null) {
-            return (
-              <div className={classes.column} key={index}>
-                <a href="">{result.title}</a>
-              </div>
-            )
-          }
+    <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>
+      <div className={classes.scrollRef} ref={scrollRef} />
+      {!isLoading && error && <Gutter>{error}</Gutter>}
+      <Fragment>
+        <Gutter>
+          <div className={classes.grid}>
+            {results.docs?.map((result, index) => {
+              if (typeof result === 'object' && result !== null) {
+                return (
+                  <div className={classes.column} key={index}>
+                    <CardSeries doc={result} mediaType="video" />
+                  </div>
+                )
+              }
 
-          return null
-        })}
-      </div>
+              return null
+            })}
+          </div>
+        </Gutter>
+      </Fragment>
     </div>
   )
 }
