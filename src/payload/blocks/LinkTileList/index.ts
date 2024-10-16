@@ -17,6 +17,7 @@ export const LinkTileList: Block = {
     richText({
       name: 'description',
       label: 'Description',
+      required: false,
     }),
     {
       name: 'links',

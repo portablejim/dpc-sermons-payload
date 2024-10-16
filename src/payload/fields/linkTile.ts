@@ -122,6 +122,9 @@ const linkTile: LinkType = ({ overrides = {} } = {}) => {
       type: 'upload',
       relationTo: 'media',
       required: true,
+      admin: {
+        condition: (_, siblingData) => siblingData?.type === 'mediaReference',
+      },
     },
   ]
 
