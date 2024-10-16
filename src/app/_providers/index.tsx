@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { NextUIProvider } from '@nextui-org/system'
 
 import { AuthProvider } from '../_providers/Auth'
 import { ThemeProvider } from './Theme'
@@ -10,7 +11,9 @@ export const Providers: React.FC<{
 }> = ({ children }) => {
   return (
     <ThemeProvider>
-      <AuthProvider>{children}</AuthProvider>
+      <NextUIProvider>
+        <AuthProvider>{children}</AuthProvider>
+      </NextUIProvider>
     </ThemeProvider>
   )
 }

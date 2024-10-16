@@ -89,3 +89,10 @@ export const SERIES_LIST = `
   blockType
 }
 `
+
+export const LIBRARY_LIST = `
+...on LibraryList {
+  blockType
+  mediaType
+}
+`

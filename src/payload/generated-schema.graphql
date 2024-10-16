@@ -1795,7 +1795,7 @@ type Page {
   _status: Page__status
 }
 
-union Page_Layout = Cta | Content | MediaBlock | LinkTileList | SeriesList
+union Page_Layout = Cta | Content | MediaBlock | LinkTileList | SeriesList | LibraryList
 
 type Cta {
   invertBackground: Boolean
@@ -2700,6 +2700,18 @@ type SeriesList {
   blockType: String
 }
 
+type LibraryList {
+  mediaType: LibraryList_mediaType
+  id: String
+  blockName: String
+  blockType: String
+}
+
+enum LibraryList_mediaType {
+  video
+  audio
+}
+
 type Page_Meta {
   title: String
   description: String
@@ -3390,7 +3402,7 @@ type PageVersion_Version {
   _status: PageVersion_Version__status
 }
 
-union PageVersion_Version_Layout = Cta | Content | MediaBlock | LinkTileList | SeriesList
+union PageVersion_Version_Layout = Cta | Content | MediaBlock | LinkTileList | SeriesList | LibraryList
 
 type PageVersion_Version_Meta {
   title: String
@@ -5238,6 +5250,7 @@ type Episode {
   title: String
   series: Series
   biblePassageText: String
+  biblePassages: [Episode_BiblePassages!]
   speaker: Speaker
   sermonDate: DateTime
   episodeImage(where: Episode_EpisodeImage_where): CoverImage
@@ -5246,7 +5259,9 @@ type Episode {
   videoUrl: String
   audioFormat: Episode_audioFormat
   audioUrl: String
+  talkOutline(depth: Int): JSON
   slug: String
+  fullTitle: String
   meta: Episode_Meta
   updatedAt: DateTime
   createdAt: DateTime
@@ -5807,6 +5822,11 @@ input Series_Meta_Image_where_or {
   id: Series_Meta_Image_id_operator
   AND: [Series_Meta_Image_where_and]
   OR: [Series_Meta_Image_where_or]
+}
+
+type Episode_BiblePassages {
+  chapter: BibleChapter
+  id: String
 }
 
 type Speaker {
@@ -6587,6 +6607,8 @@ input Episode_where {
   title: Episode_title_operator
   series: Episode_series_operator
   biblePassageText: Episode_biblePassageText_operator
+  biblePassages__chapter: Episode_biblePassages__chapter_operator
+  biblePassages__id: Episode_biblePassages__id_operator
   speaker: Episode_speaker_operator
   sermonDate: Episode_sermonDate_operator
   episodeImage: Episode_episodeImage_operator
@@ -6595,7 +6617,9 @@ input Episode_where {
   videoUrl: Episode_videoUrl_operator
   audioFormat: Episode_audioFormat_operator
   audioUrl: Episode_audioUrl_operator
+  talkOutline: Episode_talkOutline_operator
   slug: Episode_slug_operator
+  fullTitle: Episode_fullTitle_operator
   meta__title: Episode_meta__title_operator
   meta__description: Episode_meta__description_operator
   meta__image: Episode_meta__image_operator
@@ -6627,6 +6651,26 @@ input Episode_series_operator {
 }
 
 input Episode_biblePassageText_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Episode_biblePassages__chapter_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
+  exists: Boolean
+}
+
+input Episode_biblePassages__id_operator {
   equals: String
   not_equals: String
   like: String
@@ -6720,6 +6764,14 @@ input Episode_audioUrl_operator {
   exists: Boolean
 }
 
+input Episode_talkOutline_operator {
+  equals: JSON
+  not_equals: JSON
+  like: JSON
+  contains: JSON
+  exists: Boolean
+}
+
 input Episode_slug_operator {
   equals: String
   not_equals: String
@@ -6728,7 +6780,16 @@ input Episode_slug_operator {
   in: [String]
   not_in: [String]
   all: [String]
-  exists: Boolean
+}
+
+input Episode_fullTitle_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
 }
 
 input Episode_meta__title_operator {
@@ -6806,6 +6867,8 @@ input Episode_where_and {
   title: Episode_title_operator
   series: Episode_series_operator
   biblePassageText: Episode_biblePassageText_operator
+  biblePassages__chapter: Episode_biblePassages__chapter_operator
+  biblePassages__id: Episode_biblePassages__id_operator
   speaker: Episode_speaker_operator
   sermonDate: Episode_sermonDate_operator
   episodeImage: Episode_episodeImage_operator
@@ -6814,7 +6877,9 @@ input Episode_where_and {
   videoUrl: Episode_videoUrl_operator
   audioFormat: Episode_audioFormat_operator
   audioUrl: Episode_audioUrl_operator
+  talkOutline: Episode_talkOutline_operator
   slug: Episode_slug_operator
+  fullTitle: Episode_fullTitle_operator
   meta__title: Episode_meta__title_operator
   meta__description: Episode_meta__description_operator
   meta__image: Episode_meta__image_operator
@@ -6830,6 +6895,8 @@ input Episode_where_or {
   title: Episode_title_operator
   series: Episode_series_operator
   biblePassageText: Episode_biblePassageText_operator
+  biblePassages__chapter: Episode_biblePassages__chapter_operator
+  biblePassages__id: Episode_biblePassages__id_operator
   speaker: Episode_speaker_operator
   sermonDate: Episode_sermonDate_operator
   episodeImage: Episode_episodeImage_operator
@@ -6838,7 +6905,9 @@ input Episode_where_or {
   videoUrl: Episode_videoUrl_operator
   audioFormat: Episode_audioFormat_operator
   audioUrl: Episode_audioUrl_operator
+  talkOutline: Episode_talkOutline_operator
   slug: Episode_slug_operator
+  fullTitle: Episode_fullTitle_operator
   meta__title: Episode_meta__title_operator
   meta__description: Episode_meta__description_operator
   meta__image: Episode_meta__image_operator
@@ -6867,6 +6936,7 @@ type EpisodesDocAccessFields {
   title: EpisodesDocAccessFields_title
   series: EpisodesDocAccessFields_series
   biblePassageText: EpisodesDocAccessFields_biblePassageText
+  biblePassages: EpisodesDocAccessFields_biblePassages
   speaker: EpisodesDocAccessFields_speaker
   sermonDate: EpisodesDocAccessFields_sermonDate
   episodeImage: EpisodesDocAccessFields_episodeImage
@@ -6875,7 +6945,9 @@ type EpisodesDocAccessFields {
   videoUrl: EpisodesDocAccessFields_videoUrl
   audioFormat: EpisodesDocAccessFields_audioFormat
   audioUrl: EpisodesDocAccessFields_audioUrl
+  talkOutline: EpisodesDocAccessFields_talkOutline
   slug: EpisodesDocAccessFields_slug
+  fullTitle: EpisodesDocAccessFields_fullTitle
   meta: EpisodesDocAccessFields_meta
   updatedAt: EpisodesDocAccessFields_updatedAt
   createdAt: EpisodesDocAccessFields_createdAt
@@ -6948,6 +7020,81 @@ type EpisodesDocAccessFields_biblePassageText_Update {
 }
 
 type EpisodesDocAccessFields_biblePassageText_Delete {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages {
+  create: EpisodesDocAccessFields_biblePassages_Create
+  read: EpisodesDocAccessFields_biblePassages_Read
+  update: EpisodesDocAccessFields_biblePassages_Update
+  delete: EpisodesDocAccessFields_biblePassages_Delete
+  fields: EpisodesDocAccessFields_biblePassages_Fields
+}
+
+type EpisodesDocAccessFields_biblePassages_Create {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages_Read {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages_Update {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages_Delete {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages_Fields {
+  chapter: EpisodesDocAccessFields_biblePassages_chapter
+  id: EpisodesDocAccessFields_biblePassages_id
+}
+
+type EpisodesDocAccessFields_biblePassages_chapter {
+  create: EpisodesDocAccessFields_biblePassages_chapter_Create
+  read: EpisodesDocAccessFields_biblePassages_chapter_Read
+  update: EpisodesDocAccessFields_biblePassages_chapter_Update
+  delete: EpisodesDocAccessFields_biblePassages_chapter_Delete
+}
+
+type EpisodesDocAccessFields_biblePassages_chapter_Create {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages_chapter_Read {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages_chapter_Update {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages_chapter_Delete {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages_id {
+  create: EpisodesDocAccessFields_biblePassages_id_Create
+  read: EpisodesDocAccessFields_biblePassages_id_Read
+  update: EpisodesDocAccessFields_biblePassages_id_Update
+  delete: EpisodesDocAccessFields_biblePassages_id_Delete
+}
+
+type EpisodesDocAccessFields_biblePassages_id_Create {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages_id_Read {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages_id_Update {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_biblePassages_id_Delete {
   permission: Boolean!
 }
 
@@ -7135,6 +7282,29 @@ type EpisodesDocAccessFields_audioUrl_Delete {
   permission: Boolean!
 }
 
+type EpisodesDocAccessFields_talkOutline {
+  create: EpisodesDocAccessFields_talkOutline_Create
+  read: EpisodesDocAccessFields_talkOutline_Read
+  update: EpisodesDocAccessFields_talkOutline_Update
+  delete: EpisodesDocAccessFields_talkOutline_Delete
+}
+
+type EpisodesDocAccessFields_talkOutline_Create {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_talkOutline_Read {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_talkOutline_Update {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_talkOutline_Delete {
+  permission: Boolean!
+}
+
 type EpisodesDocAccessFields_slug {
   create: EpisodesDocAccessFields_slug_Create
   read: EpisodesDocAccessFields_slug_Read
@@ -7155,6 +7325,29 @@ type EpisodesDocAccessFields_slug_Update {
 }
 
 type EpisodesDocAccessFields_slug_Delete {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_fullTitle {
+  create: EpisodesDocAccessFields_fullTitle_Create
+  read: EpisodesDocAccessFields_fullTitle_Read
+  update: EpisodesDocAccessFields_fullTitle_Update
+  delete: EpisodesDocAccessFields_fullTitle_Delete
+}
+
+type EpisodesDocAccessFields_fullTitle_Create {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_fullTitle_Read {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_fullTitle_Update {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_fullTitle_Delete {
   permission: Boolean!
 }
 
@@ -7364,6 +7557,7 @@ type EpisodeVersion_Version {
   title: String
   series: Series
   biblePassageText: String
+  biblePassages: [EpisodeVersion_Version_BiblePassages!]
   speaker: Speaker
   sermonDate: DateTime
   episodeImage(where: EpisodeVersion_Version_EpisodeImage_where): CoverImage
@@ -7372,11 +7566,18 @@ type EpisodeVersion_Version {
   videoUrl: String
   audioFormat: EpisodeVersion_Version_audioFormat
   audioUrl: String
+  talkOutline(depth: Int): JSON
   slug: String
+  fullTitle: String
   meta: EpisodeVersion_Version_Meta
   updatedAt: DateTime
   createdAt: DateTime
   _status: EpisodeVersion_Version__status
+}
+
+type EpisodeVersion_Version_BiblePassages {
+  chapter: BibleChapter
+  id: String
 }
 
 input EpisodeVersion_Version_EpisodeImage_where {
@@ -7956,6 +8157,8 @@ input versionsEpisode_where {
   version__title: versionsEpisode_version__title_operator
   version__series: versionsEpisode_version__series_operator
   version__biblePassageText: versionsEpisode_version__biblePassageText_operator
+  version__biblePassages__chapter: versionsEpisode_version__biblePassages__chapter_operator
+  version__biblePassages__id: versionsEpisode_version__biblePassages__id_operator
   version__speaker: versionsEpisode_version__speaker_operator
   version__sermonDate: versionsEpisode_version__sermonDate_operator
   version__episodeImage: versionsEpisode_version__episodeImage_operator
@@ -7964,7 +8167,9 @@ input versionsEpisode_where {
   version__videoUrl: versionsEpisode_version__videoUrl_operator
   version__audioFormat: versionsEpisode_version__audioFormat_operator
   version__audioUrl: versionsEpisode_version__audioUrl_operator
+  version__talkOutline: versionsEpisode_version__talkOutline_operator
   version__slug: versionsEpisode_version__slug_operator
+  version__fullTitle: versionsEpisode_version__fullTitle_operator
   version__meta__title: versionsEpisode_version__meta__title_operator
   version__meta__description: versionsEpisode_version__meta__description_operator
   version__meta__image: versionsEpisode_version__meta__image_operator
@@ -8008,6 +8213,26 @@ input versionsEpisode_version__series_operator {
 }
 
 input versionsEpisode_version__biblePassageText_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input versionsEpisode_version__biblePassages__chapter_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
+  exists: Boolean
+}
+
+input versionsEpisode_version__biblePassages__id_operator {
   equals: String
   not_equals: String
   like: String
@@ -8101,6 +8326,14 @@ input versionsEpisode_version__audioUrl_operator {
   exists: Boolean
 }
 
+input versionsEpisode_version__talkOutline_operator {
+  equals: JSON
+  not_equals: JSON
+  like: JSON
+  contains: JSON
+  exists: Boolean
+}
+
 input versionsEpisode_version__slug_operator {
   equals: String
   not_equals: String
@@ -8109,7 +8342,16 @@ input versionsEpisode_version__slug_operator {
   in: [String]
   not_in: [String]
   all: [String]
-  exists: Boolean
+}
+
+input versionsEpisode_version__fullTitle_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
 }
 
 input versionsEpisode_version__meta__title_operator {
@@ -8216,6 +8458,8 @@ input versionsEpisode_where_and {
   version__title: versionsEpisode_version__title_operator
   version__series: versionsEpisode_version__series_operator
   version__biblePassageText: versionsEpisode_version__biblePassageText_operator
+  version__biblePassages__chapter: versionsEpisode_version__biblePassages__chapter_operator
+  version__biblePassages__id: versionsEpisode_version__biblePassages__id_operator
   version__speaker: versionsEpisode_version__speaker_operator
   version__sermonDate: versionsEpisode_version__sermonDate_operator
   version__episodeImage: versionsEpisode_version__episodeImage_operator
@@ -8224,7 +8468,9 @@ input versionsEpisode_where_and {
   version__videoUrl: versionsEpisode_version__videoUrl_operator
   version__audioFormat: versionsEpisode_version__audioFormat_operator
   version__audioUrl: versionsEpisode_version__audioUrl_operator
+  version__talkOutline: versionsEpisode_version__talkOutline_operator
   version__slug: versionsEpisode_version__slug_operator
+  version__fullTitle: versionsEpisode_version__fullTitle_operator
   version__meta__title: versionsEpisode_version__meta__title_operator
   version__meta__description: versionsEpisode_version__meta__description_operator
   version__meta__image: versionsEpisode_version__meta__image_operator
@@ -8244,6 +8490,8 @@ input versionsEpisode_where_or {
   version__title: versionsEpisode_version__title_operator
   version__series: versionsEpisode_version__series_operator
   version__biblePassageText: versionsEpisode_version__biblePassageText_operator
+  version__biblePassages__chapter: versionsEpisode_version__biblePassages__chapter_operator
+  version__biblePassages__id: versionsEpisode_version__biblePassages__id_operator
   version__speaker: versionsEpisode_version__speaker_operator
   version__sermonDate: versionsEpisode_version__sermonDate_operator
   version__episodeImage: versionsEpisode_version__episodeImage_operator
@@ -8252,7 +8500,9 @@ input versionsEpisode_where_or {
   version__videoUrl: versionsEpisode_version__videoUrl_operator
   version__audioFormat: versionsEpisode_version__audioFormat_operator
   version__audioUrl: versionsEpisode_version__audioUrl_operator
+  version__talkOutline: versionsEpisode_version__talkOutline_operator
   version__slug: versionsEpisode_version__slug_operator
+  version__fullTitle: versionsEpisode_version__fullTitle_operator
   version__meta__title: versionsEpisode_version__meta__title_operator
   version__meta__description: versionsEpisode_version__meta__description_operator
   version__meta__image: versionsEpisode_version__meta__image_operator
@@ -12663,6 +12913,7 @@ type EpisodesFields {
   title: EpisodesFields_title
   series: EpisodesFields_series
   biblePassageText: EpisodesFields_biblePassageText
+  biblePassages: EpisodesFields_biblePassages
   speaker: EpisodesFields_speaker
   sermonDate: EpisodesFields_sermonDate
   episodeImage: EpisodesFields_episodeImage
@@ -12671,7 +12922,9 @@ type EpisodesFields {
   videoUrl: EpisodesFields_videoUrl
   audioFormat: EpisodesFields_audioFormat
   audioUrl: EpisodesFields_audioUrl
+  talkOutline: EpisodesFields_talkOutline
   slug: EpisodesFields_slug
+  fullTitle: EpisodesFields_fullTitle
   meta: EpisodesFields_meta
   updatedAt: EpisodesFields_updatedAt
   createdAt: EpisodesFields_createdAt
@@ -12744,6 +12997,81 @@ type EpisodesFields_biblePassageText_Update {
 }
 
 type EpisodesFields_biblePassageText_Delete {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages {
+  create: EpisodesFields_biblePassages_Create
+  read: EpisodesFields_biblePassages_Read
+  update: EpisodesFields_biblePassages_Update
+  delete: EpisodesFields_biblePassages_Delete
+  fields: EpisodesFields_biblePassages_Fields
+}
+
+type EpisodesFields_biblePassages_Create {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages_Read {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages_Update {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages_Delete {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages_Fields {
+  chapter: EpisodesFields_biblePassages_chapter
+  id: EpisodesFields_biblePassages_id
+}
+
+type EpisodesFields_biblePassages_chapter {
+  create: EpisodesFields_biblePassages_chapter_Create
+  read: EpisodesFields_biblePassages_chapter_Read
+  update: EpisodesFields_biblePassages_chapter_Update
+  delete: EpisodesFields_biblePassages_chapter_Delete
+}
+
+type EpisodesFields_biblePassages_chapter_Create {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages_chapter_Read {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages_chapter_Update {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages_chapter_Delete {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages_id {
+  create: EpisodesFields_biblePassages_id_Create
+  read: EpisodesFields_biblePassages_id_Read
+  update: EpisodesFields_biblePassages_id_Update
+  delete: EpisodesFields_biblePassages_id_Delete
+}
+
+type EpisodesFields_biblePassages_id_Create {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages_id_Read {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages_id_Update {
+  permission: Boolean!
+}
+
+type EpisodesFields_biblePassages_id_Delete {
   permission: Boolean!
 }
 
@@ -12931,6 +13259,29 @@ type EpisodesFields_audioUrl_Delete {
   permission: Boolean!
 }
 
+type EpisodesFields_talkOutline {
+  create: EpisodesFields_talkOutline_Create
+  read: EpisodesFields_talkOutline_Read
+  update: EpisodesFields_talkOutline_Update
+  delete: EpisodesFields_talkOutline_Delete
+}
+
+type EpisodesFields_talkOutline_Create {
+  permission: Boolean!
+}
+
+type EpisodesFields_talkOutline_Read {
+  permission: Boolean!
+}
+
+type EpisodesFields_talkOutline_Update {
+  permission: Boolean!
+}
+
+type EpisodesFields_talkOutline_Delete {
+  permission: Boolean!
+}
+
 type EpisodesFields_slug {
   create: EpisodesFields_slug_Create
   read: EpisodesFields_slug_Read
@@ -12951,6 +13302,29 @@ type EpisodesFields_slug_Update {
 }
 
 type EpisodesFields_slug_Delete {
+  permission: Boolean!
+}
+
+type EpisodesFields_fullTitle {
+  create: EpisodesFields_fullTitle_Create
+  read: EpisodesFields_fullTitle_Read
+  update: EpisodesFields_fullTitle_Update
+  delete: EpisodesFields_fullTitle_Delete
+}
+
+type EpisodesFields_fullTitle_Create {
+  permission: Boolean!
+}
+
+type EpisodesFields_fullTitle_Read {
+  permission: Boolean!
+}
+
+type EpisodesFields_fullTitle_Update {
+  permission: Boolean!
+}
+
+type EpisodesFields_fullTitle_Delete {
   permission: Boolean!
 }
 
@@ -14990,6 +15364,7 @@ input mutationEpisodeInput {
   title: String!
   series: Int
   biblePassageText: String
+  biblePassages: [mutationEpisode_BiblePassagesInput]
   speaker: Int
   sermonDate: String!
   episodeImage: String
@@ -14998,11 +15373,18 @@ input mutationEpisodeInput {
   videoUrl: String
   audioFormat: Episode_audioFormat_MutationInput!
   audioUrl: String
-  slug: String
+  talkOutline: JSON
+  slug: String!
+  fullTitle: String!
   meta: mutationEpisode_MetaInput
   updatedAt: String
   createdAt: String
   _status: Episode__status_MutationInput
+}
+
+input mutationEpisode_BiblePassagesInput {
+  chapter: Int
+  id: String
 }
 
 enum Episode_videoFormat_MutationInput {
@@ -15029,6 +15411,7 @@ input mutationEpisodeUpdateInput {
   title: String
   series: Int
   biblePassageText: String
+  biblePassages: [mutationEpisodeUpdate_BiblePassagesInput]
   speaker: Int
   sermonDate: String
   episodeImage: String
@@ -15037,11 +15420,18 @@ input mutationEpisodeUpdateInput {
   videoUrl: String
   audioFormat: EpisodeUpdate_audioFormat_MutationInput
   audioUrl: String
+  talkOutline: JSON
   slug: String
+  fullTitle: String
   meta: mutationEpisodeUpdate_MetaInput
   updatedAt: String
   createdAt: String
   _status: EpisodeUpdate__status_MutationInput
+}
+
+input mutationEpisodeUpdate_BiblePassagesInput {
+  chapter: Int
+  id: String
 }
 
 enum EpisodeUpdate_videoFormat_MutationInput {

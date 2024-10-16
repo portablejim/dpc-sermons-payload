@@ -4,6 +4,7 @@ import { admins } from '../../access/admins'
 import { adminsOrPublished } from '../../access/adminsOrPublished'
 import { CallToAction } from '../../blocks/CallToAction'
 import { Content } from '../../blocks/Content'
+import { LibraryList } from '../../blocks/LibraryList'
 import { LinkTileList } from '../../blocks/LinkTileList'
 import { MediaBlock } from '../../blocks/MediaBlock'
 import { SeriesList } from '../../blocks/SeriesList'
@@ -52,7 +53,7 @@ export const Pages: CollectionConfig = {
       name: 'layout',
       type: 'blocks',
       required: true,
-      blocks: [CallToAction, Content, MediaBlock, LinkTileList, SeriesList],
+      blocks: [CallToAction, Content, MediaBlock, LinkTileList, SeriesList, LibraryList],
     },
     slugField(),
   ],

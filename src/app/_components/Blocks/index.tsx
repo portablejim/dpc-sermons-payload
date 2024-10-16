@@ -5,6 +5,7 @@ import { ArchiveBlock } from '../../_blocks/ArchiveBlock'
 import { CallToActionBlock } from '../../_blocks/CallToAction'
 import { CommentsBlock, type CommentsBlockProps } from '../../_blocks/Comments/index'
 import { ContentBlock } from '../../_blocks/Content'
+import { LibraryList } from '../../_blocks/LibraryList'
 import { MediaBlock } from '../../_blocks/MediaBlock'
 import { RelatedPosts, type RelatedPostsProps } from '../../_blocks/RelatedPosts'
 import { SeriesList } from '../../_blocks/SeriesList'
@@ -20,6 +21,7 @@ const blockComponents = {
   relatedPosts: RelatedPosts,
   comments: CommentsBlock,
   seriesList: SeriesList,
+  libraryList: LibraryList,
 }
 
 export const Blocks: React.FC<{

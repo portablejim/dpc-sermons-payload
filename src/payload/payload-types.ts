@@ -197,6 +197,12 @@ export interface Page {
         blockName?: string | null;
         blockType: 'seriesList';
       }
+    | {
+        mediaType?: ('video' | 'audio') | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'libraryList';
+      }
   )[];
   slug?: string | null;
   meta?: {
@@ -283,6 +289,12 @@ export interface Episode {
   title: string;
   series?: (number | null) | Series;
   biblePassageText?: string | null;
+  biblePassages?:
+    | {
+        chapter?: (number | null) | BibleChapter;
+        id?: string | null;
+      }[]
+    | null;
   speaker?: (number | null) | Speaker;
   sermonDate: string;
   episodeImage?: number | CoverImage | null;
@@ -296,7 +308,8 @@ export interface Episode {
         [k: string]: unknown;
       }[]
     | null;
-  slug?: string | null;
+  slug: string;
+  fullTitle: string;
   meta?: {
     title?: string | null;
     description?: string | null;
