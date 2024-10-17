@@ -166,12 +166,14 @@ export interface Page {
       }
     | {
         title?: string | null;
-        description: {
-          [k: string]: unknown;
-        }[];
-        links?:
+        description?:
           | {
-              link: {
+              [k: string]: unknown;
+            }[]
+          | null;
+        linkTiles?:
+          | {
+              linkTile: {
                 title: string;
                 subtitle?: string | null;
                 backgroundImage: number | CoverImage;
@@ -183,14 +185,15 @@ export interface Page {
                   value: number | Page;
                 } | null;
                 url?: string | null;
-                linkedMedia: number | Media;
+                linkedMedia?: number | Media | null;
               };
               id?: string | null;
             }[]
           | null;
+        paddingBottom?: ('large' | 'medium' | 'none') | null;
         id?: string | null;
         blockName?: string | null;
-        blockType: 'link-tile-list';
+        blockType: 'linkTileList';
       }
     | {
         id?: string | null;

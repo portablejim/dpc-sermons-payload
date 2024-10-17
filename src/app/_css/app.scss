@@ -90,6 +90,11 @@ h6 {
   @extend %h6;
 }
 
+h1.pageHeading {
+  font-size: 4rem;
+  margin-bottom: 2rem;
+}
+
 p {
   margin: var(--base) 0;
 

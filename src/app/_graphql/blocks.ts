@@ -1,6 +1,6 @@
 import { CATEGORIES } from './categories'
 import { LINK_FIELDS } from './link'
-import { MEDIA } from './media'
+import { COVER_IMAGE_FIELDS, MEDIA, MEDIA_FIELDS } from './media'
 import { META } from './meta'
 
 export const CALL_TO_ACTION = `
@@ -94,5 +94,41 @@ export const LIBRARY_LIST = `
 ...on LibraryList {
   blockType
   mediaType
+}
+`
+
+export const LINK_TILE_LIST = `
+...on LinkTileList {
+  blockType
+  title
+  description
+  linkTiles {
+    linkTile {
+      title
+      subtitle
+      backgroundImage {
+        ${COVER_IMAGE_FIELDS}
+      }
+      overlayColour
+      type
+      newTab
+      reference {
+        relationTo
+        value {
+          ...on Page {
+            id
+            slug
+            title
+          }
+        }
+      }
+      url
+      linkedMedia {
+        id
+        ${MEDIA_FIELDS}
+      }
+    }
+  }
+  paddingBottom
 }
 `

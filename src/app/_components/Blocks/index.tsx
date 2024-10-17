@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import payload from 'payload'
 
 import { Page } from '../../../payload/payload-types.js'
 import { ArchiveBlock } from '../../_blocks/ArchiveBlock'
@@ -6,6 +7,7 @@ import { CallToActionBlock } from '../../_blocks/CallToAction'
 import { CommentsBlock, type CommentsBlockProps } from '../../_blocks/Comments/index'
 import { ContentBlock } from '../../_blocks/Content'
 import { LibraryList } from '../../_blocks/LibraryList'
+import { LinkTileList } from '../../_blocks/LinkTileList'
 import { MediaBlock } from '../../_blocks/MediaBlock'
 import { RelatedPosts, type RelatedPostsProps } from '../../_blocks/RelatedPosts'
 import { SeriesList } from '../../_blocks/SeriesList'
@@ -22,6 +24,7 @@ const blockComponents = {
   comments: CommentsBlock,
   seriesList: SeriesList,
   libraryList: LibraryList,
+  linkTileList: LinkTileList,
 }
 
 export const Blocks: React.FC<{
@@ -59,12 +62,31 @@ export const Blocks: React.FC<{
             }
 
             if (index === blocks.length - 1) {
-              paddingBottom = 'large'
+              paddingBottom = 'medium'
             }
 
             if (disableTopPadding && index === 0) {
               paddingTop = 'none'
             }
+
+            if ('paddingBottom' in block) {
+              if (block['paddingBottom'] === 'large') {
+                paddingBottom = 'large'
+              } else if (block['paddingBottom'] === 'medium') {
+                paddingBottom = 'medium'
+              } else if (block['paddingBottom'] === 'none') {
+                paddingBottom = 'none'
+              }
+            }
+
+            payload.logger.info({
+              blockType,
+              blockIsInverted,
+              isPrevSame,
+              paddingTop,
+              paddingBottom,
+              blockPadding: block['paddingBottom'],
+            })
 
             if (Block) {
               return (

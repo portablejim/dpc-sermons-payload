@@ -8,6 +8,7 @@ import { Page as PageType } from '../../../payload/payload-types'
 import { fetchDoc } from '../../_api/fetchDoc'
 import { fetchDocs } from '../../_api/fetchDocs'
 import { Blocks } from '../../_components/Blocks'
+import { Gutter } from '../../_components/Gutter'
 import { generateMeta } from '../../_utilities/generateMeta'
 
 // Payload Cloud caches all files through Cloudflare, so we don't need Next.js to cache them as well
@@ -41,11 +42,25 @@ export default async function Page({ params: { slug = 'home' } }) {
     return notFound()
   }
 
+  let PageHeading = ({ slug }) => {
+    if (slug !== 'home') {
+      return (
+        <Gutter>
+          <h1 className="pageHeading">{page.title}</h1>
+        </Gutter>
+      )
+    }
+    return <></>
+  }
+
   const { layout } = page
 
   return (
     <React.Fragment>
-      <Blocks blocks={layout} disableTopPadding={true} />
+      <PageHeading slug={slug} />
+      <main>
+        <Blocks blocks={layout} disableTopPadding={true} />
+      </main>
     </React.Fragment>
   )
 }
@@ -75,6 +90,7 @@ export async function generateMetadata({ params: { slug = 'home' } }): Promise<M
     // this is so that we can render static fallback pages for the demo
     // when deploying this template on Payload Cloud, this page needs to build before the APIs are live
     // in production you may want to redirect to a 404  page or at least log the error somewhere
+    throw error
   }
 
   return generateMeta({ doc: page })

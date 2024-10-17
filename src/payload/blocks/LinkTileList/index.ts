@@ -4,7 +4,7 @@ import linkTile from '../../fields/linkTile'
 import richText from '../../fields/richText'
 
 export const LinkTileList: Block = {
-  slug: 'link-tile-list',
+  slug: 'linkTileList',
   labels: {
     singular: 'Link List Tile',
     plural: 'Link List Tiles',
@@ -20,10 +20,19 @@ export const LinkTileList: Block = {
       required: false,
     }),
     {
-      name: 'links',
+      name: 'linkTiles',
       type: 'array',
       label: 'Link Tile',
       fields: [linkTile({})],
+    },
+    {
+      name: 'paddingBottom',
+      type: 'select',
+      options: [
+        { label: 'Large', value: 'large' },
+        { label: 'Medium', value: 'medium' },
+        { label: 'None', value: 'none' },
+      ],
     },
   ],
 }

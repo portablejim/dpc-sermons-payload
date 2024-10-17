@@ -27,7 +27,7 @@ type LinkType = (options?: {
 
 const linkTile: LinkType = ({ overrides = {} } = {}) => {
   const linkResult: Field = {
-    name: 'link',
+    name: 'linkTile',
     type: 'group',
     admin: {
       hideGutter: true,
