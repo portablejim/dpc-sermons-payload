@@ -5,7 +5,7 @@ import { admins } from '../../access/admins'
 import { adminsOrPublished } from '../../access/adminsOrPublished'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { populateAuthors } from './hooks/populateAuthors'
-import { revalidatePost } from './hooks/revalidatePost'
+import { revalidateEpisode } from './hooks/revalidateEpisode'
 
 export const TalkEpisodes: CollectionConfig = {
   slug: 'episodes',
@@ -31,8 +31,6 @@ export const TalkEpisodes: CollectionConfig = {
         operation, // name of the operation ie. 'create', 'update'
         originalDoc, // original document
       }) => {
-        payload.logger.info(data)
-
         if (
           operation === 'create' ||
           data.fullTitle == null ||
@@ -48,17 +46,17 @@ export const TalkEpisodes: CollectionConfig = {
               collection: 'series',
               id: data.series,
               depth: 1,
+              context: {
+                seriesTitle,
+              },
             })
-            payload.logger.info(foundSeries)
-            //sermonTitle = title != undefined ? title : null
+            seriesTitle = typeof foundSeries.title === 'string' ? foundSeries.title : null
           }
           let outputParts = []
           if (data.sermonDate) {
-            payload.logger.info(data.sermonDate)
             const sermonDateYear = data.sermonDate.substring(2, 4)
             const sermonDateMonth = data.sermonDate.substring(5, 7)
             const sermonDateDay = data.sermonDate.substring(8, 10)
-            payload.logger.info(sermonDateDay, sermonDateMonth, sermonDateYear)
             outputParts.push(`${sermonDateDay}/${sermonDateMonth}/${sermonDateYear}`)
           }
           if (data.title) {
@@ -79,7 +77,7 @@ export const TalkEpisodes: CollectionConfig = {
       },
     ],
     beforeChange: [populatePublishedAt],
-    afterChange: [revalidatePost],
+    afterChange: [revalidateEpisode],
     afterRead: [populateAuthors],
   },
   versions: {
@@ -138,6 +136,22 @@ export const TalkEpisodes: CollectionConfig = {
         date: {
           pickerAppearance: 'dayOnly',
         },
+      },
+    },
+    {
+      name: 'sermonDateYear',
+      type: 'number',
+      index: true,
+      hidden: true,
+      hooks: {
+        beforeValidate: [
+          ({ data }) => {
+            if (data.sermonDate && data.sermonDate.length > 4) {
+              return parseInt(data.sermonDate.substring(0, 4))
+            }
+            return -1
+          },
+        ],
       },
     },
     {
@@ -252,7 +266,16 @@ export const TalkEpisodes: CollectionConfig = {
       admin: {
         position: 'sidebar',
       },
-      hooks: {},
+      hooks: {
+        beforeValidate: [
+          ({ data, operation }) => {
+            if (operation === 'create' && data && !data.fullTitle && data.title) {
+              // Temporarily set title for validation
+              data.fullTitle = data.title
+            }
+          },
+        ],
+      },
     },
   ],
 }

@@ -300,6 +300,7 @@ export interface Episode {
     | null;
   speaker?: (number | null) | Speaker;
   sermonDate: string;
+  sermonDateYear?: number | null;
   episodeImage?: number | CoverImage | null;
   publishedAt?: string | null;
   videoFormat: 'embed' | 'none';

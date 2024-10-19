@@ -5260,6 +5260,7 @@ type Episode {
   biblePassages: [Episode_BiblePassages!]
   speaker: Speaker
   sermonDate: DateTime
+  sermonDateYear: Float
   episodeImage(where: Episode_EpisodeImage_where): CoverImage
   publishedAt: DateTime
   videoFormat: Episode_videoFormat
@@ -7567,6 +7568,7 @@ type EpisodeVersion_Version {
   biblePassages: [EpisodeVersion_Version_BiblePassages!]
   speaker: Speaker
   sermonDate: DateTime
+  sermonDateYear: Float
   episodeImage(where: EpisodeVersion_Version_EpisodeImage_where): CoverImage
   publishedAt: DateTime
   videoFormat: EpisodeVersion_Version_videoFormat
@@ -8168,6 +8170,7 @@ input versionsEpisode_where {
   version__biblePassages__id: versionsEpisode_version__biblePassages__id_operator
   version__speaker: versionsEpisode_version__speaker_operator
   version__sermonDate: versionsEpisode_version__sermonDate_operator
+  version__sermonDateYear: versionsEpisode_version__sermonDateYear_operator
   version__episodeImage: versionsEpisode_version__episodeImage_operator
   version__publishedAt: versionsEpisode_version__publishedAt_operator
   version__videoFormat: versionsEpisode_version__videoFormat_operator
@@ -8267,6 +8270,16 @@ input versionsEpisode_version__sermonDate_operator {
   less_than_equal: DateTime
   less_than: DateTime
   like: DateTime
+}
+
+input versionsEpisode_version__sermonDateYear_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
 }
 
 input versionsEpisode_version__episodeImage_operator {
@@ -8469,6 +8482,7 @@ input versionsEpisode_where_and {
   version__biblePassages__id: versionsEpisode_version__biblePassages__id_operator
   version__speaker: versionsEpisode_version__speaker_operator
   version__sermonDate: versionsEpisode_version__sermonDate_operator
+  version__sermonDateYear: versionsEpisode_version__sermonDateYear_operator
   version__episodeImage: versionsEpisode_version__episodeImage_operator
   version__publishedAt: versionsEpisode_version__publishedAt_operator
   version__videoFormat: versionsEpisode_version__videoFormat_operator
@@ -8501,6 +8515,7 @@ input versionsEpisode_where_or {
   version__biblePassages__id: versionsEpisode_version__biblePassages__id_operator
   version__speaker: versionsEpisode_version__speaker_operator
   version__sermonDate: versionsEpisode_version__sermonDate_operator
+  version__sermonDateYear: versionsEpisode_version__sermonDateYear_operator
   version__episodeImage: versionsEpisode_version__episodeImage_operator
   version__publishedAt: versionsEpisode_version__publishedAt_operator
   version__videoFormat: versionsEpisode_version__videoFormat_operator
@@ -15374,6 +15389,7 @@ input mutationEpisodeInput {
   biblePassages: [mutationEpisode_BiblePassagesInput]
   speaker: Int
   sermonDate: String!
+  sermonDateYear: Float
   episodeImage: String
   publishedAt: String
   videoFormat: Episode_videoFormat_MutationInput!
@@ -15421,6 +15437,7 @@ input mutationEpisodeUpdateInput {
   biblePassages: [mutationEpisodeUpdate_BiblePassagesInput]
   speaker: Int
   sermonDate: String
+  sermonDateYear: Float
   episodeImage: String
   publishedAt: String
   videoFormat: EpisodeUpdate_videoFormat_MutationInput

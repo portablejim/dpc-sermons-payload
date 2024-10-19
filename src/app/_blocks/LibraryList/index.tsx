@@ -2,12 +2,11 @@
 
 import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { Tab, Tabs } from '@nextui-org/tabs'
-import qs from 'qs'
 
 import type { Page, Series } from '../../../payload/payload-types'
-import { CardSeries } from '../../_components/CardSeries'
+import { EpisodeList } from '../../_components/EpisodeList'
 import { Gutter } from '../../_components/Gutter'
-import { SeriesList } from '../SeriesList'
+import { SeriesList } from '../../_components/SeriesList'
 
 import classes from './index.module.scss'
 
@@ -47,7 +46,7 @@ export const LibraryList: React.FC<Props> = props => {
             aria-label="Show sermons by grouping"
           >
             <Tab key="date" title="By Date">
-              <p>Episodes by date</p>
+              <EpisodeList />
             </Tab>
             <Tab key="series" title="By Series">
               <SeriesList />

@@ -79,15 +79,6 @@ export const Blocks: React.FC<{
               }
             }
 
-            payload.logger.info({
-              blockType,
-              blockIsInverted,
-              isPrevSame,
-              paddingTop,
-              paddingBottom,
-              blockPadding: block['paddingBottom'],
-            })
-
             if (Block) {
               return (
                 <BackgroundColor key={index} invert={blockIsInverted}>

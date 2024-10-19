@@ -35,7 +35,6 @@ export default async function Page({ params: { slug = 'home' } }) {
     // so swallow the error here and simply render the page with fallback data where necessary
     // in production you may want to redirect to a 404  page or at least log the error somewhere
     // console.error(error)
-    payload.logger.info(JSON.stringify(error))
   }
 
   if (!page) {
