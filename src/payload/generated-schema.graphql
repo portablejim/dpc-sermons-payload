@@ -5270,7 +5270,6 @@ type Episode {
   talkOutline(depth: Int): JSON
   slug: String
   fullTitle: String
-  meta: Episode_Meta
   updatedAt: DateTime
   createdAt: DateTime
   _status: Episode__status
@@ -5278,12 +5277,12 @@ type Episode {
 
 type Series {
   id: Int
-  title: String
+  title: String!
   subtitle: String
-  seriesDate: DateTime
+  seriesDate: DateTime!
   seriesImage(where: Series_SeriesImage_where): CoverImage!
-  slug: String
-  meta: Series_Meta
+  slug: String!
+  expandedTitle: String!
   updatedAt: DateTime
   createdAt: DateTime
 }
@@ -5638,200 +5637,6 @@ input Series_SeriesImage_where_or {
   OR: [Series_SeriesImage_where_or]
 }
 
-type Series_Meta {
-  title: String
-  description: String
-  image(where: Series_Meta_Image_where): Media
-}
-
-input Series_Meta_Image_where {
-  alt: Series_Meta_Image_alt_operator
-  caption: Series_Meta_Image_caption_operator
-  updatedAt: Series_Meta_Image_updatedAt_operator
-  createdAt: Series_Meta_Image_createdAt_operator
-  url: Series_Meta_Image_url_operator
-  filename: Series_Meta_Image_filename_operator
-  mimeType: Series_Meta_Image_mimeType_operator
-  filesize: Series_Meta_Image_filesize_operator
-  width: Series_Meta_Image_width_operator
-  height: Series_Meta_Image_height_operator
-  focalX: Series_Meta_Image_focalX_operator
-  focalY: Series_Meta_Image_focalY_operator
-  id: Series_Meta_Image_id_operator
-  AND: [Series_Meta_Image_where_and]
-  OR: [Series_Meta_Image_where_or]
-}
-
-input Series_Meta_Image_alt_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-}
-
-input Series_Meta_Image_caption_operator {
-  equals: JSON
-  not_equals: JSON
-  like: JSON
-  contains: JSON
-  exists: Boolean
-}
-
-input Series_Meta_Image_updatedAt_operator {
-  equals: DateTime
-  not_equals: DateTime
-  greater_than_equal: DateTime
-  greater_than: DateTime
-  less_than_equal: DateTime
-  less_than: DateTime
-  like: DateTime
-  exists: Boolean
-}
-
-input Series_Meta_Image_createdAt_operator {
-  equals: DateTime
-  not_equals: DateTime
-  greater_than_equal: DateTime
-  greater_than: DateTime
-  less_than_equal: DateTime
-  less_than: DateTime
-  like: DateTime
-  exists: Boolean
-}
-
-input Series_Meta_Image_url_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Series_Meta_Image_filename_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Series_Meta_Image_mimeType_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Series_Meta_Image_filesize_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Series_Meta_Image_width_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Series_Meta_Image_height_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Series_Meta_Image_focalX_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Series_Meta_Image_focalY_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Series_Meta_Image_id_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Series_Meta_Image_where_and {
-  alt: Series_Meta_Image_alt_operator
-  caption: Series_Meta_Image_caption_operator
-  updatedAt: Series_Meta_Image_updatedAt_operator
-  createdAt: Series_Meta_Image_createdAt_operator
-  url: Series_Meta_Image_url_operator
-  filename: Series_Meta_Image_filename_operator
-  mimeType: Series_Meta_Image_mimeType_operator
-  filesize: Series_Meta_Image_filesize_operator
-  width: Series_Meta_Image_width_operator
-  height: Series_Meta_Image_height_operator
-  focalX: Series_Meta_Image_focalX_operator
-  focalY: Series_Meta_Image_focalY_operator
-  id: Series_Meta_Image_id_operator
-  AND: [Series_Meta_Image_where_and]
-  OR: [Series_Meta_Image_where_or]
-}
-
-input Series_Meta_Image_where_or {
-  alt: Series_Meta_Image_alt_operator
-  caption: Series_Meta_Image_caption_operator
-  updatedAt: Series_Meta_Image_updatedAt_operator
-  createdAt: Series_Meta_Image_createdAt_operator
-  url: Series_Meta_Image_url_operator
-  filename: Series_Meta_Image_filename_operator
-  mimeType: Series_Meta_Image_mimeType_operator
-  filesize: Series_Meta_Image_filesize_operator
-  width: Series_Meta_Image_width_operator
-  height: Series_Meta_Image_height_operator
-  focalX: Series_Meta_Image_focalX_operator
-  focalY: Series_Meta_Image_focalY_operator
-  id: Series_Meta_Image_id_operator
-  AND: [Series_Meta_Image_where_and]
-  OR: [Series_Meta_Image_where_or]
-}
-
 type Episode_BiblePassages {
   chapter: BibleChapter
   id: String
@@ -5840,203 +5645,8 @@ type Episode_BiblePassages {
 type Speaker {
   id: Int
   name: String
-  meta: Speaker_Meta
   updatedAt: DateTime
   createdAt: DateTime
-}
-
-type Speaker_Meta {
-  title: String
-  description: String
-  image(where: Speaker_Meta_Image_where): Media
-}
-
-input Speaker_Meta_Image_where {
-  alt: Speaker_Meta_Image_alt_operator
-  caption: Speaker_Meta_Image_caption_operator
-  updatedAt: Speaker_Meta_Image_updatedAt_operator
-  createdAt: Speaker_Meta_Image_createdAt_operator
-  url: Speaker_Meta_Image_url_operator
-  filename: Speaker_Meta_Image_filename_operator
-  mimeType: Speaker_Meta_Image_mimeType_operator
-  filesize: Speaker_Meta_Image_filesize_operator
-  width: Speaker_Meta_Image_width_operator
-  height: Speaker_Meta_Image_height_operator
-  focalX: Speaker_Meta_Image_focalX_operator
-  focalY: Speaker_Meta_Image_focalY_operator
-  id: Speaker_Meta_Image_id_operator
-  AND: [Speaker_Meta_Image_where_and]
-  OR: [Speaker_Meta_Image_where_or]
-}
-
-input Speaker_Meta_Image_alt_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-}
-
-input Speaker_Meta_Image_caption_operator {
-  equals: JSON
-  not_equals: JSON
-  like: JSON
-  contains: JSON
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_updatedAt_operator {
-  equals: DateTime
-  not_equals: DateTime
-  greater_than_equal: DateTime
-  greater_than: DateTime
-  less_than_equal: DateTime
-  less_than: DateTime
-  like: DateTime
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_createdAt_operator {
-  equals: DateTime
-  not_equals: DateTime
-  greater_than_equal: DateTime
-  greater_than: DateTime
-  less_than_equal: DateTime
-  less_than: DateTime
-  like: DateTime
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_url_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_filename_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_mimeType_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_filesize_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_width_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_height_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_focalX_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_focalY_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_id_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Speaker_Meta_Image_where_and {
-  alt: Speaker_Meta_Image_alt_operator
-  caption: Speaker_Meta_Image_caption_operator
-  updatedAt: Speaker_Meta_Image_updatedAt_operator
-  createdAt: Speaker_Meta_Image_createdAt_operator
-  url: Speaker_Meta_Image_url_operator
-  filename: Speaker_Meta_Image_filename_operator
-  mimeType: Speaker_Meta_Image_mimeType_operator
-  filesize: Speaker_Meta_Image_filesize_operator
-  width: Speaker_Meta_Image_width_operator
-  height: Speaker_Meta_Image_height_operator
-  focalX: Speaker_Meta_Image_focalX_operator
-  focalY: Speaker_Meta_Image_focalY_operator
-  id: Speaker_Meta_Image_id_operator
-  AND: [Speaker_Meta_Image_where_and]
-  OR: [Speaker_Meta_Image_where_or]
-}
-
-input Speaker_Meta_Image_where_or {
-  alt: Speaker_Meta_Image_alt_operator
-  caption: Speaker_Meta_Image_caption_operator
-  updatedAt: Speaker_Meta_Image_updatedAt_operator
-  createdAt: Speaker_Meta_Image_createdAt_operator
-  url: Speaker_Meta_Image_url_operator
-  filename: Speaker_Meta_Image_filename_operator
-  mimeType: Speaker_Meta_Image_mimeType_operator
-  filesize: Speaker_Meta_Image_filesize_operator
-  width: Speaker_Meta_Image_width_operator
-  height: Speaker_Meta_Image_height_operator
-  focalX: Speaker_Meta_Image_focalX_operator
-  focalY: Speaker_Meta_Image_focalY_operator
-  id: Speaker_Meta_Image_id_operator
-  AND: [Speaker_Meta_Image_where_and]
-  OR: [Speaker_Meta_Image_where_or]
 }
 
 input Episode_EpisodeImage_where {
@@ -6398,200 +6008,6 @@ enum Episode_audioFormat {
   linked
 }
 
-type Episode_Meta {
-  title: String
-  description: String
-  image(where: Episode_Meta_Image_where): Media
-}
-
-input Episode_Meta_Image_where {
-  alt: Episode_Meta_Image_alt_operator
-  caption: Episode_Meta_Image_caption_operator
-  updatedAt: Episode_Meta_Image_updatedAt_operator
-  createdAt: Episode_Meta_Image_createdAt_operator
-  url: Episode_Meta_Image_url_operator
-  filename: Episode_Meta_Image_filename_operator
-  mimeType: Episode_Meta_Image_mimeType_operator
-  filesize: Episode_Meta_Image_filesize_operator
-  width: Episode_Meta_Image_width_operator
-  height: Episode_Meta_Image_height_operator
-  focalX: Episode_Meta_Image_focalX_operator
-  focalY: Episode_Meta_Image_focalY_operator
-  id: Episode_Meta_Image_id_operator
-  AND: [Episode_Meta_Image_where_and]
-  OR: [Episode_Meta_Image_where_or]
-}
-
-input Episode_Meta_Image_alt_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-}
-
-input Episode_Meta_Image_caption_operator {
-  equals: JSON
-  not_equals: JSON
-  like: JSON
-  contains: JSON
-  exists: Boolean
-}
-
-input Episode_Meta_Image_updatedAt_operator {
-  equals: DateTime
-  not_equals: DateTime
-  greater_than_equal: DateTime
-  greater_than: DateTime
-  less_than_equal: DateTime
-  less_than: DateTime
-  like: DateTime
-  exists: Boolean
-}
-
-input Episode_Meta_Image_createdAt_operator {
-  equals: DateTime
-  not_equals: DateTime
-  greater_than_equal: DateTime
-  greater_than: DateTime
-  less_than_equal: DateTime
-  less_than: DateTime
-  like: DateTime
-  exists: Boolean
-}
-
-input Episode_Meta_Image_url_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Episode_Meta_Image_filename_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Episode_Meta_Image_mimeType_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Episode_Meta_Image_filesize_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Episode_Meta_Image_width_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Episode_Meta_Image_height_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Episode_Meta_Image_focalX_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Episode_Meta_Image_focalY_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input Episode_Meta_Image_id_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Episode_Meta_Image_where_and {
-  alt: Episode_Meta_Image_alt_operator
-  caption: Episode_Meta_Image_caption_operator
-  updatedAt: Episode_Meta_Image_updatedAt_operator
-  createdAt: Episode_Meta_Image_createdAt_operator
-  url: Episode_Meta_Image_url_operator
-  filename: Episode_Meta_Image_filename_operator
-  mimeType: Episode_Meta_Image_mimeType_operator
-  filesize: Episode_Meta_Image_filesize_operator
-  width: Episode_Meta_Image_width_operator
-  height: Episode_Meta_Image_height_operator
-  focalX: Episode_Meta_Image_focalX_operator
-  focalY: Episode_Meta_Image_focalY_operator
-  id: Episode_Meta_Image_id_operator
-  AND: [Episode_Meta_Image_where_and]
-  OR: [Episode_Meta_Image_where_or]
-}
-
-input Episode_Meta_Image_where_or {
-  alt: Episode_Meta_Image_alt_operator
-  caption: Episode_Meta_Image_caption_operator
-  updatedAt: Episode_Meta_Image_updatedAt_operator
-  createdAt: Episode_Meta_Image_createdAt_operator
-  url: Episode_Meta_Image_url_operator
-  filename: Episode_Meta_Image_filename_operator
-  mimeType: Episode_Meta_Image_mimeType_operator
-  filesize: Episode_Meta_Image_filesize_operator
-  width: Episode_Meta_Image_width_operator
-  height: Episode_Meta_Image_height_operator
-  focalX: Episode_Meta_Image_focalX_operator
-  focalY: Episode_Meta_Image_focalY_operator
-  id: Episode_Meta_Image_id_operator
-  AND: [Episode_Meta_Image_where_and]
-  OR: [Episode_Meta_Image_where_or]
-}
-
 enum Episode__status {
   draft
   published
@@ -6628,9 +6044,6 @@ input Episode_where {
   talkOutline: Episode_talkOutline_operator
   slug: Episode_slug_operator
   fullTitle: Episode_fullTitle_operator
-  meta__title: Episode_meta__title_operator
-  meta__description: Episode_meta__description_operator
-  meta__image: Episode_meta__image_operator
   updatedAt: Episode_updatedAt_operator
   createdAt: Episode_createdAt_operator
   _status: Episode__status_operator
@@ -6800,31 +6213,6 @@ input Episode_fullTitle_operator {
   all: [String]
 }
 
-input Episode_meta__title_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Episode_meta__description_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  exists: Boolean
-}
-
-input Episode_meta__image_operator {
-  equals: String
-  not_equals: String
-  exists: Boolean
-}
-
 input Episode_updatedAt_operator {
   equals: DateTime
   not_equals: DateTime
@@ -6888,9 +6276,6 @@ input Episode_where_and {
   talkOutline: Episode_talkOutline_operator
   slug: Episode_slug_operator
   fullTitle: Episode_fullTitle_operator
-  meta__title: Episode_meta__title_operator
-  meta__description: Episode_meta__description_operator
-  meta__image: Episode_meta__image_operator
   updatedAt: Episode_updatedAt_operator
   createdAt: Episode_createdAt_operator
   _status: Episode__status_operator
@@ -6916,9 +6301,6 @@ input Episode_where_or {
   talkOutline: Episode_talkOutline_operator
   slug: Episode_slug_operator
   fullTitle: Episode_fullTitle_operator
-  meta__title: Episode_meta__title_operator
-  meta__description: Episode_meta__description_operator
-  meta__image: Episode_meta__image_operator
   updatedAt: Episode_updatedAt_operator
   createdAt: Episode_createdAt_operator
   _status: Episode__status_operator
@@ -6956,7 +6338,6 @@ type EpisodesDocAccessFields {
   talkOutline: EpisodesDocAccessFields_talkOutline
   slug: EpisodesDocAccessFields_slug
   fullTitle: EpisodesDocAccessFields_fullTitle
-  meta: EpisodesDocAccessFields_meta
   updatedAt: EpisodesDocAccessFields_updatedAt
   createdAt: EpisodesDocAccessFields_createdAt
   _status: EpisodesDocAccessFields__status
@@ -7359,105 +6740,6 @@ type EpisodesDocAccessFields_fullTitle_Delete {
   permission: Boolean!
 }
 
-type EpisodesDocAccessFields_meta {
-  create: EpisodesDocAccessFields_meta_Create
-  read: EpisodesDocAccessFields_meta_Read
-  update: EpisodesDocAccessFields_meta_Update
-  delete: EpisodesDocAccessFields_meta_Delete
-  fields: EpisodesDocAccessFields_meta_Fields
-}
-
-type EpisodesDocAccessFields_meta_Create {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_Read {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_Update {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_Delete {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_Fields {
-  title: EpisodesDocAccessFields_meta_title
-  description: EpisodesDocAccessFields_meta_description
-  image: EpisodesDocAccessFields_meta_image
-}
-
-type EpisodesDocAccessFields_meta_title {
-  create: EpisodesDocAccessFields_meta_title_Create
-  read: EpisodesDocAccessFields_meta_title_Read
-  update: EpisodesDocAccessFields_meta_title_Update
-  delete: EpisodesDocAccessFields_meta_title_Delete
-}
-
-type EpisodesDocAccessFields_meta_title_Create {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_title_Read {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_title_Update {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_title_Delete {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_description {
-  create: EpisodesDocAccessFields_meta_description_Create
-  read: EpisodesDocAccessFields_meta_description_Read
-  update: EpisodesDocAccessFields_meta_description_Update
-  delete: EpisodesDocAccessFields_meta_description_Delete
-}
-
-type EpisodesDocAccessFields_meta_description_Create {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_description_Read {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_description_Update {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_description_Delete {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_image {
-  create: EpisodesDocAccessFields_meta_image_Create
-  read: EpisodesDocAccessFields_meta_image_Read
-  update: EpisodesDocAccessFields_meta_image_Update
-  delete: EpisodesDocAccessFields_meta_image_Delete
-}
-
-type EpisodesDocAccessFields_meta_image_Create {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_image_Read {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_image_Update {
-  permission: Boolean!
-}
-
-type EpisodesDocAccessFields_meta_image_Delete {
-  permission: Boolean!
-}
-
 type EpisodesDocAccessFields_updatedAt {
   create: EpisodesDocAccessFields_updatedAt_Create
   read: EpisodesDocAccessFields_updatedAt_Read
@@ -7578,7 +6860,6 @@ type EpisodeVersion_Version {
   talkOutline(depth: Int): JSON
   slug: String
   fullTitle: String
-  meta: EpisodeVersion_Version_Meta
   updatedAt: DateTime
   createdAt: DateTime
   _status: EpisodeVersion_Version__status
@@ -7948,200 +7229,6 @@ enum EpisodeVersion_Version_audioFormat {
   linked
 }
 
-type EpisodeVersion_Version_Meta {
-  title: String
-  description: String
-  image(where: EpisodeVersion_Version_Meta_Image_where): Media
-}
-
-input EpisodeVersion_Version_Meta_Image_where {
-  alt: EpisodeVersion_Version_Meta_Image_alt_operator
-  caption: EpisodeVersion_Version_Meta_Image_caption_operator
-  updatedAt: EpisodeVersion_Version_Meta_Image_updatedAt_operator
-  createdAt: EpisodeVersion_Version_Meta_Image_createdAt_operator
-  url: EpisodeVersion_Version_Meta_Image_url_operator
-  filename: EpisodeVersion_Version_Meta_Image_filename_operator
-  mimeType: EpisodeVersion_Version_Meta_Image_mimeType_operator
-  filesize: EpisodeVersion_Version_Meta_Image_filesize_operator
-  width: EpisodeVersion_Version_Meta_Image_width_operator
-  height: EpisodeVersion_Version_Meta_Image_height_operator
-  focalX: EpisodeVersion_Version_Meta_Image_focalX_operator
-  focalY: EpisodeVersion_Version_Meta_Image_focalY_operator
-  id: EpisodeVersion_Version_Meta_Image_id_operator
-  AND: [EpisodeVersion_Version_Meta_Image_where_and]
-  OR: [EpisodeVersion_Version_Meta_Image_where_or]
-}
-
-input EpisodeVersion_Version_Meta_Image_alt_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-}
-
-input EpisodeVersion_Version_Meta_Image_caption_operator {
-  equals: JSON
-  not_equals: JSON
-  like: JSON
-  contains: JSON
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_updatedAt_operator {
-  equals: DateTime
-  not_equals: DateTime
-  greater_than_equal: DateTime
-  greater_than: DateTime
-  less_than_equal: DateTime
-  less_than: DateTime
-  like: DateTime
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_createdAt_operator {
-  equals: DateTime
-  not_equals: DateTime
-  greater_than_equal: DateTime
-  greater_than: DateTime
-  less_than_equal: DateTime
-  less_than: DateTime
-  like: DateTime
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_url_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_filename_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_mimeType_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_filesize_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_width_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_height_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_focalX_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_focalY_operator {
-  equals: Float
-  not_equals: Float
-  greater_than_equal: Float
-  greater_than: Float
-  less_than_equal: Float
-  less_than: Float
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_id_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input EpisodeVersion_Version_Meta_Image_where_and {
-  alt: EpisodeVersion_Version_Meta_Image_alt_operator
-  caption: EpisodeVersion_Version_Meta_Image_caption_operator
-  updatedAt: EpisodeVersion_Version_Meta_Image_updatedAt_operator
-  createdAt: EpisodeVersion_Version_Meta_Image_createdAt_operator
-  url: EpisodeVersion_Version_Meta_Image_url_operator
-  filename: EpisodeVersion_Version_Meta_Image_filename_operator
-  mimeType: EpisodeVersion_Version_Meta_Image_mimeType_operator
-  filesize: EpisodeVersion_Version_Meta_Image_filesize_operator
-  width: EpisodeVersion_Version_Meta_Image_width_operator
-  height: EpisodeVersion_Version_Meta_Image_height_operator
-  focalX: EpisodeVersion_Version_Meta_Image_focalX_operator
-  focalY: EpisodeVersion_Version_Meta_Image_focalY_operator
-  id: EpisodeVersion_Version_Meta_Image_id_operator
-  AND: [EpisodeVersion_Version_Meta_Image_where_and]
-  OR: [EpisodeVersion_Version_Meta_Image_where_or]
-}
-
-input EpisodeVersion_Version_Meta_Image_where_or {
-  alt: EpisodeVersion_Version_Meta_Image_alt_operator
-  caption: EpisodeVersion_Version_Meta_Image_caption_operator
-  updatedAt: EpisodeVersion_Version_Meta_Image_updatedAt_operator
-  createdAt: EpisodeVersion_Version_Meta_Image_createdAt_operator
-  url: EpisodeVersion_Version_Meta_Image_url_operator
-  filename: EpisodeVersion_Version_Meta_Image_filename_operator
-  mimeType: EpisodeVersion_Version_Meta_Image_mimeType_operator
-  filesize: EpisodeVersion_Version_Meta_Image_filesize_operator
-  width: EpisodeVersion_Version_Meta_Image_width_operator
-  height: EpisodeVersion_Version_Meta_Image_height_operator
-  focalX: EpisodeVersion_Version_Meta_Image_focalX_operator
-  focalY: EpisodeVersion_Version_Meta_Image_focalY_operator
-  id: EpisodeVersion_Version_Meta_Image_id_operator
-  AND: [EpisodeVersion_Version_Meta_Image_where_and]
-  OR: [EpisodeVersion_Version_Meta_Image_where_or]
-}
-
 enum EpisodeVersion_Version__status {
   draft
   published
@@ -8180,9 +7267,6 @@ input versionsEpisode_where {
   version__talkOutline: versionsEpisode_version__talkOutline_operator
   version__slug: versionsEpisode_version__slug_operator
   version__fullTitle: versionsEpisode_version__fullTitle_operator
-  version__meta__title: versionsEpisode_version__meta__title_operator
-  version__meta__description: versionsEpisode_version__meta__description_operator
-  version__meta__image: versionsEpisode_version__meta__image_operator
   version__updatedAt: versionsEpisode_version__updatedAt_operator
   version__createdAt: versionsEpisode_version__createdAt_operator
   version___status: versionsEpisode_version___status_operator
@@ -8374,31 +7458,6 @@ input versionsEpisode_version__fullTitle_operator {
   all: [String]
 }
 
-input versionsEpisode_version__meta__title_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input versionsEpisode_version__meta__description_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  exists: Boolean
-}
-
-input versionsEpisode_version__meta__image_operator {
-  equals: String
-  not_equals: String
-  exists: Boolean
-}
-
 input versionsEpisode_version__updatedAt_operator {
   equals: DateTime
   not_equals: DateTime
@@ -8492,9 +7551,6 @@ input versionsEpisode_where_and {
   version__talkOutline: versionsEpisode_version__talkOutline_operator
   version__slug: versionsEpisode_version__slug_operator
   version__fullTitle: versionsEpisode_version__fullTitle_operator
-  version__meta__title: versionsEpisode_version__meta__title_operator
-  version__meta__description: versionsEpisode_version__meta__description_operator
-  version__meta__image: versionsEpisode_version__meta__image_operator
   version__updatedAt: versionsEpisode_version__updatedAt_operator
   version__createdAt: versionsEpisode_version__createdAt_operator
   version___status: versionsEpisode_version___status_operator
@@ -8525,9 +7581,6 @@ input versionsEpisode_where_or {
   version__talkOutline: versionsEpisode_version__talkOutline_operator
   version__slug: versionsEpisode_version__slug_operator
   version__fullTitle: versionsEpisode_version__fullTitle_operator
-  version__meta__title: versionsEpisode_version__meta__title_operator
-  version__meta__description: versionsEpisode_version__meta__description_operator
-  version__meta__image: versionsEpisode_version__meta__image_operator
   version__updatedAt: versionsEpisode_version__updatedAt_operator
   version__createdAt: versionsEpisode_version__createdAt_operator
   version___status: versionsEpisode_version___status_operator
@@ -8559,9 +7612,7 @@ input Series_where {
   seriesDate: Series_seriesDate_operator
   seriesImage: Series_seriesImage_operator
   slug: Series_slug_operator
-  meta__title: Series_meta__title_operator
-  meta__description: Series_meta__description_operator
-  meta__image: Series_meta__image_operator
+  expandedTitle: Series_expandedTitle_operator
   updatedAt: Series_updatedAt_operator
   createdAt: Series_createdAt_operator
   id: Series_id_operator
@@ -8577,7 +7628,6 @@ input Series_title_operator {
   in: [String]
   not_in: [String]
   all: [String]
-  exists: Boolean
 }
 
 input Series_subtitle_operator {
@@ -8599,7 +7649,6 @@ input Series_seriesDate_operator {
   less_than_equal: DateTime
   less_than: DateTime
   like: DateTime
-  exists: Boolean
 }
 
 input Series_seriesImage_operator {
@@ -8615,10 +7664,9 @@ input Series_slug_operator {
   in: [String]
   not_in: [String]
   all: [String]
-  exists: Boolean
 }
 
-input Series_meta__title_operator {
+input Series_expandedTitle_operator {
   equals: String
   not_equals: String
   like: String
@@ -8626,21 +7674,6 @@ input Series_meta__title_operator {
   in: [String]
   not_in: [String]
   all: [String]
-  exists: Boolean
-}
-
-input Series_meta__description_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  exists: Boolean
-}
-
-input Series_meta__image_operator {
-  equals: String
-  not_equals: String
-  exists: Boolean
 }
 
 input Series_updatedAt_operator {
@@ -8681,9 +7714,7 @@ input Series_where_and {
   seriesDate: Series_seriesDate_operator
   seriesImage: Series_seriesImage_operator
   slug: Series_slug_operator
-  meta__title: Series_meta__title_operator
-  meta__description: Series_meta__description_operator
-  meta__image: Series_meta__image_operator
+  expandedTitle: Series_expandedTitle_operator
   updatedAt: Series_updatedAt_operator
   createdAt: Series_createdAt_operator
   id: Series_id_operator
@@ -8697,9 +7728,7 @@ input Series_where_or {
   seriesDate: Series_seriesDate_operator
   seriesImage: Series_seriesImage_operator
   slug: Series_slug_operator
-  meta__title: Series_meta__title_operator
-  meta__description: Series_meta__description_operator
-  meta__image: Series_meta__image_operator
+  expandedTitle: Series_expandedTitle_operator
   updatedAt: Series_updatedAt_operator
   createdAt: Series_createdAt_operator
   id: Series_id_operator
@@ -8725,7 +7754,7 @@ type SeriesDocAccessFields {
   seriesDate: SeriesDocAccessFields_seriesDate
   seriesImage: SeriesDocAccessFields_seriesImage
   slug: SeriesDocAccessFields_slug
-  meta: SeriesDocAccessFields_meta
+  expandedTitle: SeriesDocAccessFields_expandedTitle
   updatedAt: SeriesDocAccessFields_updatedAt
   createdAt: SeriesDocAccessFields_createdAt
 }
@@ -8845,102 +7874,26 @@ type SeriesDocAccessFields_slug_Delete {
   permission: Boolean!
 }
 
-type SeriesDocAccessFields_meta {
-  create: SeriesDocAccessFields_meta_Create
-  read: SeriesDocAccessFields_meta_Read
-  update: SeriesDocAccessFields_meta_Update
-  delete: SeriesDocAccessFields_meta_Delete
-  fields: SeriesDocAccessFields_meta_Fields
+type SeriesDocAccessFields_expandedTitle {
+  create: SeriesDocAccessFields_expandedTitle_Create
+  read: SeriesDocAccessFields_expandedTitle_Read
+  update: SeriesDocAccessFields_expandedTitle_Update
+  delete: SeriesDocAccessFields_expandedTitle_Delete
 }
 
-type SeriesDocAccessFields_meta_Create {
+type SeriesDocAccessFields_expandedTitle_Create {
   permission: Boolean!
 }
 
-type SeriesDocAccessFields_meta_Read {
+type SeriesDocAccessFields_expandedTitle_Read {
   permission: Boolean!
 }
 
-type SeriesDocAccessFields_meta_Update {
+type SeriesDocAccessFields_expandedTitle_Update {
   permission: Boolean!
 }
 
-type SeriesDocAccessFields_meta_Delete {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_Fields {
-  title: SeriesDocAccessFields_meta_title
-  description: SeriesDocAccessFields_meta_description
-  image: SeriesDocAccessFields_meta_image
-}
-
-type SeriesDocAccessFields_meta_title {
-  create: SeriesDocAccessFields_meta_title_Create
-  read: SeriesDocAccessFields_meta_title_Read
-  update: SeriesDocAccessFields_meta_title_Update
-  delete: SeriesDocAccessFields_meta_title_Delete
-}
-
-type SeriesDocAccessFields_meta_title_Create {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_title_Read {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_title_Update {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_title_Delete {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_description {
-  create: SeriesDocAccessFields_meta_description_Create
-  read: SeriesDocAccessFields_meta_description_Read
-  update: SeriesDocAccessFields_meta_description_Update
-  delete: SeriesDocAccessFields_meta_description_Delete
-}
-
-type SeriesDocAccessFields_meta_description_Create {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_description_Read {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_description_Update {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_description_Delete {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_image {
-  create: SeriesDocAccessFields_meta_image_Create
-  read: SeriesDocAccessFields_meta_image_Read
-  update: SeriesDocAccessFields_meta_image_Update
-  delete: SeriesDocAccessFields_meta_image_Delete
-}
-
-type SeriesDocAccessFields_meta_image_Create {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_image_Read {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_image_Update {
-  permission: Boolean!
-}
-
-type SeriesDocAccessFields_meta_image_Delete {
+type SeriesDocAccessFields_expandedTitle_Delete {
   permission: Boolean!
 }
 
@@ -9026,9 +7979,6 @@ type Speakers {
 
 input Speaker_where {
   name: Speaker_name_operator
-  meta__title: Speaker_meta__title_operator
-  meta__description: Speaker_meta__description_operator
-  meta__image: Speaker_meta__image_operator
   updatedAt: Speaker_updatedAt_operator
   createdAt: Speaker_createdAt_operator
   id: Speaker_id_operator
@@ -9044,31 +7994,6 @@ input Speaker_name_operator {
   in: [String]
   not_in: [String]
   all: [String]
-  exists: Boolean
-}
-
-input Speaker_meta__title_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
-}
-
-input Speaker_meta__description_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  exists: Boolean
-}
-
-input Speaker_meta__image_operator {
-  equals: String
-  not_equals: String
   exists: Boolean
 }
 
@@ -9106,9 +8031,6 @@ input Speaker_id_operator {
 
 input Speaker_where_and {
   name: Speaker_name_operator
-  meta__title: Speaker_meta__title_operator
-  meta__description: Speaker_meta__description_operator
-  meta__image: Speaker_meta__image_operator
   updatedAt: Speaker_updatedAt_operator
   createdAt: Speaker_createdAt_operator
   id: Speaker_id_operator
@@ -9118,9 +8040,6 @@ input Speaker_where_and {
 
 input Speaker_where_or {
   name: Speaker_name_operator
-  meta__title: Speaker_meta__title_operator
-  meta__description: Speaker_meta__description_operator
-  meta__image: Speaker_meta__image_operator
   updatedAt: Speaker_updatedAt_operator
   createdAt: Speaker_createdAt_operator
   id: Speaker_id_operator
@@ -9142,7 +8061,6 @@ type speakersDocAccess {
 
 type SpeakersDocAccessFields {
   name: SpeakersDocAccessFields_name
-  meta: SpeakersDocAccessFields_meta
   updatedAt: SpeakersDocAccessFields_updatedAt
   createdAt: SpeakersDocAccessFields_createdAt
 }
@@ -9167,105 +8085,6 @@ type SpeakersDocAccessFields_name_Update {
 }
 
 type SpeakersDocAccessFields_name_Delete {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta {
-  create: SpeakersDocAccessFields_meta_Create
-  read: SpeakersDocAccessFields_meta_Read
-  update: SpeakersDocAccessFields_meta_Update
-  delete: SpeakersDocAccessFields_meta_Delete
-  fields: SpeakersDocAccessFields_meta_Fields
-}
-
-type SpeakersDocAccessFields_meta_Create {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_Read {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_Update {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_Delete {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_Fields {
-  title: SpeakersDocAccessFields_meta_title
-  description: SpeakersDocAccessFields_meta_description
-  image: SpeakersDocAccessFields_meta_image
-}
-
-type SpeakersDocAccessFields_meta_title {
-  create: SpeakersDocAccessFields_meta_title_Create
-  read: SpeakersDocAccessFields_meta_title_Read
-  update: SpeakersDocAccessFields_meta_title_Update
-  delete: SpeakersDocAccessFields_meta_title_Delete
-}
-
-type SpeakersDocAccessFields_meta_title_Create {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_title_Read {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_title_Update {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_title_Delete {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_description {
-  create: SpeakersDocAccessFields_meta_description_Create
-  read: SpeakersDocAccessFields_meta_description_Read
-  update: SpeakersDocAccessFields_meta_description_Update
-  delete: SpeakersDocAccessFields_meta_description_Delete
-}
-
-type SpeakersDocAccessFields_meta_description_Create {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_description_Read {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_description_Update {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_description_Delete {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_image {
-  create: SpeakersDocAccessFields_meta_image_Create
-  read: SpeakersDocAccessFields_meta_image_Read
-  update: SpeakersDocAccessFields_meta_image_Update
-  delete: SpeakersDocAccessFields_meta_image_Delete
-}
-
-type SpeakersDocAccessFields_meta_image_Create {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_image_Read {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_image_Update {
-  permission: Boolean!
-}
-
-type SpeakersDocAccessFields_meta_image_Delete {
   permission: Boolean!
 }
 
@@ -12947,7 +11766,6 @@ type EpisodesFields {
   talkOutline: EpisodesFields_talkOutline
   slug: EpisodesFields_slug
   fullTitle: EpisodesFields_fullTitle
-  meta: EpisodesFields_meta
   updatedAt: EpisodesFields_updatedAt
   createdAt: EpisodesFields_createdAt
   _status: EpisodesFields__status
@@ -13350,105 +12168,6 @@ type EpisodesFields_fullTitle_Delete {
   permission: Boolean!
 }
 
-type EpisodesFields_meta {
-  create: EpisodesFields_meta_Create
-  read: EpisodesFields_meta_Read
-  update: EpisodesFields_meta_Update
-  delete: EpisodesFields_meta_Delete
-  fields: EpisodesFields_meta_Fields
-}
-
-type EpisodesFields_meta_Create {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_Read {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_Update {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_Delete {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_Fields {
-  title: EpisodesFields_meta_title
-  description: EpisodesFields_meta_description
-  image: EpisodesFields_meta_image
-}
-
-type EpisodesFields_meta_title {
-  create: EpisodesFields_meta_title_Create
-  read: EpisodesFields_meta_title_Read
-  update: EpisodesFields_meta_title_Update
-  delete: EpisodesFields_meta_title_Delete
-}
-
-type EpisodesFields_meta_title_Create {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_title_Read {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_title_Update {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_title_Delete {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_description {
-  create: EpisodesFields_meta_description_Create
-  read: EpisodesFields_meta_description_Read
-  update: EpisodesFields_meta_description_Update
-  delete: EpisodesFields_meta_description_Delete
-}
-
-type EpisodesFields_meta_description_Create {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_description_Read {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_description_Update {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_description_Delete {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_image {
-  create: EpisodesFields_meta_image_Create
-  read: EpisodesFields_meta_image_Read
-  update: EpisodesFields_meta_image_Update
-  delete: EpisodesFields_meta_image_Delete
-}
-
-type EpisodesFields_meta_image_Create {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_image_Read {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_image_Update {
-  permission: Boolean!
-}
-
-type EpisodesFields_meta_image_Delete {
-  permission: Boolean!
-}
-
 type EpisodesFields_updatedAt {
   create: EpisodesFields_updatedAt_Create
   read: EpisodesFields_updatedAt_Read
@@ -13557,7 +12276,7 @@ type SeriesFields {
   seriesDate: SeriesFields_seriesDate
   seriesImage: SeriesFields_seriesImage
   slug: SeriesFields_slug
-  meta: SeriesFields_meta
+  expandedTitle: SeriesFields_expandedTitle
   updatedAt: SeriesFields_updatedAt
   createdAt: SeriesFields_createdAt
 }
@@ -13677,102 +12396,26 @@ type SeriesFields_slug_Delete {
   permission: Boolean!
 }
 
-type SeriesFields_meta {
-  create: SeriesFields_meta_Create
-  read: SeriesFields_meta_Read
-  update: SeriesFields_meta_Update
-  delete: SeriesFields_meta_Delete
-  fields: SeriesFields_meta_Fields
+type SeriesFields_expandedTitle {
+  create: SeriesFields_expandedTitle_Create
+  read: SeriesFields_expandedTitle_Read
+  update: SeriesFields_expandedTitle_Update
+  delete: SeriesFields_expandedTitle_Delete
 }
 
-type SeriesFields_meta_Create {
+type SeriesFields_expandedTitle_Create {
   permission: Boolean!
 }
 
-type SeriesFields_meta_Read {
+type SeriesFields_expandedTitle_Read {
   permission: Boolean!
 }
 
-type SeriesFields_meta_Update {
+type SeriesFields_expandedTitle_Update {
   permission: Boolean!
 }
 
-type SeriesFields_meta_Delete {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_Fields {
-  title: SeriesFields_meta_title
-  description: SeriesFields_meta_description
-  image: SeriesFields_meta_image
-}
-
-type SeriesFields_meta_title {
-  create: SeriesFields_meta_title_Create
-  read: SeriesFields_meta_title_Read
-  update: SeriesFields_meta_title_Update
-  delete: SeriesFields_meta_title_Delete
-}
-
-type SeriesFields_meta_title_Create {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_title_Read {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_title_Update {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_title_Delete {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_description {
-  create: SeriesFields_meta_description_Create
-  read: SeriesFields_meta_description_Read
-  update: SeriesFields_meta_description_Update
-  delete: SeriesFields_meta_description_Delete
-}
-
-type SeriesFields_meta_description_Create {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_description_Read {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_description_Update {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_description_Delete {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_image {
-  create: SeriesFields_meta_image_Create
-  read: SeriesFields_meta_image_Read
-  update: SeriesFields_meta_image_Update
-  delete: SeriesFields_meta_image_Delete
-}
-
-type SeriesFields_meta_image_Create {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_image_Read {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_image_Update {
-  permission: Boolean!
-}
-
-type SeriesFields_meta_image_Delete {
+type SeriesFields_expandedTitle_Delete {
   permission: Boolean!
 }
 
@@ -13852,7 +12495,6 @@ type speakersAccess {
 
 type SpeakersFields {
   name: SpeakersFields_name
-  meta: SpeakersFields_meta
   updatedAt: SpeakersFields_updatedAt
   createdAt: SpeakersFields_createdAt
 }
@@ -13877,105 +12519,6 @@ type SpeakersFields_name_Update {
 }
 
 type SpeakersFields_name_Delete {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta {
-  create: SpeakersFields_meta_Create
-  read: SpeakersFields_meta_Read
-  update: SpeakersFields_meta_Update
-  delete: SpeakersFields_meta_Delete
-  fields: SpeakersFields_meta_Fields
-}
-
-type SpeakersFields_meta_Create {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_Read {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_Update {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_Delete {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_Fields {
-  title: SpeakersFields_meta_title
-  description: SpeakersFields_meta_description
-  image: SpeakersFields_meta_image
-}
-
-type SpeakersFields_meta_title {
-  create: SpeakersFields_meta_title_Create
-  read: SpeakersFields_meta_title_Read
-  update: SpeakersFields_meta_title_Update
-  delete: SpeakersFields_meta_title_Delete
-}
-
-type SpeakersFields_meta_title_Create {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_title_Read {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_title_Update {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_title_Delete {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_description {
-  create: SpeakersFields_meta_description_Create
-  read: SpeakersFields_meta_description_Read
-  update: SpeakersFields_meta_description_Update
-  delete: SpeakersFields_meta_description_Delete
-}
-
-type SpeakersFields_meta_description_Create {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_description_Read {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_description_Update {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_description_Delete {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_image {
-  create: SpeakersFields_meta_image_Create
-  read: SpeakersFields_meta_image_Read
-  update: SpeakersFields_meta_image_Update
-  delete: SpeakersFields_meta_image_Delete
-}
-
-type SpeakersFields_meta_image_Create {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_image_Read {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_image_Update {
-  permission: Boolean!
-}
-
-type SpeakersFields_meta_image_Delete {
   permission: Boolean!
 }
 
@@ -15399,7 +13942,6 @@ input mutationEpisodeInput {
   talkOutline: JSON
   slug: String!
   fullTitle: String!
-  meta: mutationEpisode_MetaInput
   updatedAt: String
   createdAt: String
   _status: Episode__status_MutationInput
@@ -15417,12 +13959,6 @@ enum Episode_videoFormat_MutationInput {
 
 enum Episode_audioFormat_MutationInput {
   linked
-}
-
-input mutationEpisode_MetaInput {
-  title: String
-  description: String
-  image: String
 }
 
 enum Episode__status_MutationInput {
@@ -15447,7 +13983,6 @@ input mutationEpisodeUpdateInput {
   talkOutline: JSON
   slug: String
   fullTitle: String
-  meta: mutationEpisodeUpdate_MetaInput
   updatedAt: String
   createdAt: String
   _status: EpisodeUpdate__status_MutationInput
@@ -15467,32 +14002,20 @@ enum EpisodeUpdate_audioFormat_MutationInput {
   linked
 }
 
-input mutationEpisodeUpdate_MetaInput {
-  title: String
-  description: String
-  image: String
-}
-
 enum EpisodeUpdate__status_MutationInput {
   draft
   published
 }
 
 input mutationSeriesInput {
-  title: String
+  title: String!
   subtitle: String
-  seriesDate: String
+  seriesDate: String!
   seriesImage: String!
-  slug: String
-  meta: mutationSeries_MetaInput
+  slug: String!
+  expandedTitle: String!
   updatedAt: String
   createdAt: String
-}
-
-input mutationSeries_MetaInput {
-  title: String
-  description: String
-  image: String
 }
 
 input mutationSeriesUpdateInput {
@@ -15501,41 +14024,21 @@ input mutationSeriesUpdateInput {
   seriesDate: String
   seriesImage: String
   slug: String
-  meta: mutationSeriesUpdate_MetaInput
+  expandedTitle: String
   updatedAt: String
   createdAt: String
-}
-
-input mutationSeriesUpdate_MetaInput {
-  title: String
-  description: String
-  image: String
 }
 
 input mutationSpeakerInput {
   name: String
-  meta: mutationSpeaker_MetaInput
   updatedAt: String
   createdAt: String
-}
-
-input mutationSpeaker_MetaInput {
-  title: String
-  description: String
-  image: String
 }
 
 input mutationSpeakerUpdateInput {
   name: String
-  meta: mutationSpeakerUpdate_MetaInput
   updatedAt: String
   createdAt: String
-}
-
-input mutationSpeakerUpdate_MetaInput {
-  title: String
-  description: String
-  image: String
 }
 
 input mutationRedirectInput {

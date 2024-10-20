@@ -314,11 +314,6 @@ export interface Episode {
     | null;
   slug: string;
   fullTitle: string;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: number | Media | null;
-  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -329,16 +324,12 @@ export interface Episode {
  */
 export interface Series {
   id: number;
-  title?: string | null;
+  title: string;
   subtitle?: string | null;
-  seriesDate?: string | null;
+  seriesDate: string;
   seriesImage: number | CoverImage;
-  slug?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: number | Media | null;
-  };
+  slug: string;
+  expandedTitle: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -349,11 +340,6 @@ export interface Series {
 export interface Speaker {
   id: number;
   name?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: number | Media | null;
-  };
   updatedAt: string;
   createdAt: string;
 }

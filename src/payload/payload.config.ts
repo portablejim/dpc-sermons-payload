@@ -99,7 +99,7 @@ export default buildConfig({
       collections: ['categories'],
     }),
     seo({
-      collections: ['pages', 'series', 'episodes', 'speakers'],
+      collections: ['pages'],
       generateTitle,
       uploadsCollection: 'media',
     }),

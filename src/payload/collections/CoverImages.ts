@@ -10,6 +10,7 @@ export const CoverImages: CollectionConfig = {
   },
   admin: {
     group: 'Media',
+    useAsTitle: 'alt',
   },
   upload: {
     staticDir: path.resolve(__dirname, '../../../cover-images'),
