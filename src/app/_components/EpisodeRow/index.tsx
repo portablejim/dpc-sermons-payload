@@ -63,16 +63,17 @@ export const EpisodeRow: React.FC<{
   let hasSeries = false
   let seriesTitle = '(no series)'
   let seriesLink = ''
-  if (typeof series !== 'number' && series.title && series.slug) {
+  let href = `/${mediaType}/sermon/${slug}`
+  if (series !== undefined && typeof series !== 'number' && series.title && series.slug) {
     hasSeries = true
     seriesTitle = series.title
-    seriesLink = `/${mediaType}/series/${series.slug}`
+    seriesLink = `/series/${series.slug}`
+    href = `${seriesLink}/${mediaType}/sermon/${slug}`
   }
 
   const hasCategories = false
   const titleToUse = titleFromProps || title
   const sanitizedDescription = doc.biblePassageText?.replace(/\s/g, ' ') // replace non-breaking space with white space
-  const href = `/${mediaType}/sermon/${slug}`
 
   return (
     <div

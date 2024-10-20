@@ -11,6 +11,7 @@ export interface Props {
   alt?: string
   resource?: string | MediaType | CoverImageType // for Payload media
   resourceType?: 'media' | 'coverImage'
+  sizeType?: 'thumbnail' | 'card'
   size?: string // for NextImage only
   priority?: boolean // for NextImage only
   fill?: boolean // for NextImage only

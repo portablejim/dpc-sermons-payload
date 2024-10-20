@@ -18,4 +18,12 @@ width
 height
 alt
 caption
+sizes {
+  thumbnail {
+    url
+  }
+  thumbnail {
+    url
+  }
+}
 `

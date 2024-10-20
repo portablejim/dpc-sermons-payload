@@ -3,6 +3,11 @@
 import React from 'react'
 import NextImage, { StaticImageData } from 'next/image'
 
+import {
+  CoverImage,
+  type CoverImage as CoverImageType,
+  Media,
+} from '../../../../payload/payload-types'
 import cssVariables from '../../../cssVariables'
 import { Props as MediaProps } from '../types'
 
@@ -17,6 +22,7 @@ export const Image: React.FC<MediaProps> = props => {
     onLoad: onLoadFromProps,
     resource,
     resourceType,
+    sizeType,
     priority,
     fill,
     src: srcFromProps,
@@ -30,6 +36,11 @@ export const Image: React.FC<MediaProps> = props => {
   let alt = altFromProps
   let src: StaticImageData | string = srcFromProps || ''
 
+  function isCoverImageType(img: Media | CoverImage): img is CoverImage {
+    const coverImg: CoverImage = img
+    return typeof coverImg.sizes.card === 'object' && typeof coverImg.sizes.thumbnail === 'object'
+  }
+
   if (!src && resource && typeof resource !== 'string') {
     const {
       width: fullWidth,
@@ -41,8 +52,15 @@ export const Image: React.FC<MediaProps> = props => {
     width = fullWidth
     height = fullHeight
     alt = altFromResource
+    let sizeFilename = fullFilename
 
-    const filename = fullFilename
+    if (sizeType == 'card' && isCoverImageType(resource)) {
+      width = resource.sizes.card.width
+      height = resource.sizes.card.height
+      sizeFilename = resource.sizes.card.filename
+    }
+
+    const filename = sizeFilename
 
     src = `${process.env.NEXT_PUBLIC_SERVER_URL}/media/${filename}`
     if (resourceType === 'coverImage') {

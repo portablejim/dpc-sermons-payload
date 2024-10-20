@@ -25,8 +25,7 @@ export const CardSeries: React.FC<{
     mediaType,
   } = props
 
-  const { slug, title, meta } = doc || {}
-  const { image: metaImage } = meta || {}
+  const { slug, title } = doc || {}
 
   let targetImage: string | CoverImage = ''
   if (doc.seriesImage) {
@@ -38,7 +37,7 @@ export const CardSeries: React.FC<{
   const hasCategories = false
   const titleToUse = titleFromProps || title
   const sanitizedDescription = doc.subtitle?.replace(/\s/g, ' ') // replace non-breaking space with white space
-  const href = `/${mediaType}/series/${slug}`
+  const href = `/series/${slug}`
 
   return (
     <div
