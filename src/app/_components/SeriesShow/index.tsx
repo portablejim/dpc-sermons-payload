@@ -1,12 +1,10 @@
 'use client'
 
 import React, { Fragment, useEffect, useRef, useState } from 'react'
-import qs from 'qs'
 
 import type { CoverImage, Episode, Page, Series } from '../../../payload/payload-types'
 import { Image } from '../../_components/Media/Image'
-import { CardSeries } from '../CardSeries'
-import { Gutter } from '../Gutter'
+import { EpisodeRow } from '../EpisodeRow'
 
 import classes from './index.module.scss'
 
@@ -46,23 +44,25 @@ export const SeriesShow: React.FC<Props> = props => {
 
   return (
     <div>
-      <h1>{targetSeries.title}</h1>
-      <p>
+      <h1 className={classes.heading}>{targetSeries.title}</h1>
+      <p className={classes.subheading}>
         <em>{targetSeries.subtitle}</em>
       </p>
-      <div className={classes.grid}>
+      <ul className={classes.seriesList}>
         {targetSeries.episodes?.map((result, index) => {
           if (typeof result === 'object' && result !== null) {
             return (
               <div className={classes.column} key={index}>
-                <p>{result.title}</p>
+                <li>
+                  <EpisodeRow doc={result} paramSeries={targetSeries} mediaType="video" />
+                </li>
               </div>
             )
           }
 
           return null
         })}
-      </div>
+      </ul>
     </div>
   )
 }

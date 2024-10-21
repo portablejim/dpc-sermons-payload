@@ -16,19 +16,20 @@ export const EpisodeRow: React.FC<{
   title?: string
   mediaType: 'video' | 'audio'
   doc?: Episode
+  paramSeries?: Series
   orientation?: 'horizontal' | 'vertical'
 }> = props => {
   const {
     showCategories,
     title: titleFromProps,
     doc,
+    paramSeries,
     className,
     orientation = 'vertical',
     mediaType,
   } = props
 
-  const { slug, title, sermonDate, speaker, series, meta } = doc || {}
-  const { image: metaImage } = meta || {}
+  const { slug, title, sermonDate, speaker, series } = doc || {}
 
   let hasCoverImage = false
   let targetImage: CoverImage | string = ''
@@ -37,16 +38,22 @@ export const EpisodeRow: React.FC<{
     height: 300,
     width: 300,
   }
+
+  let targetSeries = series
+  if (paramSeries !== undefined && typeof paramSeries !== 'number') {
+    targetSeries = paramSeries
+  }
+
   if (doc.episodeImage && typeof doc.episodeImage !== 'number') {
     targetImage = doc.episodeImage
     targetImageUrl = null
   } else if (
-    doc.series &&
-    typeof doc.series !== 'number' &&
-    typeof doc.series?.seriesImage !== 'number' &&
-    doc.series?.seriesImage?.url
+    targetSeries &&
+    typeof targetSeries !== 'number' &&
+    typeof targetSeries?.seriesImage !== 'number' &&
+    targetSeries?.seriesImage?.url
   ) {
-    targetImage = doc.series?.seriesImage
+    targetImage = targetSeries?.seriesImage
     targetImageUrl = null
   }
 
@@ -63,12 +70,17 @@ export const EpisodeRow: React.FC<{
   let hasSeries = false
   let seriesTitle = '(no series)'
   let seriesLink = ''
-  let href = `/${mediaType}/sermon/${slug}`
-  if (series !== undefined && typeof series !== 'number' && series.title && series.slug) {
+  let href = `/sermon/${slug}`
+  if (
+    targetSeries !== undefined &&
+    typeof targetSeries !== 'number' &&
+    targetSeries.title &&
+    targetSeries.slug
+  ) {
     hasSeries = true
-    seriesTitle = series.title
-    seriesLink = `/series/${series.slug}`
-    href = `${seriesLink}/${mediaType}/sermon/${slug}`
+    seriesTitle = targetSeries.title
+    seriesLink = `/series/${targetSeries.slug}`
+    href = `${seriesLink}/sermon/${slug}`
   }
 
   const hasCategories = false

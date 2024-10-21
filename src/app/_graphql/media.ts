@@ -14,6 +14,7 @@ export const MEDIA = `media {
 export const COVER_IMAGE_FIELDS = `
 mimeType
 filename
+url
 width
 height
 alt
