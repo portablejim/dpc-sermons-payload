@@ -1,3 +1,4 @@
+import { EPISODE_FIELDS } from './episode'
 import { COVER_IMAGE_FIELDS } from './media'
 
 export const SERIES_FIELDS = `
@@ -19,29 +20,6 @@ export const SERIES = `
     }
     }
   }
-`
-
-export const EPISODE_FIELDS = `
-  title
-  sermonDate
-  biblePassageText
-  speaker {
-    id
-    name
-  }
-  sermonDateYear
-  episodeImage {
-    ${COVER_IMAGE_FIELDS}
-  }
-  videoFormat
-  videoUrl
-  audioFormat
-  audioUrl
-  talkOutline
-  series {
-    id
-  }
-  slug
 `
 
 export const SERIES_EPISODE_LIST = `
