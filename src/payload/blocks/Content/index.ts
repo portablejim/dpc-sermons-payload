@@ -2,7 +2,6 @@ import type { Block, Field } from 'payload/types'
 
 import { invertBackground } from '../../fields/invertBackground'
 import link from '../../fields/link'
-import richText from '../../fields/richText'
 
 const columnFields: Field[] = [
   {
@@ -28,7 +27,10 @@ const columnFields: Field[] = [
       },
     ],
   },
-  richText(),
+  {
+    name: 'richText',
+    type: 'richText',
+  },
   {
     name: 'enableLink',
     type: 'checkbox',
