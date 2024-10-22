@@ -11,10 +11,11 @@ const policies = {
   ],
   'child-src': ["'self'"],
   'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-  'img-src': ["'self'", 'https://raw.githubusercontent.com', 'data:'],
+  'img-src': ["'self'", 'https://raw.githubusercontent.com', 'data:', 'https://sermons.dpc.org.au'],
   'font-src': ["'self'"],
   'frame-src': ["'self'", 'https://vimeo.com', 'https://player.vimeo.com'],
-  'connect-src': ["'self'", 'https://maps.googleapis.com'],
+  'connect-src': ["'self'", 'https://maps.googleapis.com', 'https://sermons.dpc.org.au'],
+  'media-src': ["'self'", 'https://sermons.dpc.org.au'],
 }
 
 module.exports = Object.entries(policies)
