@@ -67,6 +67,16 @@ const TalkSeries: CollectionConfig = {
       type: 'text',
     },
     {
+      name: 'seriesType',
+      label: 'Type',
+      type: 'select',
+      options: [
+        { label: 'Regular Sunday', value: 'regular' },
+        { label: 'Special Event', value: 'special' },
+      ],
+      defaultValue: 'regular',
+    },
+    {
       name: 'seriesDate',
       type: 'date',
       required: true,

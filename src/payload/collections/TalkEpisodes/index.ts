@@ -96,9 +96,23 @@ export const TalkEpisodes: CollectionConfig = {
       required: true,
     },
     {
+      name: 'subtitle',
+      type: 'text',
+    },
+    {
       name: 'series',
       type: 'relationship',
       relationTo: 'series',
+    },
+    {
+      name: 'episodeType',
+      label: 'Type',
+      type: 'select',
+      options: [
+        { label: 'Regular Sunday', value: 'regular' },
+        { label: 'Special Event', value: 'special' },
+      ],
+      defaultValue: 'regular',
     },
     {
       name: 'biblePassageText',
@@ -189,8 +203,12 @@ export const TalkEpisodes: CollectionConfig = {
       required: true,
       options: [
         {
-          label: 'Embedded Player',
-          value: 'embed',
+          label: 'Embedded Player (Vimeo)',
+          value: 'vimeo',
+        },
+        {
+          label: 'Embedded Player (YoutUbe)',
+          value: 'youtube',
         },
         {
           label: 'None',
@@ -212,15 +230,72 @@ export const TalkEpisodes: CollectionConfig = {
       required: true,
       options: [
         {
-          label: 'Linked',
+          label: 'Linked (To Externally hosted file)',
           value: 'linked',
+        },
+        {
+          label: 'Uploaded',
+          value: 'uploaded',
+        },
+        {
+          label: 'None',
+          value: 'none',
         },
       ],
       defaultValue: 'linked',
     },
     {
-      name: 'audioUrl',
+      name: 'linkedAudioUrl',
+      label: 'Linked Audio: Url',
       type: 'text',
+      required: true,
+      admin: {
+        condition: (_, siblingData) => siblingData?.audioformat === 'linked',
+      },
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'linkedAudioFiletype',
+          label: 'Linked Audio: Filetype (Mimetype)',
+          type: 'text',
+          admin: {
+            condition: (_, siblingData) => siblingData?.audioformat === 'linked',
+          },
+        },
+        {
+          name: 'linkedAudioFileSize',
+          label: 'Linked Audio: File Size (Bytes)',
+          type: 'number',
+          admin: {
+            condition: (_, siblingData) => siblingData?.audioformat === 'linked',
+          },
+        },
+        {
+          name: 'linkedAudioUrl',
+          label: 'Linked Audio: Length (seconds)',
+          type: 'number',
+          admin: {
+            condition: (_, siblingData) => siblingData?.audioformat === 'linked',
+          },
+        },
+      ],
+    },
+    {
+      name: 'uploadedAudioFile',
+      type: 'relationship',
+      relationTo: 'talk-audio',
+      required: true,
+      admin: {
+        condition: (_, siblingData) => siblingData?.audioformat === 'uploaded',
+      },
+    },
+    {
+      name: 'hasValidMedia',
+      type: 'checkbox',
+      hidden: true,
+      defaultValue: false,
     },
     {
       name: 'talkOutline',
