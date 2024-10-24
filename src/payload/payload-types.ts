@@ -134,9 +134,11 @@ export interface Page {
         columns?:
           | {
               size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
-              richText: {
-                [k: string]: unknown;
-              }[];
+              richText?:
+                | {
+                    [k: string]: unknown;
+                  }[]
+                | null;
               enableLink?: boolean | null;
               link?: {
                 type?: ('reference' | 'custom') | null;
@@ -266,12 +268,29 @@ export interface User {
  */
 export interface TalkAudio {
   id: number;
-  alt: string;
-  caption?:
-    | {
-        [k: string]: unknown;
-      }[]
-    | null;
+  alt?: string | null;
+  uploadQuality?: ('best' | 'good' | 'medium' | 'low') | null;
+  lengthSeconds?: number | null;
+  lengthDisplay?: string | null;
+  status?: ('initial' | 'processing' | 'ready') | null;
+  qualityGoodMp3_filename?: string | null;
+  qualityGoodMp3_mimetype?: string | null;
+  qualityGoodMp3_filesize?: number | null;
+  qualityGoodOpus_filename?: string | null;
+  qualityGoodOpus_mimetype?: string | null;
+  qualityGoodOpus_filesize?: number | null;
+  qualityMediumMp3_filename?: string | null;
+  qualityMediumMp3_mimetype?: string | null;
+  qualityMediumMp3_filesize?: number | null;
+  qualityMediumOpus_filename?: string | null;
+  qualityMediumOpus_mimetype?: string | null;
+  qualityMediumOpus_filesize?: number | null;
+  qualityLowMp3_filename?: string | null;
+  qualityLowMp3_mimetype?: string | null;
+  qualityLowMp3_filesize?: number | null;
+  qualityLowOpus_filename?: string | null;
+  qualityLowOpus_mimetype?: string | null;
+  qualityLowOpus_filesize?: number | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -290,7 +309,9 @@ export interface TalkAudio {
 export interface Episode {
   id: number;
   title: string;
+  subtitle?: string | null;
   series?: (number | null) | Series;
+  episodeType?: ('regular' | 'special') | null;
   biblePassageText?: string | null;
   biblePassages?:
     | {
@@ -303,10 +324,15 @@ export interface Episode {
   sermonDateYear?: number | null;
   episodeImage?: number | CoverImage | null;
   publishedAt?: string | null;
-  videoFormat: 'embed' | 'none';
+  videoFormat: 'vimeo' | 'youtube' | 'none';
   videoUrl?: string | null;
-  audioFormat: 'linked';
-  audioUrl?: string | null;
+  audioFormat: 'linked' | 'uploaded' | 'none';
+  linkedAudioUrl?: string | null;
+  linkedAudioFiletype?: string | null;
+  linkedAudioFileSize?: number | null;
+  linkedAudioLength?: number | null;
+  uploadedAudioFile?: (number | null) | TalkAudio;
+  hasValidMedia?: boolean | null;
   talkOutline?:
     | {
         [k: string]: unknown;
@@ -326,6 +352,7 @@ export interface Series {
   id: number;
   title: string;
   subtitle?: string | null;
+  seriesType?: ('regular' | 'special') | null;
   seriesDate: string;
   seriesImage: number | CoverImage;
   slug: string;

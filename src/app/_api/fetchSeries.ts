@@ -1,3 +1,5 @@
+import payload from 'payload'
+
 import type { Episode } from '../../payload/payload-types'
 import { SERIES, SERIES_EPISODE_LIST } from '../_graphql/series'
 import { GRAPHQL_API_URL } from './shared'
@@ -51,7 +53,10 @@ export const fetchSeries = async <T>(args: {
       })
         ?.then(r => r.json())
         ?.then(r => {
-          if (r.errors) throw new Error(r?.errors?.[0]?.message ?? 'Error fetching episodes')
+          if (r.errors) {
+            payload.logger.info(r.errors)
+            throw new Error(r?.errors?.[0]?.message ?? 'Error fetching episodes')
+          }
           return r?.data.Episodes.docs
         })
       res.episodes = episodeList

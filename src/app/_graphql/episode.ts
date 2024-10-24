@@ -26,7 +26,7 @@ export const EPISODE_FIELDS_CONTEXT = (seriesFields: String): String => `
   videoFormat
   videoUrl
   audioFormat
-  audioUrl
+  linkedAudioUrl
   talkOutline
   series {
     ${seriesFields}

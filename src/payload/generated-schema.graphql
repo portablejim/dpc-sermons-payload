@@ -4714,8 +4714,29 @@ type usersMe {
 
 type TalkAudio {
   id: Int
-  alt: String!
-  caption(depth: Int): JSON
+  alt: String
+  uploadQuality: TalkAudio_uploadQuality
+  lengthSeconds: Float
+  lengthDisplay: String
+  status: TalkAudio_status
+  qualityGoodMp3_filename: String
+  qualityGoodMp3_mimetype: String
+  qualityGoodMp3_filesize: Float
+  qualityGoodOpus_filename: String
+  qualityGoodOpus_mimetype: String
+  qualityGoodOpus_filesize: Float
+  qualityMediumMp3_filename: String
+  qualityMediumMp3_mimetype: String
+  qualityMediumMp3_filesize: Float
+  qualityMediumOpus_filename: String
+  qualityMediumOpus_mimetype: String
+  qualityMediumOpus_filesize: Float
+  qualityLowMp3_filename: String
+  qualityLowMp3_mimetype: String
+  qualityLowMp3_filesize: Float
+  qualityLowOpus_filename: String
+  qualityLowOpus_mimetype: String
+  qualityLowOpus_filesize: Float
   updatedAt: DateTime
   createdAt: DateTime
   url: String
@@ -4726,6 +4747,19 @@ type TalkAudio {
   height: Float
   focalX: Float
   focalY: Float
+}
+
+enum TalkAudio_uploadQuality {
+  best
+  good
+  medium
+  low
+}
+
+enum TalkAudio_status {
+  initial
+  processing
+  ready
 }
 
 type TalkAudios {
@@ -4744,7 +4778,9 @@ type TalkAudios {
 
 input TalkAudio_where {
   alt: TalkAudio_alt_operator
-  caption: TalkAudio_caption_operator
+  uploadQuality: TalkAudio_uploadQuality_operator
+  lengthDisplay: TalkAudio_lengthDisplay_operator
+  status: TalkAudio_status_operator
   updatedAt: TalkAudio_updatedAt_operator
   createdAt: TalkAudio_createdAt_operator
   url: TalkAudio_url_operator
@@ -4768,14 +4804,49 @@ input TalkAudio_alt_operator {
   in: [String]
   not_in: [String]
   all: [String]
+  exists: Boolean
 }
 
-input TalkAudio_caption_operator {
-  equals: JSON
-  not_equals: JSON
-  like: JSON
-  contains: JSON
+input TalkAudio_uploadQuality_operator {
+  equals: TalkAudio_uploadQuality_Input
+  not_equals: TalkAudio_uploadQuality_Input
+  in: [TalkAudio_uploadQuality_Input]
+  not_in: [TalkAudio_uploadQuality_Input]
+  all: [TalkAudio_uploadQuality_Input]
   exists: Boolean
+}
+
+enum TalkAudio_uploadQuality_Input {
+  best
+  good
+  medium
+  low
+}
+
+input TalkAudio_lengthDisplay_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input TalkAudio_status_operator {
+  equals: TalkAudio_status_Input
+  not_equals: TalkAudio_status_Input
+  in: [TalkAudio_status_Input]
+  not_in: [TalkAudio_status_Input]
+  all: [TalkAudio_status_Input]
+  exists: Boolean
+}
+
+enum TalkAudio_status_Input {
+  initial
+  processing
+  ready
 }
 
 input TalkAudio_updatedAt_operator {
@@ -4895,7 +4966,9 @@ input TalkAudio_id_operator {
 
 input TalkAudio_where_and {
   alt: TalkAudio_alt_operator
-  caption: TalkAudio_caption_operator
+  uploadQuality: TalkAudio_uploadQuality_operator
+  lengthDisplay: TalkAudio_lengthDisplay_operator
+  status: TalkAudio_status_operator
   updatedAt: TalkAudio_updatedAt_operator
   createdAt: TalkAudio_createdAt_operator
   url: TalkAudio_url_operator
@@ -4913,7 +4986,9 @@ input TalkAudio_where_and {
 
 input TalkAudio_where_or {
   alt: TalkAudio_alt_operator
-  caption: TalkAudio_caption_operator
+  uploadQuality: TalkAudio_uploadQuality_operator
+  lengthDisplay: TalkAudio_lengthDisplay_operator
+  status: TalkAudio_status_operator
   updatedAt: TalkAudio_updatedAt_operator
   createdAt: TalkAudio_createdAt_operator
   url: TalkAudio_url_operator
@@ -4943,7 +5018,9 @@ type talk_audioDocAccess {
 
 type TalkAudioDocAccessFields {
   alt: TalkAudioDocAccessFields_alt
-  caption: TalkAudioDocAccessFields_caption
+  uploadQuality: TalkAudioDocAccessFields_uploadQuality
+  lengthDisplay: TalkAudioDocAccessFields_lengthDisplay
+  status: TalkAudioDocAccessFields_status
   updatedAt: TalkAudioDocAccessFields_updatedAt
   createdAt: TalkAudioDocAccessFields_createdAt
   url: TalkAudioDocAccessFields_url
@@ -4979,26 +5056,72 @@ type TalkAudioDocAccessFields_alt_Delete {
   permission: Boolean!
 }
 
-type TalkAudioDocAccessFields_caption {
-  create: TalkAudioDocAccessFields_caption_Create
-  read: TalkAudioDocAccessFields_caption_Read
-  update: TalkAudioDocAccessFields_caption_Update
-  delete: TalkAudioDocAccessFields_caption_Delete
+type TalkAudioDocAccessFields_uploadQuality {
+  create: TalkAudioDocAccessFields_uploadQuality_Create
+  read: TalkAudioDocAccessFields_uploadQuality_Read
+  update: TalkAudioDocAccessFields_uploadQuality_Update
+  delete: TalkAudioDocAccessFields_uploadQuality_Delete
 }
 
-type TalkAudioDocAccessFields_caption_Create {
+type TalkAudioDocAccessFields_uploadQuality_Create {
   permission: Boolean!
 }
 
-type TalkAudioDocAccessFields_caption_Read {
+type TalkAudioDocAccessFields_uploadQuality_Read {
   permission: Boolean!
 }
 
-type TalkAudioDocAccessFields_caption_Update {
+type TalkAudioDocAccessFields_uploadQuality_Update {
   permission: Boolean!
 }
 
-type TalkAudioDocAccessFields_caption_Delete {
+type TalkAudioDocAccessFields_uploadQuality_Delete {
+  permission: Boolean!
+}
+
+type TalkAudioDocAccessFields_lengthDisplay {
+  create: TalkAudioDocAccessFields_lengthDisplay_Create
+  read: TalkAudioDocAccessFields_lengthDisplay_Read
+  update: TalkAudioDocAccessFields_lengthDisplay_Update
+  delete: TalkAudioDocAccessFields_lengthDisplay_Delete
+}
+
+type TalkAudioDocAccessFields_lengthDisplay_Create {
+  permission: Boolean!
+}
+
+type TalkAudioDocAccessFields_lengthDisplay_Read {
+  permission: Boolean!
+}
+
+type TalkAudioDocAccessFields_lengthDisplay_Update {
+  permission: Boolean!
+}
+
+type TalkAudioDocAccessFields_lengthDisplay_Delete {
+  permission: Boolean!
+}
+
+type TalkAudioDocAccessFields_status {
+  create: TalkAudioDocAccessFields_status_Create
+  read: TalkAudioDocAccessFields_status_Read
+  update: TalkAudioDocAccessFields_status_Update
+  delete: TalkAudioDocAccessFields_status_Delete
+}
+
+type TalkAudioDocAccessFields_status_Create {
+  permission: Boolean!
+}
+
+type TalkAudioDocAccessFields_status_Read {
+  permission: Boolean!
+}
+
+type TalkAudioDocAccessFields_status_Update {
+  permission: Boolean!
+}
+
+type TalkAudioDocAccessFields_status_Delete {
   permission: Boolean!
 }
 
@@ -5255,7 +5378,9 @@ type TalkAudioDeleteDocAccess {
 type Episode {
   id: Int
   title: String
+  subtitle: String
   series: Series
+  episodeType: Episode_episodeType
   biblePassageText: String
   biblePassages: [Episode_BiblePassages!]
   speaker: Speaker
@@ -5266,7 +5391,12 @@ type Episode {
   videoFormat: Episode_videoFormat
   videoUrl: String
   audioFormat: Episode_audioFormat
-  audioUrl: String
+  linkedAudioUrl: String
+  linkedAudioFiletype: String
+  linkedAudioFileSize: Float
+  linkedAudioLength: Float
+  uploadedAudioFile: TalkAudio
+  hasValidMedia: Boolean
   talkOutline(depth: Int): JSON
   slug: String
   fullTitle: String
@@ -5279,12 +5409,18 @@ type Series {
   id: Int
   title: String!
   subtitle: String
+  seriesType: Series_seriesType
   seriesDate: DateTime!
   seriesImage(where: Series_SeriesImage_where): CoverImage!
   slug: String!
   expandedTitle: String!
   updatedAt: DateTime
   createdAt: DateTime
+}
+
+enum Series_seriesType {
+  regular
+  special
 }
 
 input Series_SeriesImage_where {
@@ -5635,6 +5771,11 @@ input Series_SeriesImage_where_or {
   id: Series_SeriesImage_id_operator
   AND: [Series_SeriesImage_where_and]
   OR: [Series_SeriesImage_where_or]
+}
+
+enum Episode_episodeType {
+  regular
+  special
 }
 
 type Episode_BiblePassages {
@@ -6000,12 +6141,15 @@ input Episode_EpisodeImage_where_or {
 }
 
 enum Episode_videoFormat {
-  embed
+  vimeo
+  youtube
   none
 }
 
 enum Episode_audioFormat {
   linked
+  uploaded
+  none
 }
 
 enum Episode__status {
@@ -6029,7 +6173,9 @@ type Episodes {
 
 input Episode_where {
   title: Episode_title_operator
+  subtitle: Episode_subtitle_operator
   series: Episode_series_operator
+  episodeType: Episode_episodeType_operator
   biblePassageText: Episode_biblePassageText_operator
   biblePassages__chapter: Episode_biblePassages__chapter_operator
   biblePassages__id: Episode_biblePassages__id_operator
@@ -6040,7 +6186,11 @@ input Episode_where {
   videoFormat: Episode_videoFormat_operator
   videoUrl: Episode_videoUrl_operator
   audioFormat: Episode_audioFormat_operator
-  audioUrl: Episode_audioUrl_operator
+  linkedAudioUrl: Episode_linkedAudioUrl_operator
+  linkedAudioFiletype: Episode_linkedAudioFiletype_operator
+  linkedAudioFileSize: Episode_linkedAudioFileSize_operator
+  linkedAudioLength: Episode_linkedAudioLength_operator
+  uploadedAudioFile: Episode_uploadedAudioFile_operator
   talkOutline: Episode_talkOutline_operator
   slug: Episode_slug_operator
   fullTitle: Episode_fullTitle_operator
@@ -6062,6 +6212,17 @@ input Episode_title_operator {
   all: [String]
 }
 
+input Episode_subtitle_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
 input Episode_series_operator {
   equals: JSON
   not_equals: JSON
@@ -6069,6 +6230,20 @@ input Episode_series_operator {
   not_in: [JSON]
   all: [JSON]
   exists: Boolean
+}
+
+input Episode_episodeType_operator {
+  equals: Episode_episodeType_Input
+  not_equals: Episode_episodeType_Input
+  in: [Episode_episodeType_Input]
+  not_in: [Episode_episodeType_Input]
+  all: [Episode_episodeType_Input]
+  exists: Boolean
+}
+
+enum Episode_episodeType_Input {
+  regular
+  special
 }
 
 input Episode_biblePassageText_operator {
@@ -6147,7 +6322,8 @@ input Episode_videoFormat_operator {
 }
 
 enum Episode_videoFormat_Input {
-  embed
+  vimeo
+  youtube
   none
 }
 
@@ -6172,9 +6348,21 @@ input Episode_audioFormat_operator {
 
 enum Episode_audioFormat_Input {
   linked
+  uploaded
+  none
 }
 
-input Episode_audioUrl_operator {
+input Episode_linkedAudioUrl_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+}
+
+input Episode_linkedAudioFiletype_operator {
   equals: String
   not_equals: String
   like: String
@@ -6183,6 +6371,34 @@ input Episode_audioUrl_operator {
   not_in: [String]
   all: [String]
   exists: Boolean
+}
+
+input Episode_linkedAudioFileSize_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Episode_linkedAudioLength_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Episode_uploadedAudioFile_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
 }
 
 input Episode_talkOutline_operator {
@@ -6261,7 +6477,9 @@ input Episode_id_operator {
 
 input Episode_where_and {
   title: Episode_title_operator
+  subtitle: Episode_subtitle_operator
   series: Episode_series_operator
+  episodeType: Episode_episodeType_operator
   biblePassageText: Episode_biblePassageText_operator
   biblePassages__chapter: Episode_biblePassages__chapter_operator
   biblePassages__id: Episode_biblePassages__id_operator
@@ -6272,7 +6490,11 @@ input Episode_where_and {
   videoFormat: Episode_videoFormat_operator
   videoUrl: Episode_videoUrl_operator
   audioFormat: Episode_audioFormat_operator
-  audioUrl: Episode_audioUrl_operator
+  linkedAudioUrl: Episode_linkedAudioUrl_operator
+  linkedAudioFiletype: Episode_linkedAudioFiletype_operator
+  linkedAudioFileSize: Episode_linkedAudioFileSize_operator
+  linkedAudioLength: Episode_linkedAudioLength_operator
+  uploadedAudioFile: Episode_uploadedAudioFile_operator
   talkOutline: Episode_talkOutline_operator
   slug: Episode_slug_operator
   fullTitle: Episode_fullTitle_operator
@@ -6286,7 +6508,9 @@ input Episode_where_and {
 
 input Episode_where_or {
   title: Episode_title_operator
+  subtitle: Episode_subtitle_operator
   series: Episode_series_operator
+  episodeType: Episode_episodeType_operator
   biblePassageText: Episode_biblePassageText_operator
   biblePassages__chapter: Episode_biblePassages__chapter_operator
   biblePassages__id: Episode_biblePassages__id_operator
@@ -6297,7 +6521,11 @@ input Episode_where_or {
   videoFormat: Episode_videoFormat_operator
   videoUrl: Episode_videoUrl_operator
   audioFormat: Episode_audioFormat_operator
-  audioUrl: Episode_audioUrl_operator
+  linkedAudioUrl: Episode_linkedAudioUrl_operator
+  linkedAudioFiletype: Episode_linkedAudioFiletype_operator
+  linkedAudioFileSize: Episode_linkedAudioFileSize_operator
+  linkedAudioLength: Episode_linkedAudioLength_operator
+  uploadedAudioFile: Episode_uploadedAudioFile_operator
   talkOutline: Episode_talkOutline_operator
   slug: Episode_slug_operator
   fullTitle: Episode_fullTitle_operator
@@ -6324,7 +6552,9 @@ type episodesDocAccess {
 
 type EpisodesDocAccessFields {
   title: EpisodesDocAccessFields_title
+  subtitle: EpisodesDocAccessFields_subtitle
   series: EpisodesDocAccessFields_series
+  episodeType: EpisodesDocAccessFields_episodeType
   biblePassageText: EpisodesDocAccessFields_biblePassageText
   biblePassages: EpisodesDocAccessFields_biblePassages
   speaker: EpisodesDocAccessFields_speaker
@@ -6334,7 +6564,11 @@ type EpisodesDocAccessFields {
   videoFormat: EpisodesDocAccessFields_videoFormat
   videoUrl: EpisodesDocAccessFields_videoUrl
   audioFormat: EpisodesDocAccessFields_audioFormat
-  audioUrl: EpisodesDocAccessFields_audioUrl
+  linkedAudioUrl: EpisodesDocAccessFields_linkedAudioUrl
+  linkedAudioFiletype: EpisodesDocAccessFields_linkedAudioFiletype
+  linkedAudioFileSize: EpisodesDocAccessFields_linkedAudioFileSize
+  linkedAudioLength: EpisodesDocAccessFields_linkedAudioLength
+  uploadedAudioFile: EpisodesDocAccessFields_uploadedAudioFile
   talkOutline: EpisodesDocAccessFields_talkOutline
   slug: EpisodesDocAccessFields_slug
   fullTitle: EpisodesDocAccessFields_fullTitle
@@ -6366,6 +6600,29 @@ type EpisodesDocAccessFields_title_Delete {
   permission: Boolean!
 }
 
+type EpisodesDocAccessFields_subtitle {
+  create: EpisodesDocAccessFields_subtitle_Create
+  read: EpisodesDocAccessFields_subtitle_Read
+  update: EpisodesDocAccessFields_subtitle_Update
+  delete: EpisodesDocAccessFields_subtitle_Delete
+}
+
+type EpisodesDocAccessFields_subtitle_Create {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_subtitle_Read {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_subtitle_Update {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_subtitle_Delete {
+  permission: Boolean!
+}
+
 type EpisodesDocAccessFields_series {
   create: EpisodesDocAccessFields_series_Create
   read: EpisodesDocAccessFields_series_Read
@@ -6386,6 +6643,29 @@ type EpisodesDocAccessFields_series_Update {
 }
 
 type EpisodesDocAccessFields_series_Delete {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_episodeType {
+  create: EpisodesDocAccessFields_episodeType_Create
+  read: EpisodesDocAccessFields_episodeType_Read
+  update: EpisodesDocAccessFields_episodeType_Update
+  delete: EpisodesDocAccessFields_episodeType_Delete
+}
+
+type EpisodesDocAccessFields_episodeType_Create {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_episodeType_Read {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_episodeType_Update {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_episodeType_Delete {
   permission: Boolean!
 }
 
@@ -6648,26 +6928,118 @@ type EpisodesDocAccessFields_audioFormat_Delete {
   permission: Boolean!
 }
 
-type EpisodesDocAccessFields_audioUrl {
-  create: EpisodesDocAccessFields_audioUrl_Create
-  read: EpisodesDocAccessFields_audioUrl_Read
-  update: EpisodesDocAccessFields_audioUrl_Update
-  delete: EpisodesDocAccessFields_audioUrl_Delete
+type EpisodesDocAccessFields_linkedAudioUrl {
+  create: EpisodesDocAccessFields_linkedAudioUrl_Create
+  read: EpisodesDocAccessFields_linkedAudioUrl_Read
+  update: EpisodesDocAccessFields_linkedAudioUrl_Update
+  delete: EpisodesDocAccessFields_linkedAudioUrl_Delete
 }
 
-type EpisodesDocAccessFields_audioUrl_Create {
+type EpisodesDocAccessFields_linkedAudioUrl_Create {
   permission: Boolean!
 }
 
-type EpisodesDocAccessFields_audioUrl_Read {
+type EpisodesDocAccessFields_linkedAudioUrl_Read {
   permission: Boolean!
 }
 
-type EpisodesDocAccessFields_audioUrl_Update {
+type EpisodesDocAccessFields_linkedAudioUrl_Update {
   permission: Boolean!
 }
 
-type EpisodesDocAccessFields_audioUrl_Delete {
+type EpisodesDocAccessFields_linkedAudioUrl_Delete {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioFiletype {
+  create: EpisodesDocAccessFields_linkedAudioFiletype_Create
+  read: EpisodesDocAccessFields_linkedAudioFiletype_Read
+  update: EpisodesDocAccessFields_linkedAudioFiletype_Update
+  delete: EpisodesDocAccessFields_linkedAudioFiletype_Delete
+}
+
+type EpisodesDocAccessFields_linkedAudioFiletype_Create {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioFiletype_Read {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioFiletype_Update {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioFiletype_Delete {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioFileSize {
+  create: EpisodesDocAccessFields_linkedAudioFileSize_Create
+  read: EpisodesDocAccessFields_linkedAudioFileSize_Read
+  update: EpisodesDocAccessFields_linkedAudioFileSize_Update
+  delete: EpisodesDocAccessFields_linkedAudioFileSize_Delete
+}
+
+type EpisodesDocAccessFields_linkedAudioFileSize_Create {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioFileSize_Read {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioFileSize_Update {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioFileSize_Delete {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioLength {
+  create: EpisodesDocAccessFields_linkedAudioLength_Create
+  read: EpisodesDocAccessFields_linkedAudioLength_Read
+  update: EpisodesDocAccessFields_linkedAudioLength_Update
+  delete: EpisodesDocAccessFields_linkedAudioLength_Delete
+}
+
+type EpisodesDocAccessFields_linkedAudioLength_Create {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioLength_Read {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioLength_Update {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_linkedAudioLength_Delete {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_uploadedAudioFile {
+  create: EpisodesDocAccessFields_uploadedAudioFile_Create
+  read: EpisodesDocAccessFields_uploadedAudioFile_Read
+  update: EpisodesDocAccessFields_uploadedAudioFile_Update
+  delete: EpisodesDocAccessFields_uploadedAudioFile_Delete
+}
+
+type EpisodesDocAccessFields_uploadedAudioFile_Create {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_uploadedAudioFile_Read {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_uploadedAudioFile_Update {
+  permission: Boolean!
+}
+
+type EpisodesDocAccessFields_uploadedAudioFile_Delete {
   permission: Boolean!
 }
 
@@ -6845,7 +7217,9 @@ type EpisodeVersion {
 
 type EpisodeVersion_Version {
   title: String
+  subtitle: String
   series: Series
+  episodeType: EpisodeVersion_Version_episodeType
   biblePassageText: String
   biblePassages: [EpisodeVersion_Version_BiblePassages!]
   speaker: Speaker
@@ -6856,13 +7230,23 @@ type EpisodeVersion_Version {
   videoFormat: EpisodeVersion_Version_videoFormat
   videoUrl: String
   audioFormat: EpisodeVersion_Version_audioFormat
-  audioUrl: String
+  linkedAudioUrl: String
+  linkedAudioFiletype: String
+  linkedAudioFileSize: Float
+  linkedAudioLength: Float
+  uploadedAudioFile: TalkAudio
+  hasValidMedia: Boolean
   talkOutline(depth: Int): JSON
   slug: String
   fullTitle: String
   updatedAt: DateTime
   createdAt: DateTime
   _status: EpisodeVersion_Version__status
+}
+
+enum EpisodeVersion_Version_episodeType {
+  regular
+  special
 }
 
 type EpisodeVersion_Version_BiblePassages {
@@ -7221,12 +7605,15 @@ input EpisodeVersion_Version_EpisodeImage_where_or {
 }
 
 enum EpisodeVersion_Version_videoFormat {
-  embed
+  vimeo
+  youtube
   none
 }
 
 enum EpisodeVersion_Version_audioFormat {
   linked
+  uploaded
+  none
 }
 
 enum EpisodeVersion_Version__status {
@@ -7251,7 +7638,9 @@ type versionsEpisodes {
 input versionsEpisode_where {
   parent: versionsEpisode_parent_operator
   version__title: versionsEpisode_version__title_operator
+  version__subtitle: versionsEpisode_version__subtitle_operator
   version__series: versionsEpisode_version__series_operator
+  version__episodeType: versionsEpisode_version__episodeType_operator
   version__biblePassageText: versionsEpisode_version__biblePassageText_operator
   version__biblePassages__chapter: versionsEpisode_version__biblePassages__chapter_operator
   version__biblePassages__id: versionsEpisode_version__biblePassages__id_operator
@@ -7263,7 +7652,12 @@ input versionsEpisode_where {
   version__videoFormat: versionsEpisode_version__videoFormat_operator
   version__videoUrl: versionsEpisode_version__videoUrl_operator
   version__audioFormat: versionsEpisode_version__audioFormat_operator
-  version__audioUrl: versionsEpisode_version__audioUrl_operator
+  version__linkedAudioUrl: versionsEpisode_version__linkedAudioUrl_operator
+  version__linkedAudioFiletype: versionsEpisode_version__linkedAudioFiletype_operator
+  version__linkedAudioFileSize: versionsEpisode_version__linkedAudioFileSize_operator
+  version__linkedAudioLength: versionsEpisode_version__linkedAudioLength_operator
+  version__uploadedAudioFile: versionsEpisode_version__uploadedAudioFile_operator
+  version__hasValidMedia: versionsEpisode_version__hasValidMedia_operator
   version__talkOutline: versionsEpisode_version__talkOutline_operator
   version__slug: versionsEpisode_version__slug_operator
   version__fullTitle: versionsEpisode_version__fullTitle_operator
@@ -7297,6 +7691,17 @@ input versionsEpisode_version__title_operator {
   all: [String]
 }
 
+input versionsEpisode_version__subtitle_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
 input versionsEpisode_version__series_operator {
   equals: JSON
   not_equals: JSON
@@ -7304,6 +7709,20 @@ input versionsEpisode_version__series_operator {
   not_in: [JSON]
   all: [JSON]
   exists: Boolean
+}
+
+input versionsEpisode_version__episodeType_operator {
+  equals: versionsEpisode_version__episodeType_Input
+  not_equals: versionsEpisode_version__episodeType_Input
+  in: [versionsEpisode_version__episodeType_Input]
+  not_in: [versionsEpisode_version__episodeType_Input]
+  all: [versionsEpisode_version__episodeType_Input]
+  exists: Boolean
+}
+
+enum versionsEpisode_version__episodeType_Input {
+  regular
+  special
 }
 
 input versionsEpisode_version__biblePassageText_operator {
@@ -7392,7 +7811,8 @@ input versionsEpisode_version__videoFormat_operator {
 }
 
 enum versionsEpisode_version__videoFormat_Input {
-  embed
+  vimeo
+  youtube
   none
 }
 
@@ -7417,9 +7837,11 @@ input versionsEpisode_version__audioFormat_operator {
 
 enum versionsEpisode_version__audioFormat_Input {
   linked
+  uploaded
+  none
 }
 
-input versionsEpisode_version__audioUrl_operator {
+input versionsEpisode_version__linkedAudioUrl_operator {
   equals: String
   not_equals: String
   like: String
@@ -7427,6 +7849,50 @@ input versionsEpisode_version__audioUrl_operator {
   in: [String]
   not_in: [String]
   all: [String]
+}
+
+input versionsEpisode_version__linkedAudioFiletype_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input versionsEpisode_version__linkedAudioFileSize_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input versionsEpisode_version__linkedAudioLength_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input versionsEpisode_version__uploadedAudioFile_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
+}
+
+input versionsEpisode_version__hasValidMedia_operator {
+  equals: Boolean
+  not_equals: Boolean
   exists: Boolean
 }
 
@@ -7535,7 +8001,9 @@ input versionsEpisode_id_operator {
 input versionsEpisode_where_and {
   parent: versionsEpisode_parent_operator
   version__title: versionsEpisode_version__title_operator
+  version__subtitle: versionsEpisode_version__subtitle_operator
   version__series: versionsEpisode_version__series_operator
+  version__episodeType: versionsEpisode_version__episodeType_operator
   version__biblePassageText: versionsEpisode_version__biblePassageText_operator
   version__biblePassages__chapter: versionsEpisode_version__biblePassages__chapter_operator
   version__biblePassages__id: versionsEpisode_version__biblePassages__id_operator
@@ -7547,7 +8015,12 @@ input versionsEpisode_where_and {
   version__videoFormat: versionsEpisode_version__videoFormat_operator
   version__videoUrl: versionsEpisode_version__videoUrl_operator
   version__audioFormat: versionsEpisode_version__audioFormat_operator
-  version__audioUrl: versionsEpisode_version__audioUrl_operator
+  version__linkedAudioUrl: versionsEpisode_version__linkedAudioUrl_operator
+  version__linkedAudioFiletype: versionsEpisode_version__linkedAudioFiletype_operator
+  version__linkedAudioFileSize: versionsEpisode_version__linkedAudioFileSize_operator
+  version__linkedAudioLength: versionsEpisode_version__linkedAudioLength_operator
+  version__uploadedAudioFile: versionsEpisode_version__uploadedAudioFile_operator
+  version__hasValidMedia: versionsEpisode_version__hasValidMedia_operator
   version__talkOutline: versionsEpisode_version__talkOutline_operator
   version__slug: versionsEpisode_version__slug_operator
   version__fullTitle: versionsEpisode_version__fullTitle_operator
@@ -7565,7 +8038,9 @@ input versionsEpisode_where_and {
 input versionsEpisode_where_or {
   parent: versionsEpisode_parent_operator
   version__title: versionsEpisode_version__title_operator
+  version__subtitle: versionsEpisode_version__subtitle_operator
   version__series: versionsEpisode_version__series_operator
+  version__episodeType: versionsEpisode_version__episodeType_operator
   version__biblePassageText: versionsEpisode_version__biblePassageText_operator
   version__biblePassages__chapter: versionsEpisode_version__biblePassages__chapter_operator
   version__biblePassages__id: versionsEpisode_version__biblePassages__id_operator
@@ -7577,7 +8052,12 @@ input versionsEpisode_where_or {
   version__videoFormat: versionsEpisode_version__videoFormat_operator
   version__videoUrl: versionsEpisode_version__videoUrl_operator
   version__audioFormat: versionsEpisode_version__audioFormat_operator
-  version__audioUrl: versionsEpisode_version__audioUrl_operator
+  version__linkedAudioUrl: versionsEpisode_version__linkedAudioUrl_operator
+  version__linkedAudioFiletype: versionsEpisode_version__linkedAudioFiletype_operator
+  version__linkedAudioFileSize: versionsEpisode_version__linkedAudioFileSize_operator
+  version__linkedAudioLength: versionsEpisode_version__linkedAudioLength_operator
+  version__uploadedAudioFile: versionsEpisode_version__uploadedAudioFile_operator
+  version__hasValidMedia: versionsEpisode_version__hasValidMedia_operator
   version__talkOutline: versionsEpisode_version__talkOutline_operator
   version__slug: versionsEpisode_version__slug_operator
   version__fullTitle: versionsEpisode_version__fullTitle_operator
@@ -7609,6 +8089,7 @@ type allSeries {
 input Series_where {
   title: Series_title_operator
   subtitle: Series_subtitle_operator
+  seriesType: Series_seriesType_operator
   seriesDate: Series_seriesDate_operator
   seriesImage: Series_seriesImage_operator
   slug: Series_slug_operator
@@ -7639,6 +8120,20 @@ input Series_subtitle_operator {
   not_in: [String]
   all: [String]
   exists: Boolean
+}
+
+input Series_seriesType_operator {
+  equals: Series_seriesType_Input
+  not_equals: Series_seriesType_Input
+  in: [Series_seriesType_Input]
+  not_in: [Series_seriesType_Input]
+  all: [Series_seriesType_Input]
+  exists: Boolean
+}
+
+enum Series_seriesType_Input {
+  regular
+  special
 }
 
 input Series_seriesDate_operator {
@@ -7711,6 +8206,7 @@ input Series_id_operator {
 input Series_where_and {
   title: Series_title_operator
   subtitle: Series_subtitle_operator
+  seriesType: Series_seriesType_operator
   seriesDate: Series_seriesDate_operator
   seriesImage: Series_seriesImage_operator
   slug: Series_slug_operator
@@ -7725,6 +8221,7 @@ input Series_where_and {
 input Series_where_or {
   title: Series_title_operator
   subtitle: Series_subtitle_operator
+  seriesType: Series_seriesType_operator
   seriesDate: Series_seriesDate_operator
   seriesImage: Series_seriesImage_operator
   slug: Series_slug_operator
@@ -7751,6 +8248,7 @@ type seriesDocAccess {
 type SeriesDocAccessFields {
   title: SeriesDocAccessFields_title
   subtitle: SeriesDocAccessFields_subtitle
+  seriesType: SeriesDocAccessFields_seriesType
   seriesDate: SeriesDocAccessFields_seriesDate
   seriesImage: SeriesDocAccessFields_seriesImage
   slug: SeriesDocAccessFields_slug
@@ -7802,6 +8300,29 @@ type SeriesDocAccessFields_subtitle_Update {
 }
 
 type SeriesDocAccessFields_subtitle_Delete {
+  permission: Boolean!
+}
+
+type SeriesDocAccessFields_seriesType {
+  create: SeriesDocAccessFields_seriesType_Create
+  read: SeriesDocAccessFields_seriesType_Read
+  update: SeriesDocAccessFields_seriesType_Update
+  delete: SeriesDocAccessFields_seriesType_Delete
+}
+
+type SeriesDocAccessFields_seriesType_Create {
+  permission: Boolean!
+}
+
+type SeriesDocAccessFields_seriesType_Read {
+  permission: Boolean!
+}
+
+type SeriesDocAccessFields_seriesType_Update {
+  permission: Boolean!
+}
+
+type SeriesDocAccessFields_seriesType_Delete {
   permission: Boolean!
 }
 
@@ -11432,7 +11953,9 @@ type talk_audioAccess {
 
 type TalkAudioFields {
   alt: TalkAudioFields_alt
-  caption: TalkAudioFields_caption
+  uploadQuality: TalkAudioFields_uploadQuality
+  lengthDisplay: TalkAudioFields_lengthDisplay
+  status: TalkAudioFields_status
   updatedAt: TalkAudioFields_updatedAt
   createdAt: TalkAudioFields_createdAt
   url: TalkAudioFields_url
@@ -11468,26 +11991,72 @@ type TalkAudioFields_alt_Delete {
   permission: Boolean!
 }
 
-type TalkAudioFields_caption {
-  create: TalkAudioFields_caption_Create
-  read: TalkAudioFields_caption_Read
-  update: TalkAudioFields_caption_Update
-  delete: TalkAudioFields_caption_Delete
+type TalkAudioFields_uploadQuality {
+  create: TalkAudioFields_uploadQuality_Create
+  read: TalkAudioFields_uploadQuality_Read
+  update: TalkAudioFields_uploadQuality_Update
+  delete: TalkAudioFields_uploadQuality_Delete
 }
 
-type TalkAudioFields_caption_Create {
+type TalkAudioFields_uploadQuality_Create {
   permission: Boolean!
 }
 
-type TalkAudioFields_caption_Read {
+type TalkAudioFields_uploadQuality_Read {
   permission: Boolean!
 }
 
-type TalkAudioFields_caption_Update {
+type TalkAudioFields_uploadQuality_Update {
   permission: Boolean!
 }
 
-type TalkAudioFields_caption_Delete {
+type TalkAudioFields_uploadQuality_Delete {
+  permission: Boolean!
+}
+
+type TalkAudioFields_lengthDisplay {
+  create: TalkAudioFields_lengthDisplay_Create
+  read: TalkAudioFields_lengthDisplay_Read
+  update: TalkAudioFields_lengthDisplay_Update
+  delete: TalkAudioFields_lengthDisplay_Delete
+}
+
+type TalkAudioFields_lengthDisplay_Create {
+  permission: Boolean!
+}
+
+type TalkAudioFields_lengthDisplay_Read {
+  permission: Boolean!
+}
+
+type TalkAudioFields_lengthDisplay_Update {
+  permission: Boolean!
+}
+
+type TalkAudioFields_lengthDisplay_Delete {
+  permission: Boolean!
+}
+
+type TalkAudioFields_status {
+  create: TalkAudioFields_status_Create
+  read: TalkAudioFields_status_Read
+  update: TalkAudioFields_status_Update
+  delete: TalkAudioFields_status_Delete
+}
+
+type TalkAudioFields_status_Create {
+  permission: Boolean!
+}
+
+type TalkAudioFields_status_Read {
+  permission: Boolean!
+}
+
+type TalkAudioFields_status_Update {
+  permission: Boolean!
+}
+
+type TalkAudioFields_status_Delete {
   permission: Boolean!
 }
 
@@ -11752,7 +12321,9 @@ type episodesAccess {
 
 type EpisodesFields {
   title: EpisodesFields_title
+  subtitle: EpisodesFields_subtitle
   series: EpisodesFields_series
+  episodeType: EpisodesFields_episodeType
   biblePassageText: EpisodesFields_biblePassageText
   biblePassages: EpisodesFields_biblePassages
   speaker: EpisodesFields_speaker
@@ -11762,7 +12333,11 @@ type EpisodesFields {
   videoFormat: EpisodesFields_videoFormat
   videoUrl: EpisodesFields_videoUrl
   audioFormat: EpisodesFields_audioFormat
-  audioUrl: EpisodesFields_audioUrl
+  linkedAudioUrl: EpisodesFields_linkedAudioUrl
+  linkedAudioFiletype: EpisodesFields_linkedAudioFiletype
+  linkedAudioFileSize: EpisodesFields_linkedAudioFileSize
+  linkedAudioLength: EpisodesFields_linkedAudioLength
+  uploadedAudioFile: EpisodesFields_uploadedAudioFile
   talkOutline: EpisodesFields_talkOutline
   slug: EpisodesFields_slug
   fullTitle: EpisodesFields_fullTitle
@@ -11794,6 +12369,29 @@ type EpisodesFields_title_Delete {
   permission: Boolean!
 }
 
+type EpisodesFields_subtitle {
+  create: EpisodesFields_subtitle_Create
+  read: EpisodesFields_subtitle_Read
+  update: EpisodesFields_subtitle_Update
+  delete: EpisodesFields_subtitle_Delete
+}
+
+type EpisodesFields_subtitle_Create {
+  permission: Boolean!
+}
+
+type EpisodesFields_subtitle_Read {
+  permission: Boolean!
+}
+
+type EpisodesFields_subtitle_Update {
+  permission: Boolean!
+}
+
+type EpisodesFields_subtitle_Delete {
+  permission: Boolean!
+}
+
 type EpisodesFields_series {
   create: EpisodesFields_series_Create
   read: EpisodesFields_series_Read
@@ -11814,6 +12412,29 @@ type EpisodesFields_series_Update {
 }
 
 type EpisodesFields_series_Delete {
+  permission: Boolean!
+}
+
+type EpisodesFields_episodeType {
+  create: EpisodesFields_episodeType_Create
+  read: EpisodesFields_episodeType_Read
+  update: EpisodesFields_episodeType_Update
+  delete: EpisodesFields_episodeType_Delete
+}
+
+type EpisodesFields_episodeType_Create {
+  permission: Boolean!
+}
+
+type EpisodesFields_episodeType_Read {
+  permission: Boolean!
+}
+
+type EpisodesFields_episodeType_Update {
+  permission: Boolean!
+}
+
+type EpisodesFields_episodeType_Delete {
   permission: Boolean!
 }
 
@@ -12076,26 +12697,118 @@ type EpisodesFields_audioFormat_Delete {
   permission: Boolean!
 }
 
-type EpisodesFields_audioUrl {
-  create: EpisodesFields_audioUrl_Create
-  read: EpisodesFields_audioUrl_Read
-  update: EpisodesFields_audioUrl_Update
-  delete: EpisodesFields_audioUrl_Delete
+type EpisodesFields_linkedAudioUrl {
+  create: EpisodesFields_linkedAudioUrl_Create
+  read: EpisodesFields_linkedAudioUrl_Read
+  update: EpisodesFields_linkedAudioUrl_Update
+  delete: EpisodesFields_linkedAudioUrl_Delete
 }
 
-type EpisodesFields_audioUrl_Create {
+type EpisodesFields_linkedAudioUrl_Create {
   permission: Boolean!
 }
 
-type EpisodesFields_audioUrl_Read {
+type EpisodesFields_linkedAudioUrl_Read {
   permission: Boolean!
 }
 
-type EpisodesFields_audioUrl_Update {
+type EpisodesFields_linkedAudioUrl_Update {
   permission: Boolean!
 }
 
-type EpisodesFields_audioUrl_Delete {
+type EpisodesFields_linkedAudioUrl_Delete {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioFiletype {
+  create: EpisodesFields_linkedAudioFiletype_Create
+  read: EpisodesFields_linkedAudioFiletype_Read
+  update: EpisodesFields_linkedAudioFiletype_Update
+  delete: EpisodesFields_linkedAudioFiletype_Delete
+}
+
+type EpisodesFields_linkedAudioFiletype_Create {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioFiletype_Read {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioFiletype_Update {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioFiletype_Delete {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioFileSize {
+  create: EpisodesFields_linkedAudioFileSize_Create
+  read: EpisodesFields_linkedAudioFileSize_Read
+  update: EpisodesFields_linkedAudioFileSize_Update
+  delete: EpisodesFields_linkedAudioFileSize_Delete
+}
+
+type EpisodesFields_linkedAudioFileSize_Create {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioFileSize_Read {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioFileSize_Update {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioFileSize_Delete {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioLength {
+  create: EpisodesFields_linkedAudioLength_Create
+  read: EpisodesFields_linkedAudioLength_Read
+  update: EpisodesFields_linkedAudioLength_Update
+  delete: EpisodesFields_linkedAudioLength_Delete
+}
+
+type EpisodesFields_linkedAudioLength_Create {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioLength_Read {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioLength_Update {
+  permission: Boolean!
+}
+
+type EpisodesFields_linkedAudioLength_Delete {
+  permission: Boolean!
+}
+
+type EpisodesFields_uploadedAudioFile {
+  create: EpisodesFields_uploadedAudioFile_Create
+  read: EpisodesFields_uploadedAudioFile_Read
+  update: EpisodesFields_uploadedAudioFile_Update
+  delete: EpisodesFields_uploadedAudioFile_Delete
+}
+
+type EpisodesFields_uploadedAudioFile_Create {
+  permission: Boolean!
+}
+
+type EpisodesFields_uploadedAudioFile_Read {
+  permission: Boolean!
+}
+
+type EpisodesFields_uploadedAudioFile_Update {
+  permission: Boolean!
+}
+
+type EpisodesFields_uploadedAudioFile_Delete {
   permission: Boolean!
 }
 
@@ -12273,6 +12986,7 @@ type seriesAccess {
 type SeriesFields {
   title: SeriesFields_title
   subtitle: SeriesFields_subtitle
+  seriesType: SeriesFields_seriesType
   seriesDate: SeriesFields_seriesDate
   seriesImage: SeriesFields_seriesImage
   slug: SeriesFields_slug
@@ -12324,6 +13038,29 @@ type SeriesFields_subtitle_Update {
 }
 
 type SeriesFields_subtitle_Delete {
+  permission: Boolean!
+}
+
+type SeriesFields_seriesType {
+  create: SeriesFields_seriesType_Create
+  read: SeriesFields_seriesType_Read
+  update: SeriesFields_seriesType_Update
+  delete: SeriesFields_seriesType_Delete
+}
+
+type SeriesFields_seriesType_Create {
+  permission: Boolean!
+}
+
+type SeriesFields_seriesType_Read {
+  permission: Boolean!
+}
+
+type SeriesFields_seriesType_Update {
+  permission: Boolean!
+}
+
+type SeriesFields_seriesType_Delete {
   permission: Boolean!
 }
 
@@ -13896,8 +14633,29 @@ type usersResetPassword {
 }
 
 input mutationTalkAudioInput {
-  alt: String!
-  caption: JSON
+  alt: String
+  uploadQuality: TalkAudio_uploadQuality_MutationInput
+  lengthSeconds: Float
+  lengthDisplay: String
+  status: TalkAudio_status_MutationInput
+  qualityGoodMp3_filename: String
+  qualityGoodMp3_mimetype: String
+  qualityGoodMp3_filesize: Float
+  qualityGoodOpus_filename: String
+  qualityGoodOpus_mimetype: String
+  qualityGoodOpus_filesize: Float
+  qualityMediumMp3_filename: String
+  qualityMediumMp3_mimetype: String
+  qualityMediumMp3_filesize: Float
+  qualityMediumOpus_filename: String
+  qualityMediumOpus_mimetype: String
+  qualityMediumOpus_filesize: Float
+  qualityLowMp3_filename: String
+  qualityLowMp3_mimetype: String
+  qualityLowMp3_filesize: Float
+  qualityLowOpus_filename: String
+  qualityLowOpus_mimetype: String
+  qualityLowOpus_filesize: Float
   updatedAt: String
   createdAt: String
   url: String
@@ -13908,11 +14666,45 @@ input mutationTalkAudioInput {
   height: Float
   focalX: Float
   focalY: Float
+}
+
+enum TalkAudio_uploadQuality_MutationInput {
+  best
+  good
+  medium
+  low
+}
+
+enum TalkAudio_status_MutationInput {
+  initial
+  processing
+  ready
 }
 
 input mutationTalkAudioUpdateInput {
   alt: String
-  caption: JSON
+  uploadQuality: TalkAudioUpdate_uploadQuality_MutationInput
+  lengthSeconds: Float
+  lengthDisplay: String
+  status: TalkAudioUpdate_status_MutationInput
+  qualityGoodMp3_filename: String
+  qualityGoodMp3_mimetype: String
+  qualityGoodMp3_filesize: Float
+  qualityGoodOpus_filename: String
+  qualityGoodOpus_mimetype: String
+  qualityGoodOpus_filesize: Float
+  qualityMediumMp3_filename: String
+  qualityMediumMp3_mimetype: String
+  qualityMediumMp3_filesize: Float
+  qualityMediumOpus_filename: String
+  qualityMediumOpus_mimetype: String
+  qualityMediumOpus_filesize: Float
+  qualityLowMp3_filename: String
+  qualityLowMp3_mimetype: String
+  qualityLowMp3_filesize: Float
+  qualityLowOpus_filename: String
+  qualityLowOpus_mimetype: String
+  qualityLowOpus_filesize: Float
   updatedAt: String
   createdAt: String
   url: String
@@ -13925,9 +14717,24 @@ input mutationTalkAudioUpdateInput {
   focalY: Float
 }
 
+enum TalkAudioUpdate_uploadQuality_MutationInput {
+  best
+  good
+  medium
+  low
+}
+
+enum TalkAudioUpdate_status_MutationInput {
+  initial
+  processing
+  ready
+}
+
 input mutationEpisodeInput {
   title: String!
+  subtitle: String
   series: Int
+  episodeType: Episode_episodeType_MutationInput
   biblePassageText: String
   biblePassages: [mutationEpisode_BiblePassagesInput]
   speaker: Int
@@ -13938,7 +14745,12 @@ input mutationEpisodeInput {
   videoFormat: Episode_videoFormat_MutationInput!
   videoUrl: String
   audioFormat: Episode_audioFormat_MutationInput!
-  audioUrl: String
+  linkedAudioUrl: String
+  linkedAudioFiletype: String
+  linkedAudioFileSize: Float
+  linkedAudioLength: Float
+  uploadedAudioFile: Int
+  hasValidMedia: Boolean
   talkOutline: JSON
   slug: String!
   fullTitle: String!
@@ -13947,18 +14759,26 @@ input mutationEpisodeInput {
   _status: Episode__status_MutationInput
 }
 
+enum Episode_episodeType_MutationInput {
+  regular
+  special
+}
+
 input mutationEpisode_BiblePassagesInput {
   chapter: Int
   id: String
 }
 
 enum Episode_videoFormat_MutationInput {
-  embed
+  vimeo
+  youtube
   none
 }
 
 enum Episode_audioFormat_MutationInput {
   linked
+  uploaded
+  none
 }
 
 enum Episode__status_MutationInput {
@@ -13968,7 +14788,9 @@ enum Episode__status_MutationInput {
 
 input mutationEpisodeUpdateInput {
   title: String
+  subtitle: String
   series: Int
+  episodeType: EpisodeUpdate_episodeType_MutationInput
   biblePassageText: String
   biblePassages: [mutationEpisodeUpdate_BiblePassagesInput]
   speaker: Int
@@ -13979,7 +14801,12 @@ input mutationEpisodeUpdateInput {
   videoFormat: EpisodeUpdate_videoFormat_MutationInput
   videoUrl: String
   audioFormat: EpisodeUpdate_audioFormat_MutationInput
-  audioUrl: String
+  linkedAudioUrl: String
+  linkedAudioFiletype: String
+  linkedAudioFileSize: Float
+  linkedAudioLength: Float
+  uploadedAudioFile: Int
+  hasValidMedia: Boolean
   talkOutline: JSON
   slug: String
   fullTitle: String
@@ -13988,18 +14815,26 @@ input mutationEpisodeUpdateInput {
   _status: EpisodeUpdate__status_MutationInput
 }
 
+enum EpisodeUpdate_episodeType_MutationInput {
+  regular
+  special
+}
+
 input mutationEpisodeUpdate_BiblePassagesInput {
   chapter: Int
   id: String
 }
 
 enum EpisodeUpdate_videoFormat_MutationInput {
-  embed
+  vimeo
+  youtube
   none
 }
 
 enum EpisodeUpdate_audioFormat_MutationInput {
   linked
+  uploaded
+  none
 }
 
 enum EpisodeUpdate__status_MutationInput {
@@ -14010,6 +14845,7 @@ enum EpisodeUpdate__status_MutationInput {
 input mutationSeriesInput {
   title: String!
   subtitle: String
+  seriesType: Series_seriesType_MutationInput
   seriesDate: String!
   seriesImage: String!
   slug: String!
@@ -14018,15 +14854,26 @@ input mutationSeriesInput {
   createdAt: String
 }
 
+enum Series_seriesType_MutationInput {
+  regular
+  special
+}
+
 input mutationSeriesUpdateInput {
   title: String
   subtitle: String
+  seriesType: SeriesUpdate_seriesType_MutationInput
   seriesDate: String
   seriesImage: String
   slug: String
   expandedTitle: String
   updatedAt: String
   createdAt: String
+}
+
+enum SeriesUpdate_seriesType_MutationInput {
+  regular
+  special
 }
 
 input mutationSpeakerInput {

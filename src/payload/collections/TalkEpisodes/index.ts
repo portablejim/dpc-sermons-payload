@@ -207,7 +207,7 @@ export const TalkEpisodes: CollectionConfig = {
           value: 'vimeo',
         },
         {
-          label: 'Embedded Player (YoutUbe)',
+          label: 'Embedded Player (Youtube)',
           value: 'youtube',
         },
         {
@@ -215,13 +215,14 @@ export const TalkEpisodes: CollectionConfig = {
           value: 'none',
         },
       ],
-      defaultValue: 'embed',
+      defaultValue: 'vimeo',
     },
     {
       name: 'videoUrl',
       type: 'text',
       admin: {
-        condition: (_, siblingData) => siblingData?.videoFormat === 'embed',
+        condition: (_, siblingData) =>
+          siblingData?.videoFormat === 'vimeo' || siblingData?.videoFormat === 'youtube',
       },
     },
     {
@@ -250,7 +251,7 @@ export const TalkEpisodes: CollectionConfig = {
       type: 'text',
       required: true,
       admin: {
-        condition: (_, siblingData) => siblingData?.audioformat === 'linked',
+        condition: (_, siblingData) => siblingData?.audioFormat === 'linked',
       },
     },
     {
@@ -261,7 +262,7 @@ export const TalkEpisodes: CollectionConfig = {
           label: 'Linked Audio: Filetype (Mimetype)',
           type: 'text',
           admin: {
-            condition: (_, siblingData) => siblingData?.audioformat === 'linked',
+            condition: (_, siblingData) => siblingData?.audioFormat === 'linked',
           },
         },
         {
@@ -269,15 +270,15 @@ export const TalkEpisodes: CollectionConfig = {
           label: 'Linked Audio: File Size (Bytes)',
           type: 'number',
           admin: {
-            condition: (_, siblingData) => siblingData?.audioformat === 'linked',
+            condition: (_, siblingData) => siblingData?.audioFormat === 'linked',
           },
         },
         {
-          name: 'linkedAudioUrl',
+          name: 'linkedAudioLength',
           label: 'Linked Audio: Length (seconds)',
           type: 'number',
           admin: {
-            condition: (_, siblingData) => siblingData?.audioformat === 'linked',
+            condition: (_, siblingData) => siblingData?.audioFormat === 'linked',
           },
         },
       ],
@@ -288,7 +289,7 @@ export const TalkEpisodes: CollectionConfig = {
       relationTo: 'talk-audio',
       required: true,
       admin: {
-        condition: (_, siblingData) => siblingData?.audioformat === 'uploaded',
+        condition: (_, siblingData) => siblingData?.audioFormat === 'uploaded',
       },
     },
     {

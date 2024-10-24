@@ -37,7 +37,7 @@ let BackButton = ({ series }: { series: number | Series }) => {
 }
 
 type VideoPlayerType = 'none' | 'vimeo' | 'youtube'
-type AudioPlayerType = 'none' | 'linked'
+type AudioPlayerType = 'none' | 'linked' | 'uploaded'
 
 let PlayerSection = ({
   videoType,
@@ -170,7 +170,7 @@ export const EpisodeShow: React.FC<Props> = props => {
   }
 
   let videoPlayerType: VideoPlayerType = 'none'
-  if (targetEpisode.videoFormat === 'embed') {
+  if (targetEpisode.videoFormat === 'vimeo') {
     videoPlayerType = 'vimeo'
   }
 
@@ -210,7 +210,7 @@ export const EpisodeShow: React.FC<Props> = props => {
           setDoPlay(true)
         }}
       />
-      <AudioPlayerSection playerType={audioPlayerType} mp3Url={targetEpisode.audioUrl} />
+      <AudioPlayerSection playerType={audioPlayerType} mp3Url={targetEpisode.linkedAudioUrl} />
       <h2 className={classes.partHeading}>Talk Outline</h2>
       <RichText content={targetEpisode.talkOutline} />
       <div className={classes.belowEpisode} />

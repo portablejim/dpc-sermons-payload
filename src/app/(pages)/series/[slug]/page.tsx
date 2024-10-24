@@ -48,6 +48,7 @@ export default async function Page({ params: { slug = 'home' } }) {
     // in production you may want to redirect to a 404  page or at least log the error somewhere
     // console.error(error)
     payload.logger.info({ error })
+    throw error
   }
 
   if (!series) {
