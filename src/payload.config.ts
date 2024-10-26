@@ -40,6 +40,7 @@ import { Page } from 'src/payload-types'
 
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
+import { seedHandlerEpisodes } from './endpoints/seedHandlerEpisodes'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -131,6 +132,11 @@ export default buildConfig({
       handler: seedHandler,
       method: 'get',
       path: '/seed',
+    },
+    {
+      handler: seedHandlerEpisodes,
+      method: 'get',
+      path: '/seedEpisodes',
     },
   ],
   globals: [Header, Footer],

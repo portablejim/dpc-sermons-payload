@@ -1,5 +1,5 @@
-import payload from 'payload'
-import type { CollectionConfig } from 'payload'
+import { getPayload, type CollectionConfig } from 'payload'
+import config from '@payload-config'
 
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { populateAuthors } from './hooks/populateAuthors'
@@ -44,6 +44,7 @@ export const TalkEpisodes: CollectionConfig = {
         ) {
           let seriesTitle: null | string = null
           if (data.series) {
+            let payload = await getPayload({config})
             let foundSeries = await payload.findByID({
               collection: 'series',
               id: data.series,
@@ -258,6 +259,9 @@ export const TalkEpisodes: CollectionConfig = {
     },
     {
       type: 'row',
+      admin: {
+        condition: (_, siblingData) => siblingData?.audioFormat === 'linked',
+      },
       fields: [
         {
           name: 'linkedAudioFiletype',
@@ -289,7 +293,7 @@ export const TalkEpisodes: CollectionConfig = {
       name: 'uploadedAudioFile',
       type: 'relationship',
       relationTo: 'talk-audio',
-      required: true,
+      //required: true,
       admin: {
         condition: (_, siblingData) => siblingData?.audioFormat === 'uploaded',
       },

@@ -1,6 +1,9 @@
-import fs from 'fs'
+import { Episode, Series } from '@/payload-types'
+import { getPayloadHMR } from '@payloadcms/next/utilities'
+import fs, { readFile, readFileSync } from 'fs'
 import path from 'path'
-import type { Payload, PayloadRequest } from 'payload'
+import { getPayload, type Payload, type PayloadRequest } from 'payload'
+import config from '@payload-config'
 import { fileURLToPath } from 'url'
 
 // Next.js revalidation errors are normal when seeding the database without a server running
@@ -184,4 +187,159 @@ const dirname = path.dirname(filename)
       payload.logger.info(err)
     }
   })
+}
+
+type SeriesJson = {
+  string: {
+    title: string
+    date: string,
+    imageUrl: string,
+    episodes: {
+      author: string,
+      biblePassage: string,
+      dateFormatted: string,
+      dateRaw: string,
+      htmlFile: string,
+      length: string,
+      lengthTime: string,
+      lengthTimeSeconds: number,
+      longTitle: string,
+      mp3File: string,
+      series: string,
+      subtitle: string,
+      title: string,
+      vimeoUrl: string,
+    }[]
+  }
+}
+
+export const seedEpisodes = async ({
+  payload,
+  req,
+}: {
+  payload: Payload
+  req: PayloadRequest
+}): Promise<void> => {
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
+
+  let jsonPath = path.resolve(dirname, 'groupedBySeries.json')
+  let jsonData = readFileSync(jsonPath);
+  let data: SeriesJson = JSON.parse(jsonData.toString())
+
+  const slugFormat = (val: string): string =>
+    val
+      .replace(/ /g, '-')
+      .replace(/[^\w-]+/g, '')
+      .toLowerCase()
+
+  let authorFind = payload.find({
+    collection: 'speakers',
+  })
+  let authorsMap = new Map<string, number>()
+  ;(await authorFind).docs.forEach(a => {
+    if(typeof a.name === 'string')
+    {
+      authorsMap.set(a.name, a.id)
+    }
+  })
+
+  let pl = req.payload;
+
+  let seriesKeys = Object.keys(data)
+  for (let index = 0; index < seriesKeys.length; index++) {
+    let seriesOb = data[seriesKeys[index]]
+    let seriesId: number | null = null
+    if(seriesOb.title && seriesOb.title.trim().length > 2)
+    {
+      let trimmedTitle = seriesOb.title.trim()
+      payload.logger.info(`Adding series: ${seriesOb.title}`)
+      let existingSeries = await pl.find({
+        collection: 'series',
+        where: {
+          title: {
+            equals: trimmedTitle,
+          }
+        }
+      })
+      if(existingSeries.totalDocs > 0) {
+        seriesId = existingSeries.docs[0].id
+      } else {
+        let createResult = await pl.create({
+          collection: 'series',
+          data: {
+            title: trimmedTitle,
+            seriesDate: seriesOb.date + 'T00:00:00.000Z',
+            seriesImage: 12,
+            slug: slugFormat(seriesOb.date.substring(0, 8) + seriesOb.title),
+            expandedTitle: seriesOb.title,
+          }
+        })
+        seriesId = createResult.id
+      }
+    }
+    for (let episodeIndex = 0; episodeIndex < seriesOb.episodes.length; episodeIndex++) {
+      const ep = seriesOb.episodes[episodeIndex];
+
+      let episodeTitle = ep.title
+      if((!episodeTitle || episodeTitle.trim().length < 2) && ep.biblePassage && ep.biblePassage.length > 2)
+      {
+        episodeTitle = ep.biblePassage.trim()
+      }
+
+    let authorId: number | undefined = undefined
+    if(ep.author && ep.author.length > 0 && authorsMap.has(ep.author)) {
+      authorId = authorsMap.get(ep.author)
+    }
+    else {
+      let authorCreateResult = await pl.create({
+        collection: 'speakers',
+        data: {
+          name: ep.author
+        }
+      })
+      authorsMap.set(ep.author, authorCreateResult.id)
+      authorId = authorCreateResult.id
+    }
+
+      payload.logger.info(`Adding episode: ${episodeTitle} for ${seriesId}`)
+
+      let videoFormat: 'none' | 'vimeo' = 'none';
+      if(ep.vimeoUrl && ep.vimeoUrl.length > 0)
+      {
+        videoFormat = 'vimeo'
+      }
+      let slug = slugFormat(ep.dateFormatted + '-' + episodeTitle)
+
+      try {
+        let episodeCreateResult = await pl.create({
+          collection: 'episodes',
+          data: {
+            title: episodeTitle,
+            subtitle: ep.subtitle,
+            series: seriesId,
+            biblePassageText: ep.biblePassage,
+            speaker: authorId,
+            sermonDate: ep.dateFormatted + 'T00:00:00.000Z',
+            sermonDateYear: parseInt(ep.dateFormatted.substring(0, 4)),
+            videoFormat: videoFormat,
+            videoUrl: ep.videoUrl,
+            audioFormat: 'linked',
+            linkedAudioUrl: ep.mp3File,
+            linkedAudioFileSize: parseInt(ep.length),
+            linkedAudioFiletype: 'audio/mpeg',
+            linkedAudioLength: ep.lengthTimeSeconds,
+            slug: slugFormat(ep.dateFormatted + '-' + episodeTitle),
+            fullTitle: seriesOb.fullTitle,
+            _status: 'published',
+          }
+        })
+      }
+      catch(e) {
+        payload.logger.info({e})
+        throw e
+      }
+    }
+  }
 }
