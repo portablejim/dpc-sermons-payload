@@ -2,9 +2,9 @@ import React, { Fragment } from 'react'
 import { StaticImageData } from 'next/image'
 import Link from 'next/link'
 
-import { CoverImage, Episode, Page, Series } from '../../../payload/payload-types'
+import { CoverImage, Episode, Page, Series } from '@/payload-types'
 import { Media } from '../Media'
-import { Image } from '../Media/Image'
+import { ImageMedia } from '../Media/ImageMedia'
 
 import classes from './index.module.scss'
 
@@ -33,7 +33,7 @@ export const EpisodeRow: React.FC<{
 
   let hasCoverImage = false
   let targetImage: CoverImage | string = ''
-  let targetImageUrl: StaticImageData | null = {
+  let targetImageUrl: StaticImageData | undefined = {
     src: '/dpc-mini-logo.png',
     height: 300,
     width: 300,
@@ -44,9 +44,9 @@ export const EpisodeRow: React.FC<{
     targetSeries = paramSeries
   }
 
-  if (doc.episodeImage && typeof doc.episodeImage !== 'number') {
+  if (doc && doc.episodeImage && typeof doc.episodeImage !== 'number') {
     targetImage = doc.episodeImage
-    targetImageUrl = null
+    targetImageUrl = undefined
   } else if (
     targetSeries &&
     typeof targetSeries !== 'number' &&
@@ -54,18 +54,18 @@ export const EpisodeRow: React.FC<{
     targetSeries?.seriesImage?.url
   ) {
     targetImage = targetSeries?.seriesImage
-    targetImageUrl = null
+    targetImageUrl = undefined
   }
 
   if (typeof targetImage !== 'string' && targetImage.sizes?.thumbnail) {
     targetImageUrl = {
-      src: targetImage.sizes.thumbnail.url,
+      src: targetImage.sizes.thumbnail.url ?? '',
       height: targetImage.sizes.thumbnail.height ?? 150,
       width: targetImage.sizes.thumbnail.width ?? 150,
     }
   }
 
-  const displayDate = sermonDate.substring(0, 10).split('-').reverse().join('/')
+  const displayDate = sermonDate?.substring(0, 10).split('-').reverse().join('/')
 
   let hasSeries = false
   let seriesTitle = '(no series)'
@@ -74,6 +74,7 @@ export const EpisodeRow: React.FC<{
   if (
     targetSeries !== undefined &&
     typeof targetSeries !== 'number' &&
+    targetSeries &&
     targetSeries.title &&
     targetSeries.slug
   ) {
@@ -85,7 +86,7 @@ export const EpisodeRow: React.FC<{
 
   const hasCategories = false
   const titleToUse = titleFromProps || title
-  const sanitizedDescription = doc.biblePassageText?.replace(/\s/g, ' ') // replace non-breaking space with white space
+  const sanitizedDescription = doc?.biblePassageText?.replace(/\s/g, ' ') // replace non-breaking space with white space
 
   return (
     <div
@@ -94,12 +95,12 @@ export const EpisodeRow: React.FC<{
         .join(' ')}
     >
       <div className={classes.imageContainer} aria-hidden={true}>
-        <Image
+        <ImageMedia
           className={classes.generalCoverImage}
           alt=""
           src={targetImageUrl}
           resource={targetImage}
-          resourceType="coverImage"
+          /*resourceType="coverImage"*/
           fill={true}
         />
       </div>
@@ -107,7 +108,7 @@ export const EpisodeRow: React.FC<{
         <span>
           <span>{displayDate}</span> |{' '}
           <Link href={href}>
-            <span>{doc.title}</span>
+            <span>{doc?.title}</span>
           </Link>
         </span>
         <span>
