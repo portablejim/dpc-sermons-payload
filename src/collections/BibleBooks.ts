@@ -10,6 +10,9 @@ const BibleBooks: CollectionConfig = {
     pagination: {
       defaultLimit: 70,
     },
+    components: {
+      beforeList: ['@/components/SeedBible#SeedBible'],
+    }
   },
   defaultSort: 'order',
   access: {
