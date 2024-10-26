@@ -1,32 +1,12 @@
-import type { CollectionSlug, GlobalSlug, Payload, PayloadRequest } from 'payload'
-
 import fs from 'fs'
 import path from 'path'
+import type { Payload, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
-import { contactForm as contactFormData } from './contact-form'
-import { contact as contactPageData } from './contact-page'
-import { home } from './home'
-import { image1 } from './image-1'
-import { image2 } from './image-2'
-import { post1 } from './post-1'
-import { post2 } from './post-2'
-import { post3 } from './post-3'
-
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
-
-const collections: CollectionSlug[] = [
-  'categories',
-  'media',
-  'pages',
-  'posts',
-  'forms',
-  'form-submissions',
-  'search',
-]
-const globals: GlobalSlug[] = ['header', 'footer']
-
+// Next.js revalidation errors are normal when seeding the database without a server running
+// i.e. running `yarn seed` locally instead of using the admin UI within an active app
+// The app is not running to revalidate the pages and so the API routes are not available
+// These error messages can be ignored: `Error hitting revalidate route for...`
 // Next.js revalidation errors are normal when seeding the database without a server running
 // i.e. running `yarn seed` locally instead of using the admin UI within an active app
 // The app is not running to revalidate the pages and so the API routes are not available
@@ -38,325 +18,170 @@ export const seed = async ({
   payload: Payload
   req: PayloadRequest
 }): Promise<void> => {
-  payload.logger.info('Seeding database...')
+  payload.logger.info('Seeding bible books database...')
 
-  // we need to clear the media directory before seeding
-  // as well as the collections and globals
-  // this is because while `yarn seed` drops the database
-  // the custom `/api/seed` endpoint does not
-
-  payload.logger.info(`— Clearing media...`)
-
-  const mediaDir = path.resolve(dirname, '../../public/media')
-  if (fs.existsSync(mediaDir)) {
-    fs.rmdirSync(mediaDir, { recursive: true })
+  const numBooks = await payload.count({ collection: 'bible-books' })
+  if (numBooks?.totalDocs !== 0) {
+    payload.logger.info('Database already seeded. Exiting.')
+    return
   }
 
-  payload.logger.info(`— Clearing collections and globals...`)
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
 
-  // clear the database
-  for (const global of globals) {
-    await payload.updateGlobal({
-      slug: global,
-      data: {
-        navItems: [],
-      },
-      req,
-    })
-  }
-
-  for (const collection of collections) {
-    await payload.delete({
-      collection: collection,
-      where: {
-        id: {
-          exists: true,
-        },
-      },
-      req,
-    })
-  }
-
-  const pages = await payload.delete({
-    collection: 'pages',
-    where: {},
-    req,
+  const booksInfos: Array<{ name: string; order: number; shortName: string; slug: string }> = [
+    { name: 'Genesis', order: 1, shortName: 'Gen', slug: '' },
+    { name: 'Exodus', order: 2, shortName: 'Exod', slug: '' },
+    { name: 'Leviticus', order: 3, shortName: 'Lev', slug: '' },
+    { name: 'Numbers', order: 4, shortName: 'Num', slug: '' },
+    { name: 'Deuteronomy', order: 5, shortName: 'Deut', slug: '' },
+    { name: 'Joshua', order: 6, shortName: 'Josh', slug: '' },
+    { name: 'Judges', order: 7, shortName: 'Judg', slug: '' },
+    { name: 'Ruth', order: 8, shortName: 'Ruth', slug: '' },
+    { name: '1 Samuel', order: 9, shortName: '1 Sam', slug: '' },
+    { name: '2 Samuel', order: 10, shortName: '2 Sam', slug: '' },
+    { name: '1 Kings', order: 11, shortName: '1 Kings', slug: '' },
+    { name: '2 Kings', order: 12, shortName: '2 Kings', slug: '' },
+    { name: '1 Chronicles', order: 13, shortName: '1 Chron', slug: '' },
+    { name: '2 Chronicles', order: 14, shortName: '2 Chron', slug: '' },
+    { name: 'Ezra', order: 15, shortName: 'Ezra', slug: '' },
+    { name: 'Nehemiah', order: 16, shortName: 'Neh', slug: '' },
+    { name: 'Esther', order: 17, shortName: 'Esther', slug: '' },
+    { name: 'Job', order: 18, shortName: 'Job', slug: '' },
+    { name: 'Psalms', order: 19, shortName: 'Ps', slug: '' },
+    { name: 'Proverbs', order: 20, shortName: 'Prov', slug: '' },
+    { name: 'Ecclesiastes', order: 21, shortName: 'Eccles', slug: '' },
+    { name: 'Song of Solomon', order: 22, shortName: 'Song', slug: '' },
+    { name: 'Isaiah', order: 23, shortName: 'Isa', slug: '' },
+    { name: 'Jeremiah', order: 24, shortName: 'Jer', slug: '' },
+    { name: 'Lamentations', order: 25, shortName: 'Lam', slug: '' },
+    { name: 'Ezekiel', order: 26, shortName: 'Ezek', slug: '' },
+    { name: 'Daniel', order: 27, shortName: 'Dan', slug: '' },
+    { name: 'Hosea', order: 28, shortName: 'Hos', slug: '' },
+    { name: 'Joel', order: 29, shortName: 'Joel', slug: '' },
+    { name: 'Amos', order: 30, shortName: 'Amos', slug: '' },
+    { name: 'Obadiah', order: 31, shortName: 'Obad', slug: '' },
+    { name: 'Jonah', order: 32, shortName: 'Jonah', slug: '' },
+    { name: 'Micah', order: 33, shortName: 'Micah', slug: '' },
+    { name: 'Nahum', order: 34, shortName: 'Nah', slug: '' },
+    { name: 'Habakkuk', order: 35, shortName: 'Hab', slug: '' },
+    { name: 'Zephaniah', order: 36, shortName: 'Zeph', slug: '' },
+    { name: 'Haggai', order: 37, shortName: 'Haggai', slug: '' },
+    { name: 'Zechariah', order: 38, shortName: 'Zech', slug: '' },
+    { name: 'Malachi', order: 39, shortName: 'Mal', slug: '' },
+    { name: 'Matthew', order: 40, shortName: 'Matt', slug: '' },
+    { name: 'Mark', order: 41, shortName: 'Mark', slug: '' },
+    { name: 'Luke', order: 42, shortName: 'Luke', slug: '' },
+    { name: 'John', order: 43, shortName: 'John', slug: '' },
+    { name: 'Acts', order: 44, shortName: 'Acts', slug: '' },
+    { name: 'Romans', order: 45, shortName: 'Rom', slug: '' },
+    { name: '1 Corinthians', order: 46, shortName: '1 Cor', slug: '' },
+    { name: '2 Corinthians', order: 47, shortName: '2 Cor', slug: '' },
+    { name: 'Galatians', order: 48, shortName: 'Gal', slug: '' },
+    { name: 'Ephesians', order: 49, shortName: 'Eph', slug: '' },
+    { name: 'Philippians', order: 50, shortName: 'Phil', slug: '' },
+    { name: 'Colossians', order: 51, shortName: 'Col', slug: '' },
+    { name: '1 Thessalonians', order: 52, shortName: '1 Thess', slug: '' },
+    { name: '2 Thessalonians', order: 53, shortName: '2 Thess', slug: '' },
+    { name: '1 Timothy', order: 54, shortName: '1 Tim', slug: '' },
+    { name: '2 Timothy', order: 55, shortName: '2 Tim', slug: '' },
+    { name: 'Titus', order: 56, shortName: 'Titus', slug: '' },
+    { name: 'Philemon', order: 57, shortName: 'Philem', slug: '' },
+    { name: 'Hebrews', order: 58, shortName: 'Heb', slug: '' },
+    { name: 'James', order: 59, shortName: 'James', slug: '' },
+    { name: '1 Peter', order: 60, shortName: '1 Pet', slug: '' },
+    { name: '2 Peter', order: 61, shortName: '2 Pet', slug: '' },
+    { name: '1 John', order: 62, shortName: '1 John', slug: '' },
+    { name: '2 John', order: 63, shortName: '2 John', slug: '' },
+    { name: '3 John', order: 64, shortName: '3 John', slug: '' },
+    { name: 'Jude', order: 65, shortName: 'Jude', slug: '' },
+    { name: 'Revelation', order: 66, shortName: 'Rev', slug: '' },
+  ].map(i => {
+    if (i.slug === '') {
+      i.slug = i.name.toLowerCase().replace(' ', '-')
+    }
+    return i
   })
 
-  console.log({ pages })
+  // Chapter list fetched from https://versenotes.org/a-list-of-books-in-the-bible-by-number-of-chapters/
+  let csvPath = path.resolve(dirname, 'bible-chapters.csv')
+  fs.readFile(csvPath, async (err, data) => {
+    if (data) {
+      let fullChaptersList = data
+        .toString()
+        .replace(/\r\n/g, '\n') // Unify line endings
+        .split('\n')
+        .map(l => l.split(','))
 
-  payload.logger.info(`— Seeding demo author and user...`)
+      let chaptersList: Array<Array<{ chapterNum: number; numVerses: number }>> = []
+      let currentBook = 'Genesis'
+      let currentChaptersList: Array<{ chapterNum: number; numVerses: number }> = []
 
-  await payload.delete({
-    collection: 'users',
-    where: {
-      email: {
-        equals: 'demo-author@payloadcms.com',
-      },
-    },
-    req,
+      for (let index = 1; index < fullChaptersList.length; index++) {
+        const currentLine = fullChaptersList[index]
+        const currentLineBook = currentLine[0]
+        const currentChapterNum = parseInt(currentLine[1])
+        const currentChapterLen = parseInt(currentLine[1])
+        if (currentBook !== currentLineBook) {
+          chaptersList.push(currentChaptersList)
+          currentBook = currentLineBook
+          currentChaptersList = []
+        }
+
+        currentChaptersList.push({ chapterNum: currentChapterNum, numVerses: currentChapterLen })
+      }
+      chaptersList.push(currentChaptersList)
+
+      for (let bookIndex = 0; bookIndex < booksInfos.length; bookIndex++) {
+        const bookInfo = booksInfos[bookIndex]
+        let bookData = {
+          id: bookInfo.order,
+          name: bookInfo.name,
+          order: bookInfo.order,
+          shortName: bookInfo.shortName,
+          slug: bookInfo.slug,
+        }
+        payload.logger.info(`Seeding ${bookInfo.name}...`)
+        let bookRecord = await payload.create({
+          collection: 'bible-books',
+          data: bookData,
+        })
+
+        let chaptersInfos = chaptersList[bookIndex]
+        for (let chapterIndex = 0; chapterIndex < chaptersInfos.length; chapterIndex++) {
+          let chapterInfo = chaptersInfos[chapterIndex]
+
+          let chapterName = bookInfo.name
+          let globalOrder = bookInfo.order * 1000 + chapterInfo.chapterNum
+          let shortName = bookInfo.shortName
+          let slug = bookInfo.slug
+          let hasNoChapters = true
+          if (chaptersInfos.length > 1) {
+            chapterName = `${bookInfo.name} ${chapterInfo.chapterNum}`
+            shortName = `${bookInfo.shortName} ${chapterInfo.chapterNum}`
+            slug = `${bookInfo.slug}-${chapterInfo.chapterNum}`
+            hasNoChapters = false
+          }
+          let chapterData = {
+            id: globalOrder,
+            book: bookRecord.id,
+            name: chapterName,
+            order: chapterInfo.chapterNum,
+            globalOrder: globalOrder,
+            shortName: shortName,
+            slug: slug,
+            hasNoChapters: hasNoChapters,
+            verses: chapterInfo.numVerses,
+          }
+          await payload.create({
+            collection: 'bible-chapters',
+            data: chapterData,
+          })
+        }
+      }
+      payload.logger.info('Seeded database successfully!')
+    } else {
+      payload.logger.info(err)
+    }
   })
-
-  const demoAuthor = await payload.create({
-    collection: 'users',
-    data: {
-      name: 'Demo Author',
-      email: 'demo-author@payloadcms.com',
-      password: 'password',
-    },
-    req,
-  })
-
-  let demoAuthorID: number | string = demoAuthor.id
-
-  payload.logger.info(`— Seeding media...`)
-  const image1Doc = await payload.create({
-    collection: 'media',
-    data: image1,
-    filePath: path.resolve(dirname, 'image-post1.webp'),
-    req,
-  })
-  const image2Doc = await payload.create({
-    collection: 'media',
-    data: image2,
-    filePath: path.resolve(dirname, 'image-post2.webp'),
-    req,
-  })
-  const image3Doc = await payload.create({
-    collection: 'media',
-    data: image2,
-    filePath: path.resolve(dirname, 'image-post3.webp'),
-    req,
-  })
-  const imageHomeDoc = await payload.create({
-    collection: 'media',
-    data: image2,
-    filePath: path.resolve(dirname, 'image-hero1.webp'),
-    req,
-  })
-
-  payload.logger.info(`— Seeding categories...`)
-  const technologyCategory = await payload.create({
-    collection: 'categories',
-    data: {
-      title: 'Technology',
-    },
-    req,
-  })
-
-  const newsCategory = await payload.create({
-    collection: 'categories',
-    data: {
-      title: 'News',
-    },
-    req,
-  })
-
-  const financeCategory = await payload.create({
-    collection: 'categories',
-    data: {
-      title: 'Finance',
-    },
-    req,
-  })
-
-  await payload.create({
-    collection: 'categories',
-    data: {
-      title: 'Design',
-    },
-    req,
-  })
-
-  await payload.create({
-    collection: 'categories',
-    data: {
-      title: 'Software',
-    },
-    req,
-  })
-
-  await payload.create({
-    collection: 'categories',
-    data: {
-      title: 'Engineering',
-    },
-    req,
-  })
-
-  let image1ID: number | string = image1Doc.id
-  let image2ID: number | string = image2Doc.id
-  let image3ID: number | string = image3Doc.id
-  let imageHomeID: number | string = imageHomeDoc.id
-
-  if (payload.db.defaultIDType === 'text') {
-    image1ID = `"${image1Doc.id}"`
-    image2ID = `"${image2Doc.id}"`
-    image3ID = `"${image3Doc.id}"`
-    imageHomeID = `"${imageHomeDoc.id}"`
-    demoAuthorID = `"${demoAuthorID}"`
-  }
-
-  payload.logger.info(`— Seeding posts...`)
-
-  // Do not create posts with `Promise.all` because we want the posts to be created in order
-  // This way we can sort them by `createdAt` or `publishedAt` and they will be in the expected order
-  const post1Doc = await payload.create({
-    collection: 'posts',
-    data: JSON.parse(
-      JSON.stringify({ ...post1, categories: [technologyCategory.id] })
-        .replace(/"\{\{IMAGE_1\}\}"/g, String(image1ID))
-        .replace(/"\{\{IMAGE_2\}\}"/g, String(image2ID))
-        .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
-    ),
-    req,
-  })
-
-  const post2Doc = await payload.create({
-    collection: 'posts',
-    data: JSON.parse(
-      JSON.stringify({ ...post2, categories: [newsCategory.id] })
-        .replace(/"\{\{IMAGE_1\}\}"/g, String(image2ID))
-        .replace(/"\{\{IMAGE_2\}\}"/g, String(image3ID))
-        .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
-    ),
-    req,
-  })
-
-  const post3Doc = await payload.create({
-    collection: 'posts',
-    data: JSON.parse(
-      JSON.stringify({ ...post3, categories: [financeCategory.id] })
-        .replace(/"\{\{IMAGE_1\}\}"/g, String(image3ID))
-        .replace(/"\{\{IMAGE_2\}\}"/g, String(image1ID))
-        .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
-    ),
-    req,
-  })
-
-  // update each post with related posts
-  await payload.update({
-    id: post1Doc.id,
-    collection: 'posts',
-    data: {
-      relatedPosts: [post2Doc.id, post3Doc.id],
-    },
-    req,
-  })
-  await payload.update({
-    id: post2Doc.id,
-    collection: 'posts',
-    data: {
-      relatedPosts: [post1Doc.id, post3Doc.id],
-    },
-    req,
-  })
-  await payload.update({
-    id: post3Doc.id,
-    collection: 'posts',
-    data: {
-      relatedPosts: [post1Doc.id, post2Doc.id],
-    },
-    req,
-  })
-
-  payload.logger.info(`— Seeding home page...`)
-
-  await payload.create({
-    collection: 'pages',
-    data: JSON.parse(
-      JSON.stringify(home)
-        .replace(/"\{\{IMAGE_1\}\}"/g, String(imageHomeID))
-        .replace(/"\{\{IMAGE_2\}\}"/g, String(image2ID)),
-    ),
-    req,
-  })
-
-  payload.logger.info(`— Seeding contact form...`)
-
-  const contactForm = await payload.create({
-    collection: 'forms',
-    data: JSON.parse(JSON.stringify(contactFormData)),
-    req,
-  })
-
-  let contactFormID: number | string = contactForm.id
-
-  if (payload.db.defaultIDType === 'text') {
-    contactFormID = `"${contactFormID}"`
-  }
-
-  payload.logger.info(`— Seeding contact page...`)
-
-  const contactPage = await payload.create({
-    collection: 'pages',
-    data: JSON.parse(
-      JSON.stringify(contactPageData).replace(/"\{\{CONTACT_FORM_ID\}\}"/g, String(contactFormID)),
-    ),
-    req,
-  })
-
-  payload.logger.info(`— Seeding header...`)
-
-  await payload.updateGlobal({
-    slug: 'header',
-    data: {
-      navItems: [
-        {
-          link: {
-            type: 'custom',
-            label: 'Posts',
-            url: '/posts',
-          },
-        },
-        {
-          link: {
-            type: 'reference',
-            label: 'Contact',
-            reference: {
-              relationTo: 'pages',
-              value: contactPage.id,
-            },
-          },
-        },
-      ],
-    },
-    req,
-  })
-
-  payload.logger.info(`— Seeding footer...`)
-
-  await payload.updateGlobal({
-    slug: 'footer',
-    data: {
-      navItems: [
-        {
-          link: {
-            type: 'custom',
-            label: 'Admin',
-            url: '/admin',
-          },
-        },
-        {
-          link: {
-            type: 'custom',
-            label: 'Source Code',
-            newTab: true,
-            url: 'https://github.com/payloadcms/payload/tree/beta/templates/website',
-          },
-        },
-        {
-          link: {
-            type: 'custom',
-            label: 'Payload',
-            newTab: true,
-            url: 'https://payloadcms.com/',
-          },
-        },
-      ],
-    },
-    req,
-  })
-
-  payload.logger.info('Seeded database successfully!')
 }

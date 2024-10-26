@@ -21,6 +21,11 @@ const Users: CollectionConfig = {
       name: 'name',
       type: 'text',
     },
+    {
+      name: 'isConfiguringBooks',
+      type: 'checkbox',
+      defaultValue: false,
+    },
   ],
   timestamps: true,
 }
