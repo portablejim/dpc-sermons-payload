@@ -4,10 +4,10 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { StaticImageData } from 'next/image'
 
-import type { CoverImage, Episode, Page, Series } from '../../../payload/payload-types'
+import type { CoverImage, Episode, Page, Series } from '@/payload-types'
 import { Button } from '../Button'
 import { EpisodeRow } from '../EpisodeRow'
-import { Image } from '../Media/Image'
+import { ImageMedia } from '../Media/ImageMedia'
 import RichText from '../RichText'
 
 import classes from './index.module.scss'
@@ -54,7 +54,7 @@ let PlayerSection = ({
   vimeoUrl: string
   onPlayClick: () => void
 }) => {
-  if (videoType != 'none') {
+  if (videoType != 'none' && vimeoUrl.trim().length > 1) {
     if (doPlay) {
       let iframe = <></>
       if (videoType === 'vimeo') {
@@ -90,12 +90,12 @@ let PlayerSection = ({
             <div className={classes.playerPlayButton}>
               <Button appearance="primary" label="Play" onClick={onPlayClick} />
             </div>
-            <Image
+            <ImageMedia
               className={classes.playerCoverImage}
               alt=""
               src={targetImageUrl}
               resource={targetImage}
-              resourceType="coverImage"
+              //resourceType="coverImage"
               fill={true}
             />
             <img
@@ -122,9 +122,9 @@ let AudioPlayerSection = ({
   mp3Url,
 }: {
   playerType: AudioPlayerType
-  mp3Url: string
+  mp3Url: string | null
 }) => {
-  if (playerType === 'none') {
+  if (playerType === 'none' || mp3Url == null) {
     return <></>
   } else {
     return (
@@ -154,7 +154,7 @@ export const EpisodeShow: React.FC<Props> = props => {
 
   let hasCoverImage = false
   let targetImage: CoverImage | string = ''
-  let targetImageUrl: StaticImageData | null = {
+  let targetImageUrl: StaticImageData | undefined = {
     src: '/dpc-mini-logo.png',
     height: 300,
     width: 300,
@@ -174,15 +174,21 @@ export const EpisodeShow: React.FC<Props> = props => {
     videoPlayerType = 'vimeo'
   }
 
-  let vimeoUrl =
-    'https://player.vimeo.com/video/' +
-    targetEpisode.videoUrl.match(
+  let vimeoUrl = '';
+  if(targetEpisode && targetEpisode.videoUrl)
+  {
+    let videoUrlParts = targetEpisode.videoUrl.match(
       /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/,
-    )[3]
+    )
+    if(videoUrlParts)
+    {
+      vimeoUrl = 'https://player.vimeo.com/video/' + videoUrlParts[3]
+    }
+  }
 
   if (targetEpisode.episodeImage && typeof targetEpisode.episodeImage !== 'number') {
     targetImage = targetEpisode.episodeImage
-    targetImageUrl = null
+    targetImageUrl = undefined
   } else if (
     targetSeries &&
     typeof targetSeries !== 'number' &&
@@ -190,12 +196,19 @@ export const EpisodeShow: React.FC<Props> = props => {
     targetSeries?.seriesImage?.url
   ) {
     targetImage = targetSeries?.seriesImage
-    targetImageUrl = null
+    targetImageUrl = undefined
+  }
+  if (targetImageUrl === undefined || targetImageUrl === null) {
+    targetImageUrl = {
+      src: '/dpcPodcastGenericLogo_plain.png',
+      height: 1920,
+      width: 1080,
+    }
   }
 
   return (
     <div>
-      <BackButton series={targetSeries} />
+      {targetSeries ? <BackButton series={targetSeries} /> : <></>}
       <h1 className={classes.heading}>{targetEpisode.title}</h1>
       <p className={classes.subheading}>
         <em>{targetEpisode.biblePassageText}</em>
@@ -210,9 +223,9 @@ export const EpisodeShow: React.FC<Props> = props => {
           setDoPlay(true)
         }}
       />
-      <AudioPlayerSection playerType={audioPlayerType} mp3Url={targetEpisode.linkedAudioUrl} />
+      <AudioPlayerSection playerType={audioPlayerType} mp3Url={targetEpisode.linkedAudioUrl ?? null} />
       <h2 className={classes.partHeading}>Talk Outline</h2>
-      <RichText content={targetEpisode.talkOutline} />
+      {targetEpisode.talkOutline ? <RichText content={targetEpisode.talkOutline} /> : <></>}
       <div className={classes.belowEpisode} />
     </div>
   )

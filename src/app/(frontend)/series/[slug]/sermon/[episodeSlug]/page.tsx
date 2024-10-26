@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { cache } from 'react'
 import { Metadata } from 'next'
 import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
@@ -10,10 +10,10 @@ import {
   Episode as EpisodeType,
   Page as PageType,
   Series as SeriesType,
-} from '../../../../../../payload/payload-types'
-import { fetchEpisode } from '../../../../../_api/fetchEpisode'
-import { EpisodeShow } from '../../../../../_components/EpisodeShow'
-import { Gutter } from '../../../../../_components/Gutter'
+} from '@/payload-types'
+import { EpisodeShow } from '../../../../../../components/EpisodeShow'
+import { getPayloadHMR } from '@payloadcms/next/utilities'
+import configPromise from '@payload-config'
 
 // Payload Cloud caches all files through Cloudflare, so we don't need Next.js to cache them as well
 // This means that we can turn off Next.js data caching and instead rely solely on the Cloudflare CDN
@@ -23,12 +23,19 @@ import { Gutter } from '../../../../../_components/Gutter'
 // If you are not using Payload Cloud then this line can be removed, see `../../../README.md#cache`
 export const dynamic = 'force-dynamic'
 
-export default async function Page({ params: { slug, episodeSlug } }): Promise<JSX.Element> {
+type Args = {
+  params: Promise<{
+    slug: string
+    episodeSlug: string
+  }>
+}
+
+export default async function Page({ params: paramsPromise } : Args) {
+  const { slug, episodeSlug } = await paramsPromise
   let episode: Episode | null = null
 
   try {
-    payload.logger.info('fetching series')
-    episode = await fetchEpisode<EpisodeType>({
+    episode = await queryEpisodeBySlug({
       slug: episodeSlug,
     })
   } catch (error) {
@@ -45,9 +52,29 @@ export default async function Page({ params: { slug, episodeSlug } }): Promise<J
 
   return (
     <>
-      <Gutter>
+      <div className='container'>
         <EpisodeShow targetEpisode={episode} />
-      </Gutter>
+      </div>
     </>
   )
 }
+
+const queryEpisodeBySlug = cache(async ({ slug }: { slug: string }) => {
+  const { isEnabled: draft } = await draftMode()
+
+  const payload = await getPayloadHMR({ config: configPromise })
+
+  const result = await payload.find({
+    collection: 'episodes',
+    draft,
+    limit: 1,
+    overrideAccess: draft,
+    where: {
+      slug: {
+        equals: slug,
+      },
+    },
+  })
+
+  return result.docs?.[0] || null
+})

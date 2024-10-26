@@ -21,7 +21,7 @@ export const LinkTileList: React.FC<Props & LinkTileListProps> = props => {
   return (
     <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>
       <Fragment>
-        <Gutter>
+        <div className='container'>
           <div>
             <LinkTileGroup
               title={title}
@@ -30,7 +30,7 @@ export const LinkTileList: React.FC<Props & LinkTileListProps> = props => {
               blockType="linkTileList"
             />
           </div>
-        </Gutter>
+        </div>
       </Fragment>
     </div>
   )

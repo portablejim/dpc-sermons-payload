@@ -18,6 +18,7 @@ import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { Gutter } from '@payloadcms/ui'
+import notFound from '../../not-found'
 
 // Payload Cloud caches all files through Cloudflare, so we don't need Next.js to cache them as well
 // This means that we can turn off Next.js data caching and instead rely solely on the Cloudflare CDN
@@ -34,30 +35,27 @@ type Args = {
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  const { slug = 'home' } = await paramsPromise
+  const { slug } = await paramsPromise
   const url = '/' + slug
 
-  let page: PageType | null
-  let series: SeriesType | null
+  if (!slug) {
+    return notFound()
+  }
 
-  page = await queryPageBySlug({
-    slug,
-  })
+  let series: SeriesType | null
   series = await querySeriesBySlug({
     slug,
   })
 
-  if (!page) {
+  if (!series) {
     return <PayloadRedirects url={url} />
   }
 
-  const { layout } = page
-
   return (
     <>
-      <Gutter>
+      <div className='container'>
         <SeriesShow targetSeries={series} />
-      </Gutter>
+      </div>
     </>
   )
 }

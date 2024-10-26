@@ -6,9 +6,9 @@ import { Tab, Tabs } from '@nextui-org/tabs'
 import type { Page, Series } from '@/payload-types'
 import { EpisodeList } from '../../components/EpisodeList'
 import { SeriesList } from '../../components/SeriesList'
+import { Gutter } from '../../components/Gutter'
 
 import classes from './index.module.scss'
-import { Gutter } from '@payloadcms/ui/elements/Gutter'
 
 type Result = {
   docs: (Series | string)[]
@@ -38,7 +38,7 @@ export const LibraryList: React.FC<Props> = props => {
     <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>
       <div className={classes.scrollRef} ref={scrollRef} />
       <Fragment>
-        <Gutter>
+          <div className='container flex flex-col justify-between'>
           <Tabs
             variant="underlined"
             size="lg"
@@ -55,7 +55,7 @@ export const LibraryList: React.FC<Props> = props => {
               <p>Bible books</p>
             </Tab>
           </Tabs>
-        </Gutter>
+          </div>
       </Fragment>
     </div>
   )
