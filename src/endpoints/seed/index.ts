@@ -324,7 +324,7 @@ const dirname = path.dirname(filename)
             sermonDate: ep.dateFormatted + 'T00:00:00.000Z',
             sermonDateYear: parseInt(ep.dateFormatted.substring(0, 4)),
             videoFormat: videoFormat,
-            videoUrl: ep.videoUrl,
+            videoUrl: ep.vimeoUrl,
             audioFormat: 'linked',
             linkedAudioUrl: ep.mp3File,
             linkedAudioFileSize: parseInt(ep.length),
