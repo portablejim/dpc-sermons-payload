@@ -11,6 +11,7 @@ export async function Footer() {
   const footer: Footer = await getCachedGlobal('footer')()
 
   const navItems = footer?.navItems || []
+  const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL!
 
   return (
     <footer className="border-t border-border bg-black dark:bg-card text-white">
@@ -19,8 +20,8 @@ export async function Footer() {
           <picture>
             <img
               alt="Payload Logo"
-              className="max-w-[6rem] invert-0"
-              src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/payload/src/admin/assets/images/payload-logo-light.svg"
+              className="max-w-[3rem] invert-0"
+              src={baseUrl + '/dpc-mini-logo.png'}
             />
           </picture>
         </Link>

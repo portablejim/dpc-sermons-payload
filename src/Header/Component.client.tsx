@@ -31,12 +31,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
 
   return (
     <header
-      className="container relative z-20 py-8 flex justify-between"
+      className="container relative z-20 py-8 flex justify-between flex-wrap"
       {...(theme ? { 'data-theme': theme } : {})}
     >
       <Link href="/">
         <Logo />
       </Link>
+      <p className='grow pl-4 self-center sm:text-lg'><em className='not-italic font-bold'>DPC Hub</em><span className='sm:inline'>: </span><span className='subtitle block md:inline'> For Sermons and Files</span></p>
       <HeaderNav header={header} />
     </header>
   )

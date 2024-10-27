@@ -88,7 +88,7 @@ let PlayerSection = ({
         <div className={classes.videoPlayer}>
           <div className={classes.playerInner}>
             <div className={classes.playerPlayButton}>
-              <Button appearance="primary" label="Play" onClick={onPlayClick} />
+              <Button className='btn' appearance="primary" label="Play" onClick={onPlayClick} />
             </div>
             <ImageMedia
               className={classes.playerCoverImage}
