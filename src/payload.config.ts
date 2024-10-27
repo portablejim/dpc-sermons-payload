@@ -7,6 +7,7 @@ import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import {
+  AlignFeature,
   BoldFeature,
   FixedToolbarFeature,
   HeadingFeature,

@@ -1,10 +1,14 @@
 import type { Block, Field } from 'payload'
 
 import {
+  AlignFeature,
   FixedToolbarFeature,
   HeadingFeature,
+  IndentFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  OrderedListFeature,
+  UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
 
 import { link } from '@/fields/link'
@@ -40,9 +44,11 @@ const columnFields: Field[] = [
       features: ({ rootFeatures }) => {
         return [
           ...rootFeatures,
-          HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+          HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4', 'h5'] }),
           FixedToolbarFeature(),
           InlineToolbarFeature(),
+          OrderedListFeature(),
+          UnorderedListFeature(),
         ]
       },
     }),
