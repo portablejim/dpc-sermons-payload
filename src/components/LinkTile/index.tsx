@@ -32,9 +32,9 @@ export const LinkTile: React.FC<Props> = props => {
   let targetUrl = ''
   if (linkTile.type == 'mediaReference' && typeof linkTile.linkedMedia !== 'number') {
     if (linkTile.newTab) {
-      targetUrl = `/media/preview/${linkTile.linkedMedia?.id}`
+      targetUrl = `/api/media/preview/${linkTile.linkedMedia?.id}`
     } else {
-      targetUrl = `/media/download/${linkTile.linkedMedia?.id}`
+      targetUrl = `/api/media/download/${linkTile.linkedMedia?.id}`
     }
   } else if (linkTile.type == 'reference' && typeof linkTile.reference.value !== 'number') {
     targetUrl = `/${linkTile.reference.value?.slug}`

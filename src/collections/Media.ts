@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
+import { open, openSync, readFileSync } from 'fs'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -42,4 +43,56 @@ export const Media: CollectionConfig = {
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
     staticDir: path.resolve(dirname, '../../public/media'),
   },
+  endpoints: [
+    {
+      method: 'get',
+      path: '/preview/:id',
+      handler: async (req) => {
+        if(typeof req?.routeParams?.id != 'string') {
+          return Response.error()
+        }
+        let mediaFind = await req.payload.findByID({
+          collection: 'media',
+          id: req.routeParams.id
+        })
+        if(typeof mediaFind.filename != 'string') {
+          return Response.error()
+        }
+        let filePath = path.resolve(dirname, '../../public/media', mediaFind.filename)
+        let mediaBody = readFileSync(filePath)
+        let fileNameSafe = encodeURIComponent(mediaFind.filename)
+        return new Response(mediaBody, {
+          headers: new Headers({
+            'content-type': mediaFind.mimeType ?? '',
+            'content-disposition': `inline; filename*=UTF-8''${fileNameSafe}`,
+          }),
+        })
+      }
+    },
+    {
+      method: 'get',
+      path: '/download/:id',
+      handler: async (req) => {
+        if(typeof req?.routeParams?.id != 'string') {
+          return Response.error()
+        }
+        let mediaFind = await req.payload.findByID({
+          collection: 'media',
+          id: req.routeParams.id
+        })
+        if(typeof mediaFind.filename != 'string') {
+          return Response.error()
+        }
+        let filePath = path.resolve(dirname, '../../public/media', mediaFind.filename)
+        let mediaBody = readFileSync(filePath)
+        let fileNameSafe = encodeURIComponent(mediaFind.filename)
+        return new Response(mediaBody, {
+          headers: new Headers({
+            'content-type': mediaFind.mimeType ?? '',
+            'content-disposition': `attachment; filename*=UTF-8''${fileNameSafe}`,
+          }),
+        })
+      }
+    },
+  ],
 }
