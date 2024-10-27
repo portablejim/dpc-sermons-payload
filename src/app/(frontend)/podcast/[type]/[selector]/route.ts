@@ -241,7 +241,12 @@ export async function GET(
           audioDuration = new Date(e.linkedAudioLength ?? 0 * 1000).toISOString().slice(11, 19);
         }
 
+        let isPermaLink = 'false'
         let itemGuid = baseUrl + '/' + e.id.toFixed()
+        if(e.guid) {
+          itemGuid = `${baseUrl}/sermon/guid/${e.guid}`
+          isPermaLink = 'true'
+        }
 
         let itemImage = ''
         if(typeof e.episodeImage != 'number' && e.episodeImage?.sizes?.thumbnail?.url) {
@@ -271,7 +276,7 @@ export async function GET(
       <description></description>
       <enclosure type="${audioMimetype}" length="${audioLength}" url="${audioUrl}" />
       <itunes:duration>${audioDuration}</itunes:duration>
-      <guid isPermaLink="false">${itemGuid}</guid>
+      <guid isPermaLink="${true}">${itemGuid}</guid>
       ${itunesImageStr}
       <pubDate>${itemPubDate}</pubDate>
     </item>`
