@@ -134,6 +134,14 @@ export interface CoverImage {
       filesize?: number | null;
       filename?: string | null;
     };
+    largeSquare?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
   };
 }
 /**
@@ -625,6 +633,7 @@ export interface Episode {
   } | null;
   slug: string;
   fullTitle: string;
+  guid?: string | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -646,6 +655,7 @@ export interface Series {
     docs?: (number | Episode)[] | null;
     hasNextPage?: boolean | null;
   } | null;
+  guid?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -656,6 +666,7 @@ export interface Series {
 export interface Speaker {
   id: number;
   name?: string | null;
+  guid?: string | null;
   updatedAt: string;
   createdAt: string;
 }

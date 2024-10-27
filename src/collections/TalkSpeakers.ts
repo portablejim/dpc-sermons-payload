@@ -15,6 +15,18 @@ const TalkSpeakers: CollectionConfig = {
       name: 'name',
       type: 'text',
     },
+    {
+      name: 'guid',
+      type: 'text',
+      label: 'GUID',
+      unique: true,
+      index: true,
+      admin: {
+        readOnly: true,
+        position: 'sidebar',
+      },
+      defaultValue: () => crypto.randomUUID()
+    },
   ],
 }
 

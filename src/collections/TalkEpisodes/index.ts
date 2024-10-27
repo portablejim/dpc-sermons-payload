@@ -6,6 +6,7 @@ import { populateAuthors } from './hooks/populateAuthors'
 import { revalidateEpisode } from './hooks/revalidateEpisode'
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import { text } from 'stream/consumers'
 
 export const TalkEpisodes: CollectionConfig = {
   slug: 'episodes',
@@ -358,6 +359,18 @@ export const TalkEpisodes: CollectionConfig = {
           },
         ],
       },
+    },
+    {
+      name: 'guid',
+      type: 'text',
+      label: 'GUID',
+      unique: true,
+      index: true,
+      admin: {
+        readOnly: true,
+        position: 'sidebar',
+      },
+      defaultValue: () => crypto.randomUUID()
     },
   ],
 }

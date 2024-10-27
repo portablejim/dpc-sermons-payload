@@ -44,6 +44,13 @@ export const CoverImages: CollectionConfig = {
         position: 'left bottom',
         withoutEnlargement: true,
       },
+      {
+        name: 'largeSquare',
+        width: 1500,
+        height: 1500,
+        position: 'left bottom',
+        withoutEnlargement: false,
+      },
     ],
     resizeOptions: {
       position: 'left bottom',
