@@ -6,7 +6,7 @@ import { populateAuthors } from './hooks/populateAuthors'
 import { revalidateEpisode } from './hooks/revalidateEpisode'
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
-import { text } from 'stream/consumers'
+import { episodeList, validYears } from '@/endpoints/episodeHandler'
 
 export const TalkEpisodes: CollectionConfig = {
   slug: 'episodes',
@@ -371,6 +371,18 @@ export const TalkEpisodes: CollectionConfig = {
         position: 'sidebar',
       },
       defaultValue: () => crypto.randomUUID()
+    },
+  ],
+  endpoints: [
+    {
+      path: '/yearList/:type',
+      method: 'get',
+      handler: validYears
+    },
+    {
+      path: '/byYear/:type/:year',
+      method: 'get',
+      handler: episodeList
     },
   ],
 }

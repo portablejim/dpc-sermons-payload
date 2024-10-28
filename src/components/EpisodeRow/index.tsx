@@ -7,6 +7,7 @@ import { Media } from '../Media'
 import { ImageMedia } from '../Media/ImageMedia'
 
 import classes from './index.module.scss'
+import { Button } from '@payloadcms/ui'
 
 export const EpisodeRow: React.FC<{
   alignItems?: 'center'
@@ -84,6 +85,16 @@ export const EpisodeRow: React.FC<{
     href = `${seriesLink}/sermon/${slug}`
   }
 
+  let detailsButtonText = 'Details'
+  if (doc?.videoFormat !== 'none') {
+    detailsButtonText = 'Details / Watch'
+  }
+
+  let listenButton = <></>
+  if (doc?.audioFormat !== 'none') {
+    listenButton = <Button>Listen</Button>
+  }
+
   const hasCategories = false
   const titleToUse = titleFromProps || title
   const sanitizedDescription = doc?.biblePassageText?.replace(/\s/g, ' ') // replace non-breaking space with white space
@@ -120,6 +131,10 @@ export const EpisodeRow: React.FC<{
             seriesTitle
           )}
         </span>
+      </div>
+      {listenButton}
+      <div>
+          <Link href={href}>{detailsButtonText}</Link>
       </div>
     </div>
   )

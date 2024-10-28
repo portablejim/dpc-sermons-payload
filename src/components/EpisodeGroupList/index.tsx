@@ -23,33 +23,26 @@ type Result = {
 }
 
 export type Props = {
-  className?: string
-  limit?: number
+  title: string,
+  rssUrl: string | undefined,
+  episodeType: string,
+  episodeRange: string,
+  defaultOpen: boolean,
+  initialEpisodeList?: Episode[]
   onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
-  showPageRange?: boolean
-  sort?: string
 }
 
-export const EpisodeList: React.FC<Props> = props => {
-  const { className, limit = 10, onResultChange, showPageRange, sort = '-createdAt' } = props
+export const EpisodeGroupList: React.FC<Props> = props => {
+  const { title, rssUrl, episodeType, episodeRange, defaultOpen, initialEpisodeList = [], onResultChange } = props
 
   const [isLoading, setIsLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(defaultOpen)
   const [error, setError] = useState<string | undefined>(undefined)
-  const scrollRef = useRef<HTMLDivElement>(null)
   const hasHydrated = useRef(false)
   const isRequesting = useRef(false)
   const [page, setPage] = useState(1)
 
-  const [results, setResults] = useState<Result>({
-    docs: [],
-    hasNextPage: false,
-    hasPrevPage: false,
-    nextPage: 1,
-    page: 1,
-    prevPage: 1,
-    totalDocs: 0,
-    totalPages: 1,
-  })
+  const [results, setResults] = useState<Episode[]>(initialEpisodeList)
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null
@@ -77,31 +70,34 @@ export const EpisodeList: React.FC<Props> = props => {
       )
 
       const makeRequest = async () => {
-        try {
-          const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes?${searchQuery}`)
+        if(isOpen)
+        {
+          try {
+            const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/byYear/${episodeType}/${episodeRange}`)
 
-          const json = await req.json()
-          if(timer != null) {
-            clearTimeout(timer)
-          }
-
-          const { docs } = json as { docs: Episode[] }
-
-          if (docs && Array.isArray(docs)) {
-            setResults(json)
-            setIsLoading(false)
-            if (typeof onResultChange === 'function') {
-              onResultChange(json)
+            const json = await req.json() as Episode[]
+            if(timer != null) {
+              clearTimeout(timer)
             }
+
+            if (json && Array.isArray(json)) {
+              setResults(json)
+              setIsLoading(false)
+              /*
+              if (typeof onResultChange === 'function') {
+                onResultChange(json)
+              }
+              */
+            }
+          } catch (err) {
+            console.warn(err) // eslint-disable-line no-console
+            setIsLoading(false)
+            setError(`Unable to load "series" data at this time.`)
           }
-        } catch (err) {
-          console.warn(err) // eslint-disable-line no-console
-          setIsLoading(false)
-          setError(`Unable to load "series" data at this time.`)
-        }
 
         isRequesting.current = false
         hasHydrated.current = true
+        }
       }
 
       void makeRequest()
@@ -110,7 +106,7 @@ export const EpisodeList: React.FC<Props> = props => {
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [page, onResultChange])
+  }, [episodeType, episodeRange, isOpen])
 
   //const payload = await getPayloadHMR({ config: configPromise })
 
@@ -128,9 +124,11 @@ export const EpisodeList: React.FC<Props> = props => {
 
   return (
     <div>
+        <hr />
+        <h3>{title}</h3>
         {isLoading ? (<Spinner />) : <></>}
       <ul>
-        {results.docs?.map((result, index) => {
+        {results.map((result, index) => {
           if (typeof result === 'object' && result !== null) {
             return (
               <div className={classes.column} key={index}>
@@ -144,6 +142,7 @@ export const EpisodeList: React.FC<Props> = props => {
           return null
         })}
       </ul>
+        <hr />
     </div>
   )
 }

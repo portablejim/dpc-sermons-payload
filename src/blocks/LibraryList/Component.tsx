@@ -1,14 +1,11 @@
-'use client'
+import React, { Fragment } from 'react'
 
-import React, { Fragment, useEffect, useRef, useState } from 'react'
-import { Tab, Tabs } from '@nextui-org/react'
-
-import type { Page, Series } from '@/payload-types'
-import { EpisodeList } from '../../components/EpisodeList'
+import type { Episode, Series } from '@/payload-types'
 import { SeriesList } from '../../components/SeriesList'
-import { Gutter } from '../../components/Gutter'
 
 import classes from './index.module.scss'
+import { EpisodeGroupsList } from '@/components/EpisodeGroupsList'
+import { LibraryList as LibraryListComponent } from '@/components/LibraryList'
 
 type Result = {
   docs: (Series | string)[]
@@ -29,35 +26,43 @@ export type Props = {
   sort?: string
 }
 
-export const LibraryList: React.FC<Props> = props => {
+export const LibraryList: React.FC<Props> = async props => {
   const { className } = props
 
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const yearListPromise = (async () => {
+    let yearsRaw = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/yearList/regular`)
+    let yearsJson = (await yearsRaw.json()) as string[]
+    if(yearsJson && Array.isArray(yearsJson)) {
+      return yearsJson
+    } else {
+      return []
+    }
+  })()
+
+  const latestEpisodesRaw = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/byYear/regular/latest`)
+  const latestEpisodesJson = (await latestEpisodesRaw.json()) as Episode[]
+
+  let latestEpisodes: Episode[] = []
+  if (latestEpisodesJson && Array.isArray(latestEpisodesJson)) {
+    latestEpisodes = latestEpisodesJson
+  }
 
   return (
     <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>
-      <div className={classes.scrollRef} ref={scrollRef} />
       <Fragment>
           <div className='container flex flex-col justify-between'>
-          <Tabs
-            variant="solid"
-            radius="none"
-            size="lg"
-            fullWidth={true}
-            aria-label="Show sermons by grouping"
-          >
-            <Tab key="date" title="By Date">
+            <LibraryListComponent byDateTab={(
               <div className="episodeListContainer">
-                <EpisodeList />
+                <EpisodeGroupsList initialEpisodeList={latestEpisodes} yearListPromise={yearListPromise} />
               </div>
-            </Tab>
-            <Tab key="series" title="By Series">
+            )}
+            bySeriesTab = {(
               <SeriesList />
-            </Tab>
-            <Tab key="passage" title="By Bible Passage">
+            )}
+            byPassageTab = {(
               <p>Bible books</p>
-            </Tab>
-          </Tabs>
+            )}
+             />
           </div>
       </Fragment>
     </div>
