@@ -1,13 +1,16 @@
 /** @type {import('tailwindcss').Config} */
+import {nextui} from "@nextui-org/react"
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: ['selector', '[data-theme="dark"]'],
-  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
+  darkMode: ['selector', '[data-theme="dark"]', 'class'],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography'), nextui()],
   prefix: '',
   safelist: [
     'lg:col-span-4',

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { Fragment, useEffect, useRef, useState } from 'react'
-import { Tab, Tabs } from '@nextui-org/tabs'
+import { Tab, Tabs } from '@nextui-org/react'
 
 import type { Page, Series } from '@/payload-types'
 import { EpisodeList } from '../../components/EpisodeList'
@@ -40,13 +40,16 @@ export const LibraryList: React.FC<Props> = props => {
       <Fragment>
           <div className='container flex flex-col justify-between'>
           <Tabs
-            variant="underlined"
+            variant="solid"
+            radius="none"
             size="lg"
             fullWidth={true}
             aria-label="Show sermons by grouping"
           >
             <Tab key="date" title="By Date">
-              <EpisodeList />
+              <div className="episodeListContainer">
+                <EpisodeList />
+              </div>
             </Tab>
             <Tab key="series" title="By Series">
               <SeriesList />
