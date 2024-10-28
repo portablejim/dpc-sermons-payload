@@ -49,6 +49,8 @@ const columnFields: Field[] = [
           InlineToolbarFeature(),
           OrderedListFeature(),
           UnorderedListFeature(),
+          AlignFeature(),
+          IndentFeature(),
         ]
       },
     }),
