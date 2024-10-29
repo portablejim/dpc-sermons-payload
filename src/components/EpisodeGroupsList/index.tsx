@@ -37,7 +37,7 @@ const MoreEpisodeList: React.FC<MoreEpisodesProps> = props => {
         let yearRssUrl = `${baseUrl}/podcast/${episodeType}/${year}.rss`
         const yearTitle = year
 
-        return (<EpisodeGroupList title={year} rssUrl={yearRssUrl} episodeType={episodeType} episodeRange={year} defaultOpen={true} />)
+        return (<EpisodeGroupList title={year} rssUrl={yearRssUrl} episodeType={episodeType} episodeRange={year} defaultOpen={false} />)
   })}</>)
 }
 
@@ -46,7 +46,7 @@ export const EpisodeGroupsList: React.FC<Props> = props => {
 
   const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL!
 
-  let latestRssUrl = `${baseUrl}/podcast/`
+  let latestRssUrl = `${baseUrl}/podcast/${episodeType}/latest.rss`
 
 
 

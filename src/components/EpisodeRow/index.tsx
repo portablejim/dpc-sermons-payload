@@ -134,7 +134,7 @@ export const EpisodeRow: React.FC<{
       </div>
       {listenButton}
       <div>
-          <Link href={href}>{detailsButtonText}</Link>
+          <Link className="" href={href}>{detailsButtonText}</Link>
       </div>
     </div>
   )

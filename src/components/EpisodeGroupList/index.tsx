@@ -108,24 +108,11 @@ export const EpisodeGroupList: React.FC<Props> = props => {
     }
   }, [episodeType, episodeRange, isOpen])
 
-  //const payload = await getPayloadHMR({ config: configPromise })
-
-  /*
-  const fetchedEpisodes = {docs: null}; await payload.find({
-    collection: 'episodes',
-    depth: 3,
-    limit,
-    where: {
-      sermonDate: {
-        greater_than: '2024-01-01',
-      },
-    },
-  })*/
-
   return (
     <div>
         <hr />
         <h3>{title}</h3>
+        <p><a href={rssUrl}>RSS</a></p>
         {isLoading ? (<Spinner />) : <></>}
       <ul>
         {results.map((result, index) => {

@@ -30,10 +30,15 @@ export const LibraryList: React.FC<Props> = async props => {
   const { className } = props
 
   const yearListPromise = (async () => {
+    let timestamp = new Date()
+    let yearsToRemove = [timestamp.getFullYear().toFixed(0)]
+    if (timestamp.getMonth() < 7) {
+      yearsToRemove.push((timestamp.getFullYear() - 1).toFixed(0))
+    }
     let yearsRaw = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/yearList/regular`)
     let yearsJson = (await yearsRaw.json()) as string[]
     if(yearsJson && Array.isArray(yearsJson)) {
-      return yearsJson
+      return yearsJson.filter(y => !yearsToRemove.includes(y))
     } else {
       return []
     }
