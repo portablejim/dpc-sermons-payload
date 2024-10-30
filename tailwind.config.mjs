@@ -27,6 +27,25 @@ export default {
     'bg-warning/30',
   ],
   theme: {
+    screens: {
+      'xs': '25rem',
+      // => @media (min-width: 400px) { ... }
+
+      'sm': '40rem',
+      // => @media (min-width: 640px) { ... }
+
+      'md': '48rem',
+      // => @media (min-width: 768px) { ... }
+
+      'lg': '64rem',
+      // => @media (min-width: 1024px) { ... }
+
+      'xl': '80rem',
+      // => @media (min-width: 1280px) { ... }
+
+      '2xl': '96rem',
+      // => @media (min-width: 1536px) { ... }
+    },
     container: {
       center: true,
       padding: {
@@ -39,10 +58,11 @@ export default {
       },
       screens: {
         '2xl': '86rem',
+        xl: '80rem',
         lg: '64rem',
         md: '48rem',
         sm: '40rem',
-        xl: '80rem',
+        xs: '40rem',
       },
     },
     extend: {

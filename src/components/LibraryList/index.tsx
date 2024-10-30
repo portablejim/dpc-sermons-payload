@@ -33,13 +33,13 @@ export const LibraryList: React.FC<Props> = props => {
       fullWidth={true}
       aria-label="Show sermons by grouping"
     >
-      <Tab key="date" title="By Date">
+      <Tab key="date" title={<><span className="">By Date</span></>}>
         {byDateTab}
       </Tab>
-      <Tab key="series" title="By Series">
+      <Tab key="series" title={<><span className="hidden sm:inline">By Series</span><span className="sm:hidden">Series</span></>}>
         {bySeriesTab}
       </Tab>
-      <Tab key="passage" title="By Bible Passage">
+      <Tab key="passage" title={<><span className="hidden sm:inline">By Bible Passage</span><span className="sm:hidden">Passage</span></>}>
         {byPassageTab}
       </Tab>
     </Tabs>

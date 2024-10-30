@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { StaticImageData } from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 import Link from 'next/link'
 
 import { CoverImage, Episode, Page, Series } from '@/payload-types'
@@ -8,6 +8,7 @@ import { ImageMedia } from '../Media/ImageMedia'
 
 import classes from './index.module.scss'
 import { Button } from '@payloadcms/ui'
+import { ICON_SVG_CHEVRON_RIGHT, ICON_SVG_MUSIC, svgToDataURI } from '@/utilities/iconsSvg'
 
 export const EpisodeRow: React.FC<{
   alignItems?: 'center'
@@ -92,7 +93,10 @@ export const EpisodeRow: React.FC<{
 
   let listenButton = <></>
   if (doc?.audioFormat !== 'none') {
-    listenButton = <Button>Listen</Button>
+    listenButton = <div className="flex-shrink-0 flex">
+      <Button className="px-2 h-10 mx-1 leading-10 text-nowrap border-gray-200 border-solid border-1 hidden md:block">Listen</Button>
+      <Button className="px-2 h-10 mx-1 leading-10 flex-shrink-0 flex items-center text-nowrap border-gray-200 border-solid border-1 md:hidden"><Image src={svgToDataURI(ICON_SVG_MUSIC)} alt={detailsButtonText} width={16} height={16} /></Button>
+      </div>
   }
 
   const hasCategories = false
@@ -116,10 +120,10 @@ export const EpisodeRow: React.FC<{
         />
       </div>
       <div className={classes.generalRowDescription}>
-        <span>
-          <span>{displayDate}</span> |{' '}
+        <span className="flex flex-col sm:flex-row">
+          <span tabIndex={0}>{displayDate}</span><span className="hidden px-1 sm:inline"> | </span>
           <Link href={href}>
-            <span>{doc?.title}</span>
+            <span className="font-bold">{doc?.title}</span>
           </Link>
         </span>
         <span>
@@ -132,9 +136,12 @@ export const EpisodeRow: React.FC<{
           )}
         </span>
       </div>
+      <div className='flex flex-row flex-shrink-0 flex-grow xs:flex-grow-0'>
       {listenButton}
-      <div>
-          <Link className="" href={href}>{detailsButtonText}</Link>
+      <div className="flex-shrink-0 flex">
+          <Link className="px-2 h-10 leading-10 text-nowrap border-gray-200 border-solid border-1 block xs:hidden md:block" href={href}>{detailsButtonText}</Link>
+          <Link className="px-2 h-10 leading-10 flex-shrink-0 text-nowrap border-gray-200 border-solid border-1 hidden xs:flex md:hidden" href={href}><Image src={svgToDataURI(ICON_SVG_CHEVRON_RIGHT)} alt={detailsButtonText} width={16} height={16} /></Link>
+      </div>
       </div>
     </div>
   )

@@ -33,9 +33,18 @@
 .generalRow
 {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   padding: 0.4em 0;
+  border-bottom: 1px solid #AAA;
+  text-align: center;
+}
+
+@media screen and (min-width: 25rem) {
+  .generalRow {
+    flex-direction: row;
+    text-align: left;
+  }
 }
 
 .generalRowDescription
@@ -58,6 +67,7 @@
   border-radius: 1em;
   overflow: hidden;
   margin-right: 0.5em;
+  flex-shrink: 0;
 }
 
 .content {
