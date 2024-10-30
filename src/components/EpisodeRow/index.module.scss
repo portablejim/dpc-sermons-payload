@@ -40,6 +40,11 @@
   text-align: center;
 }
 
+.generalRow:last-child
+{
+  border-bottom-width: 0;
+}
+
 @media screen and (min-width: 25rem) {
   .generalRow {
     flex-direction: row;

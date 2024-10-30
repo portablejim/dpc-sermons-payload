@@ -1,8 +1,10 @@
+'use client'
 
-import React, { Suspense, use } from 'react'
+import React, { Suspense, use, useState } from 'react'
 import type { Episode } from '@/payload-types'
 import { Spinner } from '@nextui-org/react'
 import { EpisodeGroupList } from '../EpisodeGroupList'
+import * as Accordion from "@radix-ui/react-accordion"
 
 type Result = {
   docs: (Episode | string)[]
@@ -25,11 +27,12 @@ export type Props = {
 export type MoreEpisodesProps = {
   baseUrl: string
   episodeType: string
+  accordionsOpen: string[],
   episodeYearListPromise: Promise<string[]>,
 }
 
 const MoreEpisodeList: React.FC<MoreEpisodesProps> = props => {
-  const { baseUrl, episodeType, episodeYearListPromise } = props
+  const { baseUrl, episodeType, accordionsOpen, episodeYearListPromise } = props
 
     const episodeYearList = use(episodeYearListPromise)
 
@@ -37,7 +40,7 @@ const MoreEpisodeList: React.FC<MoreEpisodesProps> = props => {
         let yearRssUrl = `${baseUrl}/podcast/${episodeType}/${year}.rss`
         const yearTitle = year
 
-        return (<EpisodeGroupList title={year} rssUrl={yearRssUrl} episodeType={episodeType} episodeRange={year} defaultOpen={false} />)
+        return (<EpisodeGroupList key={year} title={yearTitle} rssUrl={yearRssUrl} episodeType={episodeType} episodeRange={year} defaultOpen={false} accordionsOpen={accordionsOpen} />)
   })}</>)
 }
 
@@ -48,14 +51,16 @@ export const EpisodeGroupsList: React.FC<Props> = props => {
 
   let latestRssUrl = `${baseUrl}/podcast/${episodeType}/latest.rss`
 
-
+  const [accordionState, setAccordionState] = useState(['latest'])
 
   return (
     <div>
-        <EpisodeGroupList title='Latest' rssUrl={latestRssUrl} episodeType={episodeType} episodeRange='latest' defaultOpen={true} initialEpisodeList={initialEpisodeList} />
+        <Accordion.Root className='accordionRoot' type="multiple" value={accordionState} onValueChange={setAccordionState}>
+        <EpisodeGroupList title='Latest' rssUrl={latestRssUrl} episodeType={episodeType} episodeRange='latest' defaultOpen={true} initialEpisodeList={initialEpisodeList} accordionsOpen={accordionState} />
         <Suspense fallback={<Spinner />}>
-          <MoreEpisodeList baseUrl={baseUrl} episodeType={episodeType} episodeYearListPromise={yearListPromise} />
+          <MoreEpisodeList baseUrl={baseUrl} episodeType={episodeType} episodeYearListPromise={yearListPromise} accordionsOpen={accordionState} />
         </Suspense>
+        </Accordion.Root>
     </div>
   )
 }
