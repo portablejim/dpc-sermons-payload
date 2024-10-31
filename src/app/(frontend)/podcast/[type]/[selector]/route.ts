@@ -258,7 +258,7 @@ export async function GET(
           audioMimetype = e.linkedAudioFiletype ?? ''
           audioUrl = e.linkedAudioUrl ?? ''
           audioLength = Math.round(e.linkedAudioFileSize ?? 0).toFixed(0)
-          audioDuration = new Date(e.linkedAudioLength ?? 0 * 1000).toISOString().slice(11, 19);
+          audioDuration = new Date((e.linkedAudioLength ?? 0) * 1000).toISOString().slice(11, 19);
         }
 
         let isPermaLink = 'false'
@@ -291,7 +291,7 @@ export async function GET(
           seriesName = encodeURIComponent(e.series?.title ?? '')
           let seriesDate = e.series?.seriesDate.substring(0, 10) ?? ''
           let seriesNum = parseInt(seriesDate.replaceAll('-', ''))
-          seriesMarkup = `<podcast:season name="${seriesDate}">${seriesNum}</podcast:season>`
+          seriesMarkup = `<podcast:season name="${e.series?.title}">${seriesNum}</podcast:season>`
         }
 
         let videoMarkup = ''
