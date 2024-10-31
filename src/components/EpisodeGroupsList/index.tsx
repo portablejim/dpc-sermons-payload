@@ -47,7 +47,7 @@ const MoreEpisodeList: React.FC<MoreEpisodesProps> = props => {
 export const EpisodeGroupsList: React.FC<Props> = props => {
   const { episodeType = 'regular', initialEpisodeList = [], yearListPromise = Promise.resolve([]) } = props
 
-  const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL!
+  const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL ?? ''
 
   let latestRssUrl = `${baseUrl}/podcast/${episodeType}/latest.rss`
 

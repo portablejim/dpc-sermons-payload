@@ -303,7 +303,7 @@ const dirname = path.dirname(filename)
       authorId = authorCreateResult.id
     }
 
-      payload.logger.info(`Adding episode: ${episodeTitle} for ${seriesId}`)
+      payload.logger.info(`Adding episode: ${episodeTitle} for ${seriesId} | '${ep.vimeoUrl}'`)
 
       let videoFormat: 'none' | 'vimeo' = 'none';
       if(ep.vimeoUrl && ep.vimeoUrl.length > 0)

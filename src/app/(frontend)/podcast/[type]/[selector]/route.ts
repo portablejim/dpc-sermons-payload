@@ -5,6 +5,7 @@ import { Episode } from "@/payload-types"
 import { equal } from "assert"
 import url from 'url'
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url"
+import uuidv5 from 'uuidv5'
 
 const ERROR_RSS = baseUrl => `<?xml version="1.0" encoding="utf-8" ?>
 <rss version="2.0">
@@ -82,6 +83,8 @@ export async function GET(
       mimeTypeRss = 'application/rss+xml'
     }
 
+    let urlUUID = uuidv5('url', parsedUrl.toString())
+
     if (selectorParts.length <= 1) {
       if (selectorRaw != 'latest' && isNaN(parseInt(selectorRaw))) {
       return new Response(ERROR_RSS(baseUrl), {
@@ -153,6 +156,9 @@ export async function GET(
     // Or: <year>.xml / <year>.rss / <year>.atom
 
     let payload = getPayload({ config })
+
+    let awaitedPayload = await payload
+    ;(await payload).logger.info({urlUUID, type: typeof urlUUID})
 
     let titleTalkType = 'Bible'
     let titleTalkTypeSuffix = ''
@@ -242,25 +248,46 @@ export async function GET(
         }
 
         let isPermaLink = 'false'
+        let itemUuid = uuidv5(urlUUID, `${e.id}`)
         let itemGuid = baseUrl + '/' + e.id.toFixed()
         if(e.guid) {
           itemGuid = `${baseUrl}/sermon/guid/${e.guid}`
           isPermaLink = 'true'
+          itemUuid = uuidv5(urlUUID, e.guid)
         }
 
         let itemImage = ''
-        if(typeof e.episodeImage != 'number' && e.episodeImage?.sizes?.thumbnail?.url) {
-          itemImage = baseUrl + e.episodeImage?.sizes?.thumbnail?.url;
+        awaitedPayload.logger.info({episodeImage: e.episodeImage, series: e.series})
+        if (typeof e.series !== 'number') {
+          if(typeof e.series?.seriesImage != 'number' && e.series?.seriesImage?.sizes?.largeSquare?.url) {
+            itemImage = baseUrl + e.series?.seriesImage?.sizes?.largeSquare?.url;
+          }
         }
         if(typeof e.episodeImage != 'number' && e.episodeImage?.sizes?.largeSquare?.url) {
-          itemImage = baseUrl + e.episodeImage?.sizes?.thumbnail?.url;
+          itemImage = baseUrl + e.episodeImage?.sizes?.largeSquare?.url;
         }
 
+        let seriesMarkup = ''
         let itemPubDate = buildRFC822Date(e.sermonDate)
         let speakerName= ''
         if (typeof e.speaker !== 'number' && e.speaker?.name) {
           speakerName = e.speaker?.name
         }
+        let seriesName = ''
+        if (typeof e.series !== 'number') {
+          seriesName = encodeURIComponent(e.series?.title ?? '')
+          let seriesDate = e.series?.seriesDate.substring(0, 10) ?? ''
+          let seriesNum = parseInt(seriesDate.replaceAll('-', ''))
+          seriesMarkup = `<podcast:season name="${seriesDate}">${seriesNum}</podcast:season>`
+        }
+
+        let videoMarkup = ''
+        if ((e.videoFormat == 'vimeo' || e.videoFormat === 'youtube') && e.videoUrl !== undefined && e.videoUrl !== null && e.videoUrl.length > 0)
+        {
+          videoMarkup = `<podcast:contentLink>${e.videoUrl}</podcast:contentLink>`
+        }
+
+        let subtitle = e.subtitle ?? ''
 
         let itunesImageStr = ''
         if(itemImage.trim().length > 0)
@@ -279,19 +306,25 @@ export async function GET(
       <guid isPermaLink="${true}">${itemGuid}</guid>
       ${itunesImageStr}
       <pubDate>${itemPubDate}</pubDate>
+      ${seriesMarkup}
+      ${videoMarkup}
     </item>`
       })
 
       let episodesBody = episodeRssList.join('')
 
       let rssBody = `<?xml version="1.0" encoding="utf-8" ?>
-<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+xmlns:content="http://purl.org/rss/1.0/modules/content/"
+xmlns:podcast="https://podcastindex.org/namespace/1.0"
+xmlns:atom="http://www.w3.org/2005/Atom" >
   <channel>
     <title>DPC Bible Talks</title>
     <link>http://www.dubbo.church</link>
     <language>en-au</language>
     <copyright>℗ &amp; © Dubbo Presbyterian Church</copyright>
     <itunes:subtitle>Dubbo Presbyterian Church Bible Talks</itunes:subtitle>
+    <category>Christianity</category>
     <itunes:category text="Religion &amp; Spirituality"><itunes:category text="Christianity"/></itunes:category>
     <itunes:author>Dubbo Presbyterian Church</itunes:author>
     <itunes:summary>Dubbo Presbyterian Church Bible Talks</itunes:summary>
@@ -302,6 +335,7 @@ export async function GET(
     </itunes:owner>
     <itunes:image href="${podcastImage}"/>
     <itunes:explicit>false</itunes:explicit>
+    <atom:link href="${parsedUrl}" rel="self" type="application/rss+xml" />
     ${episodesBody}
   </channel>
 </rss>
