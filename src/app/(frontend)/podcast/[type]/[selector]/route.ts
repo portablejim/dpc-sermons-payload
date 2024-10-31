@@ -157,9 +157,6 @@ export async function GET(
 
     let payload = getPayload({ config })
 
-    let awaitedPayload = await payload
-    ;(await payload).logger.info({urlUUID, type: typeof urlUUID})
-
     let titleTalkType = 'Bible'
     let titleTalkTypeSuffix = ''
     let filenameTalkType = 'bible'
@@ -181,18 +178,35 @@ export async function GET(
     let podcastFilename = `dpc-${filenameTalkType}-talks`
     if(filter === 'latest')
     {
+      let timestamp = new Date()
+      let thisYear = timestamp.getFullYear()
+      let lastYear = thisYear - 1
+      let targetYears = [thisYear]
+      if (timestamp.getMonth() < 7) {
+        targetYears.push(lastYear)
+      }
+
       podcastTitle = `DPC ${titleTalkType} Talks (Latest${titleTalkTypeSuffix})`
       podcastFilename = `dpc-${filenameTalkType}-talks-latest${filenameTalkTypeSuffix}`
 
       episodes = await (await payload).find({
         collection: 'episodes',
         where: {
-          episodeType: {
-            equals: episodeType
-          }
+          and: [
+            {
+              episodeType: {
+                equals: episodeType
+              },
+            },
+            {
+              sermonDateYear: {
+                in: targetYears
+              },
+            },
+          ]
         },
         sort: '-sermonDate',
-        limit: 52,
+        limit: 99,
       })
     } else if(typeof filter === 'number') {
       let startDate = filter.toFixed(0).padStart(4, '0') + '-01-01';
@@ -257,7 +271,6 @@ export async function GET(
         }
 
         let itemImage = ''
-        awaitedPayload.logger.info({episodeImage: e.episodeImage, series: e.series})
         if (typeof e.series !== 'number') {
           if(typeof e.series?.seriesImage != 'number' && e.series?.seriesImage?.sizes?.largeSquare?.url) {
             itemImage = baseUrl + e.series?.seriesImage?.sizes?.largeSquare?.url;

@@ -160,7 +160,10 @@ export const TalkEpisodes: CollectionConfig = {
       name: 'sermonDateYear',
       type: 'number',
       index: true,
-      hidden: true,
+      admin: {
+        readOnly: true,
+        position: 'sidebar',
+      },
       hooks: {
         beforeValidate: [
           ({ data }) => {
