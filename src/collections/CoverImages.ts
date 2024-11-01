@@ -77,5 +77,18 @@ export const CoverImages: CollectionConfig = {
         },
       }),
     },
+    {
+      name: 'guid',
+      type: 'text',
+      label: 'GUID',
+      unique: true,
+      index: true,
+      hidden: true,
+      admin: {
+        readOnly: true,
+        position: 'sidebar',
+      },
+      defaultValue: () => crypto.randomUUID()
+    },
   ],
 }

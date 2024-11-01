@@ -106,6 +106,7 @@ export interface CoverImage {
     };
     [k: string]: unknown;
   } | null;
+  guid?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -331,6 +332,7 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
+  guid?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -573,6 +575,7 @@ export interface TalkAudio {
   qualityLowOpus_filename?: string | null;
   qualityLowOpus_mimetype?: string | null;
   qualityLowOpus_filesize?: number | null;
+  guid?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;

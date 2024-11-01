@@ -160,6 +160,19 @@ export const TalkAudio: CollectionConfig = {
       type: 'number',
       hidden: true,
     },
+    {
+      name: 'guid',
+      type: 'text',
+      label: 'GUID',
+      unique: true,
+      index: true,
+      hidden: true,
+      admin: {
+        readOnly: true,
+        position: 'sidebar',
+      },
+      defaultValue: () => crypto.randomUUID()
+    },
   ],
   upload: {
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
