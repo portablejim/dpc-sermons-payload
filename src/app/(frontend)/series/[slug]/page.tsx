@@ -7,17 +7,11 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
 import type {
-  CoverImage as CoverImageType,
-  Episode as EpisodeType,
-  Page as PageType,
   Series as SeriesType,
 } from '@/payload-types'
 import { SeriesShow } from '../../../../components/SeriesShow'
 
-import { RenderBlocks } from '@/blocks/RenderBlocks'
-import { generateMeta } from '@/utilities/generateMeta'
-import PageClient from './page.client'
-import { Gutter } from '@payloadcms/ui'
+import { generateSeriesMeta } from '@/utilities/generateMeta'
 import notFound from '../../not-found'
 
 // Payload Cloud caches all files through Cloudflare, so we don't need Next.js to cache them as well
@@ -63,7 +57,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 export async function generateStaticParams() {
   const payload = await getPayloadHMR({ config: configPromise })
   const pages = await payload.find({
-    collection: 'pages',
+    collection: 'series',
     draft: false,
     limit: 1000,
     overrideAccess: false,
@@ -82,32 +76,12 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params: paramsPromise }): Promise<Metadata> {
   const { slug = 'home' } = await paramsPromise
-  const page = await queryPageBySlug({
+  const page = await querySeriesBySlug({
     slug,
   })
 
-  return generateMeta({ doc: page })
+  return generateSeriesMeta({ doc: page })
 }
-
-const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
-  const { isEnabled: draft } = await draftMode()
-
-  const payload = await getPayloadHMR({ config: configPromise })
-
-  const result = await payload.find({
-    collection: 'pages',
-    draft,
-    limit: 1,
-    overrideAccess: draft,
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-  })
-
-  return result.docs?.[0] || null
-})
 
 const querySeriesBySlug = cache(async ({ slug }: { slug: string }) => {
   const { isEnabled: draft } = await draftMode()

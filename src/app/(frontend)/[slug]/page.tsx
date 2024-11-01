@@ -12,6 +12,8 @@ import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 
+export const dynamic = 'force-dynamic'
+
 export async function generateStaticParams() {
   const payload = await getPayloadHMR({ config: configPromise })
   const pages = await payload.find({

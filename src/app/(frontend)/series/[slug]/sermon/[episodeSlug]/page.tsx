@@ -5,15 +5,12 @@ import { notFound } from 'next/navigation'
 import payload from 'payload'
 
 import {
-  CoverImage,
   Episode,
-  Episode as EpisodeType,
-  Page as PageType,
-  Series as SeriesType,
 } from '@/payload-types'
 import { EpisodeShow } from '../../../../../../components/EpisodeShow'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import configPromise from '@payload-config'
+import { generateEpisodeMeta } from '@/utilities/generateMeta'
 
 // Payload Cloud caches all files through Cloudflare, so we don't need Next.js to cache them as well
 // This means that we can turn off Next.js data caching and instead rely solely on the Cloudflare CDN
@@ -57,6 +54,15 @@ export default async function Page({ params: paramsPromise } : Args) {
       </div>
     </>
   )
+}
+
+export async function generateMetadata({ params: paramsPromise }): Promise<Metadata> {
+  const { slug = 'home' } = await paramsPromise
+  const page = await queryEpisodeBySlug({
+    slug,
+  })
+
+  return generateEpisodeMeta({ doc: page })
 }
 
 const queryEpisodeBySlug = cache(async ({ slug }: { slug: string }) => {
