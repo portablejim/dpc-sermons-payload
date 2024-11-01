@@ -115,7 +115,7 @@ export const EpisodeRow: React.FC<{
           alt=""
           src={targetImageUrl}
           resource={targetImage}
-          /*resourceType="coverImage"*/
+          resourceType="coverImage"
           fill={true}
         />
       </div>

@@ -1,4 +1,3 @@
-import { revalidate } from '@/app/(frontend)/posts/page'
 import { AfterChangeHook } from 'node_modules/payload/dist/collections/config/types'
 
 

@@ -36,8 +36,8 @@ export const LinkTile: React.FC<Props> = props => {
     } else {
       targetUrl = `/api/media/download/${linkTile.linkedMedia?.id}`
     }
-  } else if (linkTile.type == 'reference' && typeof linkTile.reference.value !== 'number') {
-    targetUrl = `/${linkTile.reference.value?.slug}`
+  } else if (typeof linkTile === 'object' && linkTile.type == 'reference' && typeof linkTile?.reference?.value !== 'number') {
+    targetUrl = `/${linkTile?.reference?.value?.slug}`
   } else {
     targetUrl = linkTile.url ?? ''
   }

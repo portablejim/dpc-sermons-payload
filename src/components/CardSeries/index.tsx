@@ -28,7 +28,7 @@ export const CardSeries: React.FC<{
   const { slug, title } = doc || {}
 
   let targetImage: string | CoverImage = ''
-  if (doc.seriesImage) {
+  if (doc?.seriesImage) {
     if (typeof doc.seriesImage !== 'number') {
       targetImage = doc.seriesImage
     }
@@ -36,7 +36,7 @@ export const CardSeries: React.FC<{
 
   const hasCategories = false
   const titleToUse = titleFromProps || title
-  const sanitizedDescription = doc.subtitle?.replace(/\s/g, ' ') // replace non-breaking space with white space
+  const sanitizedDescription = doc?.subtitle?.replace(/\s/g, ' ') // replace non-breaking space with white space
   const href = `/series/${slug}`
 
   return (
@@ -65,7 +65,7 @@ export const CardSeries: React.FC<{
             </Link>
           </h4>
         )}
-        {doc.subtitle && (
+        {doc?.subtitle && (
           <div className={classes.body}>
             {doc.subtitle && <p className={classes.description}>{sanitizedDescription}</p>}
           </div>

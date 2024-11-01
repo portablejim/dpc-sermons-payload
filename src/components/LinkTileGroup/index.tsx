@@ -3,7 +3,7 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react'
 
 import type { Page, Series } from '@/payload-types'
-import { LinkTileListProps, LinkTileListTileProps } from '../../blocks/LinkTileList/types'
+import { LinkTileListProps } from '../../blocks/LinkTileList/types'
 import { LinkTile } from '../LinkTile'
 import RichText from '../RichText'
 
@@ -28,12 +28,13 @@ export const LinkTileGroup: React.FC<Props & LinkTileListProps> = props => {
   } = props
 
   let showTitle = false
-  if (title?.length > 0) {
+  if (title && title?.length > 0) {
     showTitle = true
   }
 
-  let linkTileNum = linkTiles.length
-  let tileList = linkTiles.map(lt => <LinkTile key={lt.id} linkTile={lt.linkTile} />)
+  let linkTileNum = linkTiles?.length ?? 0
+  let tileList = linkTiles?.map(lt => <LinkTile key={lt.id} linkTile={lt.linkTile} />) ?? []
+  let descriptionRichText = description ?? []
 
   return (
     <div className="linkTileGroup">
@@ -45,7 +46,7 @@ export const LinkTileGroup: React.FC<Props & LinkTileListProps> = props => {
       ) : (
         <></>
       )}
-      <RichText content={description} />
+      <RichText content={descriptionRichText} />
       <div className={[classes.tileListGrid, className].filter(Boolean).join(' ')}>{tileList}</div>
     </div>
   )

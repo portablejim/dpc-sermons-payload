@@ -17,6 +17,7 @@ type Props = Extract<Page['layout'][0], { blockType: 'mediaBlock' }> & {
   imgClassName?: string
   staticImage?: StaticImageData
   disableInnerContainer?: boolean
+  mediaType: 'coverImage' | 'media'
 }
 
 export const MediaBlock: React.FC<Props> = (props) => {
@@ -46,11 +47,11 @@ export const MediaBlock: React.FC<Props> = (props) => {
     >
       {position === 'fullscreen' && (
         <div className="relative">
-          <Media resource={media} src={staticImage} />
+          <Media resource={media} resourceType='media' src={staticImage} />
         </div>
       )}
       {position === 'default' && (
-        <Media imgClassName={cn('rounded', imgClassName)} resource={media} src={staticImage} />
+        <Media imgClassName={cn('rounded', imgClassName)} resource={media} resourceType='media' src={staticImage} />
       )}
       {caption && (
         <div
