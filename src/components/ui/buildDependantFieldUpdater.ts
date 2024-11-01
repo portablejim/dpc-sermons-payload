@@ -14,7 +14,7 @@ const buildDependentFieldUpdater = (path, dependencies, fn) => {
         const newValue = fn(object, dispatch)
         if (newValue !== object[path]) dispatch({ type: 'UPDATE', path, value: newValue })
       }
-    }, [object])
+    }, [dispatch, object])
 
     return null
   }

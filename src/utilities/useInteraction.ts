@@ -6,6 +6,7 @@ export default function useOnScreen(ref: RefObject<HTMLElement | null>) {
   
     const observer = useMemo(() => new IntersectionObserver(
       ([entry]) => setIntersecting(entry.isIntersecting)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     ), [ref])
   
   
@@ -15,6 +16,7 @@ export default function useOnScreen(ref: RefObject<HTMLElement | null>) {
         observer.observe(ref.current)
         return () => observer.disconnect()
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
   
     return isIntersecting
