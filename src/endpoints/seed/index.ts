@@ -107,7 +107,7 @@ const dirname = path.dirname(filename)
   })
 
   // Chapter list fetched from https://versenotes.org/a-list-of-books-in-the-bible-by-number-of-chapters/
-  let csvPath = path.resolve(__dirname, 'bible-chapters.csv')
+  let csvPath = path.resolve(dirname, 'bible-chapters.csv')
   fs.readFile(csvPath, async (err, data) => {
     if (data) {
       let fullChaptersList = data
@@ -224,7 +224,7 @@ export const seedEpisodes = async ({
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-  let jsonPath = path.resolve(__dirname, 'groupedBySeries.json')
+  let jsonPath = path.resolve(dirname, 'groupedBySeries.json')
   let jsonData = readFileSync(jsonPath);
   let data: SeriesJson = JSON.parse(jsonData.toString())
 
