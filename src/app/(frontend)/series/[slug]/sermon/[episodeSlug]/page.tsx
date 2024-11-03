@@ -57,9 +57,9 @@ export default async function Page({ params: paramsPromise } : Args) {
 }
 
 export async function generateMetadata({ params: paramsPromise }): Promise<Metadata> {
-  const { slug = 'home' } = await paramsPromise
+  const { slug, episodeSlug } = await paramsPromise
   const page = await queryEpisodeBySlug({
-    slug,
+    slug: episodeSlug,
   })
 
   return generateEpisodeMeta({ doc: page })

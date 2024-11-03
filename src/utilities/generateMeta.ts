@@ -74,7 +74,7 @@ export const generateEpisodeMeta = async (args: { doc: Episode }): Promise<Metad
     doc.episodeImage.url !== null &&
     doc.episodeImage.url !== undefined &&
     `${process.env.NEXT_PUBLIC_SERVER_URL}${doc.episodeImage.url}`)
-    || (typeof doc.series === 'object' && typeof doc.series?.seriesImage === 'object' &&
+    || (typeof doc?.series === 'object' && typeof doc.series?.seriesImage === 'object' &&
     doc.series.seriesImage.url !== null &&
     doc.series.seriesImage.url !== undefined &&
     `${process.env.NEXT_PUBLIC_SERVER_URL}${doc.series?.seriesImage?.url}`)
