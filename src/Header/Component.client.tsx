@@ -25,9 +25,8 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
   }, [pathname])
 
   useEffect(() => {
-    if (headerTheme && headerTheme !== theme) setTheme(headerTheme)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [headerTheme])
+    setHeaderTheme(theme === 'dark' ? 'dark' : 'light')
+  }, [setHeaderTheme, theme])
 
   return (
     <header

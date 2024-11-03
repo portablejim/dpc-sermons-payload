@@ -8,7 +8,7 @@ import { ImageMedia } from '../Media/ImageMedia'
 
 import classes from './index.module.scss'
 import { Button } from '@payloadcms/ui'
-import { ICON_SVG_CHEVRON_RIGHT, ICON_SVG_MUSIC, svgToDataURI } from '@/utilities/iconsSvg'
+import { ICON_SVG_CHEVRON_RIGHT, ICON_SVG_CHEVRON_RIGHT_REACT, ICON_SVG_MUSIC, ICON_SVG_MUSIC_REACT, ICON_SVG_REACT, svgToDataURI } from '@/utilities/iconsSvg'
 
 export const EpisodeRow: React.FC<{
   alignItems?: 'center'
@@ -95,7 +95,9 @@ export const EpisodeRow: React.FC<{
   if (doc?.audioFormat !== 'none') {
     listenButton = <div className="flex-shrink-0 flex">
       <Button className="px-2 h-10 mx-1 leading-10 text-nowrap border-gray-200 border-solid border-1 hidden md:block">Listen</Button>
-      <Button className="px-2 h-10 mx-1 leading-10 flex-shrink-0 flex items-center text-nowrap border-gray-200 border-solid border-1 md:hidden"><Image src={svgToDataURI(ICON_SVG_MUSIC)} alt={detailsButtonText} width={16} height={16} /></Button>
+      <Button className="px-2 h-10 mx-1 leading-10 flex-shrink-0 flex items-center text-nowrap border-gray-200 border-solid border-1 md:hidden">
+        <ICON_SVG_REACT className="w-6 h-6 fill-black dark:fill-white" role='img' label='Listen' ariaHidden={false} svgInner={ICON_SVG_MUSIC_REACT} />
+        </Button>
       </div>
   }
 
@@ -140,7 +142,9 @@ export const EpisodeRow: React.FC<{
       {listenButton}
       <div className="flex-shrink-0 flex">
           <Link className="px-2 h-10 leading-10 text-nowrap border-gray-200 border-solid border-1 block xs:hidden md:block" href={href}>{detailsButtonText}</Link>
-          <Link className="px-2 h-10 leading-10 flex-shrink-0 text-nowrap border-gray-200 border-solid border-1 hidden xs:flex md:hidden" href={href}><Image src={svgToDataURI(ICON_SVG_CHEVRON_RIGHT)} alt={detailsButtonText} width={16} height={16} /></Link>
+          <Link className="px-2 h-10 leading-10 flex-shrink-0 items-center text-nowrap border-gray-200 border-solid border-1 hidden xs:flex md:hidden" href={href} title={detailsButtonText}>
+            <ICON_SVG_REACT className="w-6 h-6 fill-black dark:fill-white" role='img' label={detailsButtonText} ariaHidden={false} svgInner={ICON_SVG_CHEVRON_RIGHT_REACT} />
+          </Link>
       </div>
       </div>
     </div>

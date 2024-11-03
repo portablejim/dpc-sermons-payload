@@ -9,7 +9,7 @@ import { EpisodeRow } from '../EpisodeRow'
 
 import classes from './index.module.scss'
 import { Spinner } from '@nextui-org/react'
-import { ICON_SVG_MINUS, ICON_SVG_PLUS, ICON_SVG_PODCAST, svgToDataURI } from '@/utilities/iconsSvg'
+import { ICON_SVG_MINUS, ICON_SVG_MINUS_REACT, ICON_SVG_PLUS, ICON_SVG_PLUS_REACT, ICON_SVG_PODCAST, ICON_SVG_PODCAST_REACT, ICON_SVG_REACT, svgToDataURI } from '@/utilities/iconsSvg'
 import Image from 'next/image'
 import * as Accordion from "@radix-ui/react-accordion"
 import useOnScreen from '@/utilities/useInteraction'
@@ -110,8 +110,8 @@ export const EpisodeGroupList: React.FC<Props> = props => {
   }, [episodeType, episodeRange, isOpen, isVisible])
 
   const accordionActionItem = isOpen ? 
-    <Image src={svgToDataURI(ICON_SVG_MINUS)} width={16} height={16} style={{width: '1rem', height: '1rem'}} alt="Click to reduce" /> :
-    <Image src={svgToDataURI(ICON_SVG_PLUS)} width={16} height={16} style={{width: '1rem', height: '1rem'}} alt="Click to expand" />
+    <ICON_SVG_REACT className="w-6 h-6 fill-black dark:fill-white" role='img' label="Click to redce" ariaHidden={false} svgInner={ICON_SVG_MINUS_REACT} /> :
+    <ICON_SVG_REACT className="w-6 h-6 fill-black dark:fill-white" role='img' label="Click to expand" ariaHidden={false} svgInner={ICON_SVG_PLUS_REACT} />
 
   return (
 
@@ -131,7 +131,7 @@ export const EpisodeGroupList: React.FC<Props> = props => {
       </Accordion.AccordionHeader>
           <div className="ml-2 sm:ml-8 py-2 pr-2 flex-shrink-0 flex flex-row items-center">
             <a href={rssUrl} title="RSS Podcast">
-              <Image className='w-4 h-4' src={svgToDataURI(ICON_SVG_PODCAST)} width={16} height={16} alt="Podcast" />
+              <ICON_SVG_REACT className="w-6 h-6 fill-black dark:fill-white" role='img' label="Podcast" ariaHidden={false} svgInner={ICON_SVG_PODCAST_REACT} />
               </a>
           </div>
         </div>
