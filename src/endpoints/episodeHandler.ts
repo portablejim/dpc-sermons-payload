@@ -1,4 +1,3 @@
-import { sql } from '@payloadcms/db-postgres'
 import { desc, eq } from 'drizzle-orm/expressions';
 import { type PayloadHandler } from 'payload'
 
