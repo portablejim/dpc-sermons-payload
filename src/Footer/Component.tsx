@@ -19,14 +19,14 @@ export async function Footer() {
         <Link className="flex items-center" href="/">
           <picture>
             <img
-              alt="Payload Logo"
+              alt="DPC Logo"
               className="max-w-[3rem] invert-0"
               src={baseUrl + '/dpc-mini-logo.png'}
             />
           </picture>
         </Link>
 
-        <div className="flex flex-col-reverse items-start md:flex-row gap-4 md:items-center">
+        <div className="flex flex-col-reverse items-start md:flex-row gap-4 md:items-center pb-4 md:pb-0">
           <ThemeSelector />
           <nav className="flex flex-col md:flex-row gap-4">
             {navItems.map(({ link }, i) => {
