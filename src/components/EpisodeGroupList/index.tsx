@@ -117,7 +117,7 @@ export const EpisodeGroupList: React.FC<Props> = props => {
 
     <Accordion.AccordionItem ref={ref} className='accordionItem my-4' value={episodeRange}>
     <div className="border-1">
-        <div className="flex flex-row bg-gray-100">
+        <div className="flex flex-row bg-gray-100 dark:bg-neutral-900">
       <Accordion.AccordionHeader className='flex-grow px-2 py-2'>
           <Accordion.AccordionTrigger className='flex-grow w-full'>
           <div className="flex flex-row items-center">
