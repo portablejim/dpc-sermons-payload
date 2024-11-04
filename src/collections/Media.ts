@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url'
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { open, openSync, readFileSync } from 'fs'
+import { ensureGuid } from '@/hooks/ensureGuid'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -49,7 +50,9 @@ export const Media: CollectionConfig = {
         readOnly: true,
         position: 'sidebar',
       },
-      defaultValue: () => crypto.randomUUID()
+      hooks: {
+        beforeValidate: [ensureGuid]
+      }
     },
   ],
   upload: {

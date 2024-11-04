@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
+import { ensureGuid } from '@/hooks/ensureGuid'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -88,7 +89,9 @@ export const CoverImages: CollectionConfig = {
         readOnly: true,
         position: 'sidebar',
       },
-      defaultValue: () => crypto.randomUUID()
+      hooks: {
+        beforeValidate: [ensureGuid]
+      }
     },
   ],
 }

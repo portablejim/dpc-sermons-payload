@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 //import buildDependentFieldUpdater from '../components/ui/buildDependantFieldUpdater'
 import type { Series } from '@/payload-types'
 import { authenticated } from '@/access/authenticated'
+import { ensureGuid } from '@/hooks/ensureGuid'
 
 const getExpandedTitle = (doc): string => {
   if (typeof doc.subtitle === 'string' && doc.subtitle.trim().length > 0) {
@@ -171,7 +172,9 @@ const TalkSeries: CollectionConfig = {
         readOnly: true,
         position: 'sidebar',
       },
-      defaultValue: () => crypto.randomUUID()
+      hooks: {
+        beforeValidate: [ensureGuid]
+      },
     },
   ],
 }

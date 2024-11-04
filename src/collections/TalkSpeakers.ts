@@ -1,3 +1,4 @@
+import { ensureGuid } from '@/hooks/ensureGuid'
 import type { CollectionConfig } from 'payload'
 
 const TalkSpeakers: CollectionConfig = {
@@ -25,7 +26,9 @@ const TalkSpeakers: CollectionConfig = {
         readOnly: true,
         position: 'sidebar',
       },
-      defaultValue: () => crypto.randomUUID()
+      hooks: {
+        beforeValidate: [ensureGuid]
+      }
     },
   ],
 }

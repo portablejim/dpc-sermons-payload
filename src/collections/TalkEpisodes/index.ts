@@ -7,6 +7,7 @@ import { revalidateEpisode } from './hooks/revalidateEpisode'
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
 import { episodeList, validYears } from '@/endpoints/episodeHandler'
+import { ensureGuid } from '@/hooks/ensureGuid'
 
 export const TalkEpisodes: CollectionConfig = {
   slug: 'episodes',
@@ -373,7 +374,9 @@ export const TalkEpisodes: CollectionConfig = {
         readOnly: true,
         position: 'sidebar',
       },
-      defaultValue: () => crypto.randomUUID()
+      hooks: {
+        beforeValidate: [ensureGuid]
+      }
     },
   ],
   endpoints: [
