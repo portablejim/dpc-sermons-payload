@@ -69,6 +69,7 @@ export const SeriesList: React.FC<Props> = props => {
           page,
           sort: '-seriesDate',
           where: {},
+          limit: 0,
         },
         { encode: false },
       )
