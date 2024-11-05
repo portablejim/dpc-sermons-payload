@@ -7,5 +7,15 @@ export const LibraryList: Block = {
     singular: 'Sermon Library Block',
   },
   fields: [
+    {
+      name: 'episodeType',
+      label: 'Type',
+      type: 'select',
+      options: [
+        { label: 'Regular Sunday', value: 'regular' },
+        { label: 'Special Event', value: 'special' },
+      ],
+      defaultValue: 'regular',
+    },
   ],
 }

@@ -199,6 +199,7 @@ export interface Page {
         blockType: 'linkTileList';
       }
     | {
+        episodeType?: ('regular' | 'special') | null;
         id?: string | null;
         blockName?: string | null;
         blockType: 'libraryList';
