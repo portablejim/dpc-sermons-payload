@@ -79,6 +79,26 @@ export const CoverImages: CollectionConfig = {
       }),
     },
     {
+      name: 'version',
+      type: 'number',
+      defaultValue: 1,
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+      },
+      hooks: {
+        beforeChange: [
+          ({ value }) => {
+            if (typeof value === 'number') {
+              return value + 1
+            }
+
+            return value
+          },
+        ],
+      },
+    },
+    {
       name: 'guid',
       type: 'text',
       label: 'GUID',

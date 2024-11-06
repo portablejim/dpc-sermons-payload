@@ -106,6 +106,7 @@ export interface CoverImage {
     };
     [k: string]: unknown;
   } | null;
+  version?: number | null;
   guid?: string | null;
   updatedAt: string;
   createdAt: string;
