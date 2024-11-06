@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url'
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { ensureGuid } from '@/hooks/ensureGuid'
+import { getFileData } from '@/hooks/getFileData'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -25,6 +26,9 @@ export const TalkAudio: CollectionConfig = {
   },
   admin: {
     group: 'Media',
+  },
+  hooks: {
+    afterChange: [getFileData],
   },
   fields: [
     {
@@ -173,7 +177,7 @@ export const TalkAudio: CollectionConfig = {
         position: 'sidebar',
       },
       hooks: {
-        beforeValidate: [ensureGuid]
+        beforeValidate: [ensureGuid],
       }
     },
   ],

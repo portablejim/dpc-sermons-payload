@@ -165,8 +165,14 @@ export const EpisodeShow: React.FC<Props> = props => {
   let targetSeries = targetEpisode.series
 
   let audioPlayerType: AudioPlayerType = 'none'
+  let mp3Url: string | null = null
   if (targetEpisode.audioFormat === 'linked') {
     audioPlayerType = 'linked'
+    mp3Url = targetEpisode.linkedAudioUrl ?? null
+  } else if (targetEpisode.audioFormat === 'uploaded' && typeof targetEpisode.uploadedAudioFile === 'object' && targetEpisode.uploadedAudioFile !== undefined) {
+    audioPlayerType = 'uploaded'
+    let baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? ''
+    mp3Url = baseUrl + '/' + (targetEpisode.uploadedAudioFile?.url ?? '')
   }
 
   let videoPlayerType: VideoPlayerType = 'none'
@@ -223,7 +229,7 @@ export const EpisodeShow: React.FC<Props> = props => {
           setDoPlay(true)
         }}
       />
-      <AudioPlayerSection playerType={audioPlayerType} mp3Url={targetEpisode.linkedAudioUrl ?? null} />
+      <AudioPlayerSection playerType={audioPlayerType} mp3Url={mp3Url} />
       <h2 className={classes.partHeading}>Talk Outline</h2>
       {targetEpisode.talkOutline ? <RichText content={targetEpisode.talkOutline} /> : <></>}
       <div className={classes.belowEpisode} />

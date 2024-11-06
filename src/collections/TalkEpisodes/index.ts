@@ -133,13 +133,29 @@ export const TalkEpisodes: CollectionConfig = {
       type: 'array',
       fields: [
         {
-          name: 'chapter',
-          type: 'relationship',
-          relationTo: 'bible-chapters',
-          admin: {
-            allowCreate: false,
-          },
-        },
+          type: 'row',
+          fields: [
+            {
+              name: 'chapter',
+              type: 'relationship',
+              relationTo: 'bible-chapters',
+              required: true,
+              admin: {
+                allowCreate: false,
+              },
+            },
+            {
+              name: 'verseStart',
+              type: 'number',
+              required: true,
+            },
+            {
+              name: 'verseEnd',
+              type: 'number',
+              required: true,
+            },
+          ],
+        }
       ],
     },
     {

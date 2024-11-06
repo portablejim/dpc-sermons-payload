@@ -611,7 +611,9 @@ export interface Episode {
   biblePassageText?: string | null;
   biblePassages?:
     | {
-        chapter?: (number | null) | BibleChapter;
+        chapter: number | BibleChapter;
+        verseStart: number;
+        verseEnd: number;
         id?: string | null;
       }[]
     | null;

@@ -1,7 +1,7 @@
 import { getPayload, PaginatedDocs } from "payload"
 import configPromise from '@payload-config'
 import config from '@payload-config'
-import { Episode } from "@/payload-types"
+import { Episode, TalkAudio } from "@/payload-types"
 import { equal } from "assert"
 import url from 'url'
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url"
@@ -207,6 +207,7 @@ export async function GET(
         },
         sort: '-sermonDate',
         limit: 99,
+        showHiddenFields: true,
       })
     } else if(typeof filter === 'number') {
       let startDate = filter.toFixed(0).padStart(4, '0') + '-01-01';
@@ -259,6 +260,12 @@ export async function GET(
           audioUrl = e.linkedAudioUrl ?? ''
           audioLength = Math.round(e.linkedAudioFileSize ?? 0).toFixed(0)
           audioDuration = new Date((e.linkedAudioLength ?? 0) * 1000).toISOString().slice(11, 19);
+        } else if (e.audioFormat === 'uploaded' && typeof e.uploadedAudioFile === 'object' && e.uploadedAudioFile !== undefined) {
+          let audioFile: TalkAudio = e.uploadedAudioFile
+          audioMimetype = audioFile.mimeType ?? ''
+          audioUrl = baseUrl + '/' + (audioFile.url ?? '')
+          audioLength = Math.round(audioFile.filesize ?? 0).toFixed(0)
+          audioDuration = new Date((audioFile.lengthSeconds ?? 0) * 1000).toISOString().slice(11, 19);
         }
 
         let isPermaLink = 'false'
