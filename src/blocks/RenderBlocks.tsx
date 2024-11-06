@@ -11,9 +11,11 @@ import { SeriesList } from '@/blocks/SeriesList/Component'
 import { LibraryList } from '@/blocks/LibraryList/Component'
 import { LinkTileList } from '@/blocks/LinkTileList/Component'
 import { CodeBlock } from '@/blocks/Code/Component'
+import { CodeBlock as CodeBlocksBlock } from '@/blocks/CodeBlock/Component'
 
 const blockComponents = {
   code: CodeBlock,
+  'code-block': CodeBlocksBlock,
   content: ContentBlock,
   cta: CallToActionBlock,
   formBlock: FormBlock,
@@ -41,7 +43,7 @@ export const RenderBlocks: React.FC<{
 
             if (Block) {
               return (
-                <div className="my-16" key={index}>
+                <div className="my-8" key={index}>
                   <Block {...block} />
                 </div>
               )

@@ -121,7 +121,6 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
-    push: false,
   }),
   collections: [BibleBooks, BibleChapters, CoverImages, Pages, Media, TalkAudio, TalkEpisodes, TalkSeries, TalkSpeakers, Users],
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),

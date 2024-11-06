@@ -52,13 +52,17 @@ export default async function Page({ params: paramsPromise }: Args) {
     return <PayloadRedirects url={url} />
   }
 
-  const { layout } = page
+  const { layout, title } = page
 
   return (
-    <article className="pt-16 pb-24">
+    <article className="pt-8 pb-16">
       <PageClient />
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
+
+      <div className="container">
+        <h1 className="text-xl md:text-3xl">{title}</h1>
+      </div>
 
       <RenderBlocks blocks={layout} />
     </article>
