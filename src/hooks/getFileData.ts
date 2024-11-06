@@ -2,6 +2,10 @@ import { AfterChangeHook } from 'node_modules/payload/dist/collections/config/ty
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+
 let ffmpeg = require('fluent-ffmpeg')
 
 // Revalidate the post in the background, so the user doesn't have to wait
