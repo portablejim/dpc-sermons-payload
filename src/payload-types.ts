@@ -206,6 +206,13 @@ export interface Page {
         blockType: 'libraryList';
       }
     | CodeBlock
+    | {
+        bodyCode?: string | null;
+        cssCode?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'code-block';
+      }
   )[];
   meta?: {
     title?: string | null;

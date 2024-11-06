@@ -10,8 +10,10 @@ import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { SeriesList } from '@/blocks/SeriesList/Component'
 import { LibraryList } from '@/blocks/LibraryList/Component'
 import { LinkTileList } from '@/blocks/LinkTileList/Component'
+import { CodeBlock } from '@/blocks/Code/Component'
 
 const blockComponents = {
+  code: CodeBlock,
   content: ContentBlock,
   cta: CallToActionBlock,
   formBlock: FormBlock,
