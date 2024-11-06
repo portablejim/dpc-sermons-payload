@@ -260,7 +260,7 @@ export async function GET(
           audioUrl = e.linkedAudioUrl ?? ''
           audioLength = Math.round(e.linkedAudioFileSize ?? 0).toFixed(0)
           audioDuration = new Date((e.linkedAudioLength ?? 0) * 1000).toISOString().slice(11, 19);
-        } else if (e.audioFormat === 'uploaded' && typeof e.uploadedAudioFile === 'object' && e.uploadedAudioFile !== undefined) {
+        } else if (e.audioFormat === 'uploaded' && typeof e.uploadedAudioFile === 'object' && e.uploadedAudioFile !== undefined && e.uploadedAudioFile !== null) {
           let audioFile: TalkAudio = e.uploadedAudioFile
           audioMimetype = audioFile.mimeType ?? ''
           audioUrl = baseUrl + '/' + (audioFile.url ?? '')

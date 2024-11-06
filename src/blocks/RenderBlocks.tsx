@@ -15,7 +15,7 @@ import { CodeBlock as CodeBlocksBlock } from '@/blocks/CodeBlock/Component'
 
 const blockComponents = {
   code: CodeBlock,
-  'code-block': CodeBlocksBlock,
+  'row-code-block': CodeBlocksBlock,
   content: ContentBlock,
   cta: CallToActionBlock,
   formBlock: FormBlock,

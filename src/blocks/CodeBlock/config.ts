@@ -1,7 +1,7 @@
 import type { Block } from 'payload'
 
 export const CodeBlock: Block = {
-  slug: 'code-block',
+  slug: 'raw-code-block',
   labels: {
     singular: 'Raw HTML/CSS Code Block',
     plural: 'Raw HTML/CSS Code Blocks',

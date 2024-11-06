@@ -238,7 +238,7 @@ export interface Page {
         limitWidth?: boolean | null;
         id?: string | null;
         blockName?: string | null;
-        blockType: 'code-block';
+        blockType: 'raw-code-block';
       }
   )[];
   meta?: {
@@ -1061,7 +1061,7 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
-        'code-block'?:
+        'raw-code-block'?:
           | T
           | {
               cssCode?: T;
