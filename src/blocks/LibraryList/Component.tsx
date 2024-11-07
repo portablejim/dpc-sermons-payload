@@ -20,6 +20,7 @@ type Result = {
 
 export type Props = {
   className?: string
+  episodeType?: string
   limit?: number
   onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
   showPageRange?: boolean
@@ -27,7 +28,7 @@ export type Props = {
 }
 
 export const LibraryList: React.FC<Props> = async props => {
-  const { className } = props
+  const { className, episodeType } = props
 
   const yearListPromise = (async () => {
     let timestamp = new Date()
@@ -58,7 +59,7 @@ export const LibraryList: React.FC<Props> = async props => {
           <div className='container flex flex-col justify-between'>
             <LibraryListComponent byDateTab={(
               <div className="episodeListContainer">
-                <EpisodeGroupsList initialEpisodeList={latestEpisodes} yearListPromise={yearListPromise} />
+                <EpisodeGroupsList initialEpisodeList={latestEpisodes} episodeType={episodeType} yearListPromise={yearListPromise} />
               </div>
             )}
             bySeriesTab = {(
