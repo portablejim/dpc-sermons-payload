@@ -7,7 +7,6 @@ import { Media } from '../Media'
 import { ImageMedia } from '../Media/ImageMedia'
 
 import classes from './index.module.scss'
-import { Button } from '@payloadcms/ui'
 import { ICON_SVG_CHEVRON_RIGHT, ICON_SVG_CHEVRON_RIGHT_REACT, ICON_SVG_MUSIC, ICON_SVG_MUSIC_REACT, ICON_SVG_REACT, svgToDataURI } from '@/utilities/iconsSvg'
 
 export const EpisodeRow: React.FC<{
@@ -94,10 +93,10 @@ export const EpisodeRow: React.FC<{
   let listenButton = <></>
   if (doc?.audioFormat !== 'none') {
     listenButton = <div className="flex-shrink-0 flex">
-      <Button className="px-2 h-10 mx-1 leading-10 text-nowrap border-gray-200 border-solid border-1 hidden md:block">Listen</Button>
-      <Button className="px-2 h-10 mx-1 leading-10 flex-shrink-0 flex items-center text-nowrap border-gray-200 border-solid border-1 md:hidden">
+      <button className="px-2 h-10 mx-1 leading-10 text-nowrap border-gray-200 border-solid border-1 hidden md:block">Listen</button>
+      <button className="px-2 h-10 mx-1 leading-10 flex-shrink-0 flex items-center text-nowrap border-gray-200 border-solid border-1 md:hidden">
         <ICON_SVG_REACT className="w-6 h-6 fill-black dark:fill-white" role='img' label='Listen' ariaHidden={false} svgInner={ICON_SVG_MUSIC_REACT} />
-        </Button>
+        </button>
       </div>
   }
 
