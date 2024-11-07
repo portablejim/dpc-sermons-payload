@@ -4,6 +4,7 @@ import type { CollectionConfig } from 'payload'
 import type { Series } from '@/payload-types'
 import { authenticated } from '@/access/authenticated'
 import { ensureGuid } from '@/hooks/ensureGuid'
+import { revalidateSeries } from '@/utilities/revalidateSeries'
 
 const getExpandedTitle = (doc): string => {
   if (typeof doc.subtitle === 'string' && doc.subtitle.trim().length > 0) {
@@ -56,6 +57,9 @@ const TalkSeries: CollectionConfig = {
     update: authenticated,
     create: authenticated,
     delete: authenticated,
+  },
+  hooks: {
+    afterChange: [revalidateSeries],
   },
   fields: [
     {
@@ -160,7 +164,7 @@ const TalkSeries: CollectionConfig = {
       name: 'episodes',
       type: 'join',
       collection: 'episodes',
-      on: 'series'
+      on: 'series',
     },
     {
       name: 'guid',
@@ -173,7 +177,7 @@ const TalkSeries: CollectionConfig = {
         position: 'sidebar',
       },
       hooks: {
-        beforeValidate: [ensureGuid]
+        beforeValidate: [ensureGuid],
       },
     },
   ],
