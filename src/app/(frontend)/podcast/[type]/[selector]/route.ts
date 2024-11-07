@@ -240,6 +240,8 @@ export async function GET(
         },
       },
       sort: '-sermonDate',
+      limit: 99,
+      showHiddenFields: true,
     })
   } else {
     if (selectorParts[1] === 'atom') {
