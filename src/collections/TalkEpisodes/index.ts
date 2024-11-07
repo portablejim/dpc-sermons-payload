@@ -8,6 +8,7 @@ import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
 import { episodeList, validYears } from '@/endpoints/episodeHandler'
 import { ensureGuid } from '@/hooks/ensureGuid'
+import { validBooks, episodeByBookList } from '@/endpoints/episodeBookHandler'
 
 export const TalkEpisodes: CollectionConfig = {
   slug: 'episodes',
@@ -405,6 +406,16 @@ export const TalkEpisodes: CollectionConfig = {
       path: '/byYear/:type/:year',
       method: 'get',
       handler: episodeList
+    },
+    {
+      path: '/bookList/:type',
+      method: 'get',
+      handler: validBooks
+    },
+    {
+      path: '/byBook/:type/:book',
+      method: 'get',
+      handler: episodeByBookList
     },
   ],
 }
