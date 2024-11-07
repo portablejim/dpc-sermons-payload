@@ -27,7 +27,7 @@ export type Props = {
   sort?: string
 }
 
-export const LibraryList: React.FC<Props> = async props => {
+export const LibraryList: React.FC<Props> = async (props) => {
   const { className, episodeType } = props
 
   const yearListPromise = (async () => {
@@ -36,16 +36,20 @@ export const LibraryList: React.FC<Props> = async props => {
     if (timestamp.getMonth() < 7) {
       yearsToRemove.push((timestamp.getFullYear() - 1).toFixed(0))
     }
-    let yearsRaw = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/yearList/regular`)
+    let yearsRaw = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/yearList/regular`,
+    )
     let yearsJson = (await yearsRaw.json()) as string[]
-    if(yearsJson && Array.isArray(yearsJson)) {
-      return yearsJson.filter(y => !yearsToRemove.includes(y))
+    if (yearsJson && Array.isArray(yearsJson)) {
+      return yearsJson.filter((y) => !yearsToRemove.includes(y))
     } else {
       return []
     }
   })()
 
-  const latestEpisodesRaw = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/byYear/regular/latest`)
+  const latestEpisodesRaw = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/byYear/regular/latest`,
+  )
   const latestEpisodesJson = (await latestEpisodesRaw.json()) as Episode[]
 
   let latestEpisodes: Episode[] = []
@@ -56,20 +60,21 @@ export const LibraryList: React.FC<Props> = async props => {
   return (
     <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>
       <Fragment>
-          <div className='container flex flex-col justify-between'>
-            <LibraryListComponent byDateTab={(
+        <div className="container flex flex-col justify-between">
+          <LibraryListComponent
+            byDateTab={
               <div className="episodeListContainer">
-                <EpisodeGroupsList initialEpisodeList={latestEpisodes} episodeType={episodeType} yearListPromise={yearListPromise} />
+                <EpisodeGroupsList
+                  initialEpisodeList={latestEpisodes}
+                  episodeType={episodeType}
+                  yearListPromise={yearListPromise}
+                />
               </div>
-            )}
-            bySeriesTab = {(
-              <SeriesList />
-            )}
-            byPassageTab = {(
-              <p>Bible books</p>
-            )}
-             />
-          </div>
+            }
+            bySeriesTab={<SeriesList />}
+            byPassageTab={<p>Bible books</p>}
+          />
+        </div>
       </Fragment>
     </div>
   )
