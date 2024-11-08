@@ -88,7 +88,7 @@ let PlayerSection = ({
         <div className={classes.videoPlayer}>
           <div className={classes.playerInner}>
             <div className={classes.playerPlayButton}>
-              <Button className='btn' appearance="primary" label="Play" onClick={onPlayClick} />
+              <Button className="btn" appearance="primary" label="Play" onClick={onPlayClick} />
             </div>
             <ImageMedia
               className={classes.playerCoverImage}
@@ -149,13 +149,13 @@ export type Props = {
   sort?: string
 }
 
-export const EpisodeShow: React.FC<Props> = props => {
+export const EpisodeShow: React.FC<Props> = (props) => {
   const { targetEpisode, sort = '-createdAt' } = props
 
   let hasCoverImage = false
   let targetImage: CoverImage | string = ''
   let targetImageUrl: StaticImageData | undefined = {
-    src: '/dpc-mini-logo.png',
+    src: '/dpcPodcastGenericLogo_plain.svg',
     height: 300,
     width: 300,
   }
@@ -169,7 +169,11 @@ export const EpisodeShow: React.FC<Props> = props => {
   if (targetEpisode.audioFormat === 'linked') {
     audioPlayerType = 'linked'
     mp3Url = targetEpisode.linkedAudioUrl ?? null
-  } else if (targetEpisode.audioFormat === 'uploaded' && typeof targetEpisode.uploadedAudioFile === 'object' && targetEpisode.uploadedAudioFile !== undefined) {
+  } else if (
+    targetEpisode.audioFormat === 'uploaded' &&
+    typeof targetEpisode.uploadedAudioFile === 'object' &&
+    targetEpisode.uploadedAudioFile !== undefined
+  ) {
     audioPlayerType = 'uploaded'
     let baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? ''
     mp3Url = baseUrl + '/' + (targetEpisode.uploadedAudioFile?.url ?? '')
@@ -180,14 +184,12 @@ export const EpisodeShow: React.FC<Props> = props => {
     videoPlayerType = 'vimeo'
   }
 
-  let vimeoUrl = '';
-  if(targetEpisode && targetEpisode.videoUrl)
-  {
+  let vimeoUrl = ''
+  if (targetEpisode && targetEpisode.videoUrl) {
     let videoUrlParts = targetEpisode.videoUrl.match(
       /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/,
     )
-    if(videoUrlParts)
-    {
+    if (videoUrlParts) {
       vimeoUrl = 'https://player.vimeo.com/video/' + videoUrlParts[3]
     }
   }
@@ -206,7 +208,7 @@ export const EpisodeShow: React.FC<Props> = props => {
   }
   if (targetImageUrl === undefined || targetImageUrl === null) {
     targetImageUrl = {
-      src: '/dpcPodcastGenericLogo_plain.png',
+      src: '/dpcPodcastGenericLogo_plain.svg',
       height: 1920,
       width: 1080,
     }
