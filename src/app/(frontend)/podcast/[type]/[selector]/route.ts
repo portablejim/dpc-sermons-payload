@@ -3,7 +3,6 @@ import configPromise from '@payload-config'
 import config from '@payload-config'
 import { Episode, TalkAudio } from '@/payload-types'
 import { equal } from 'assert'
-import url from 'url'
 import { parseUrl } from 'next/dist/shared/lib/router/utils/parse-url'
 import uuidv5 from 'uuidv5'
 
@@ -77,17 +76,17 @@ export async function GET(
     ?.split(',')
     .map((acc) => acc.trim().split(';')[0])
   let disposition = 'inline'
-  let parsedUrl = new URL(request.url, baseUrl)
-  if (parsedUrl.searchParams.has('download') && parsedUrl.searchParams.get('download') === 'true') {
+  let parsedRequestUrl = new URL(request.url)
+  let parsedUrl = new URL(parsedRequestUrl.pathname, baseUrl)
+  if (
+    parsedRequestUrl.searchParams.has('download') &&
+    parsedRequestUrl.searchParams.get('download') === 'true'
+  ) {
     disposition = 'attachment'
   }
 
-  let mimeTypeAtom = 'plan/text'
-  let mimeTypeRss = 'plan/text'
-  if (acceptHeaders?.includes('text/xml')) {
-    mimeTypeAtom = 'text/xml'
-    mimeTypeRss = 'text/xml'
-  }
+  let mimeTypeAtom = 'text/xml'
+  let mimeTypeRss = 'text/xml'
   if (acceptHeaders?.includes('application/xml')) {
     mimeTypeAtom = 'application/xml'
     mimeTypeRss = 'application/xml'
@@ -169,6 +168,7 @@ export async function GET(
   // Or: <year>.xml / <year>.rss / <year>.atom
 
   let payload = getPayload({ config })
+  ;(await payload).logger.info({ acceptHeaders })
 
   let titleTalkType = 'Bible'
   let titleTalkTypeSuffix = ''
