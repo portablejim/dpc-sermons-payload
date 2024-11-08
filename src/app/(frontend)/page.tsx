@@ -7,5 +7,5 @@ export default PageTemplate
 export { generateMetadata }
 
 export function generateStaticParams() {
-  return [{ slug: 'home' }]
+  return []
 }

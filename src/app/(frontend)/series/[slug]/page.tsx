@@ -6,9 +6,7 @@ import { getPayloadHMR } from '@payloadcms/next/utilities'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
-import type {
-  Series as SeriesType,
-} from '@/payload-types'
+import type { Series as SeriesType } from '@/payload-types'
 import { SeriesShow } from '../../../../components/SeriesShow'
 
 import { generateSeriesMeta } from '@/utilities/generateMeta'
@@ -39,7 +37,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   return (
     <>
-      <div className='container'>
+      <div className="container">
         <SeriesShow targetSeries={series} />
       </div>
     </>
@@ -47,23 +45,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 }
 
 export async function generateStaticParams() {
-  const payload = await getPayloadHMR({ config: configPromise })
-  const pages = await payload.find({
-    collection: 'series',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-  })
-
-  const params = pages.docs
-    ?.filter((doc) => {
-      return doc.slug !== 'home'
-    })
-    .map(({ slug }) => {
-      return { slug }
-    })
-
-  return params
+  return []
 }
 
 export async function generateMetadata({ params: paramsPromise }): Promise<Metadata> {
