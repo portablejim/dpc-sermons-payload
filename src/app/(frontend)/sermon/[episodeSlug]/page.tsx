@@ -4,9 +4,7 @@ import { draftMode } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
 import payload from 'payload'
 
-import {
-  Episode,
-} from '@/payload-types'
+import { Episode } from '@/payload-types'
 import { EpisodeShow } from '../../../../components/EpisodeShow'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import configPromise from '@payload-config'
@@ -27,7 +25,7 @@ type Args = {
   }>
 }
 
-export default async function Page({ params: paramsPromise } : Args) {
+export default async function Page({ params: paramsPromise }: Args) {
   const { slug, episodeSlug } = await paramsPromise
   let episode: Episode | null = null
 
@@ -47,13 +45,13 @@ export default async function Page({ params: paramsPromise } : Args) {
     return notFound()
   }
 
-  if(typeof episode.series !== 'number' && episode.series?.slug) {
+  if (typeof episode.series !== 'number' && episode.series?.slug) {
     return redirect(`../series/${episode.series.slug}/sermon/${episode.slug}`)
   }
 
   return (
     <>
-      <div className='container'>
+      <div className="container">
         <EpisodeShow targetEpisode={episode} />
       </div>
     </>
@@ -61,9 +59,9 @@ export default async function Page({ params: paramsPromise } : Args) {
 }
 
 export async function generateMetadata({ params: paramsPromise }): Promise<Metadata> {
-  const { slug = 'home' } = await paramsPromise
+  const { episodeSlug = '' } = await paramsPromise
   const page = await queryEpisodeBySlug({
-    slug,
+    slug: episodeSlug,
   })
 
   return generateEpisodeMeta({ doc: page })
@@ -86,7 +84,7 @@ const queryEpisodeBySlug = cache(async ({ slug }: { slug: string }) => {
     },
   })
 
-  payload.logger.info({result})
+  payload.logger.info({ result })
 
   return result.docs?.[0] || null
 })
