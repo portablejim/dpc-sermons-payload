@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 
 import type { Episode, Series } from '@/payload-types'
-import { SeriesList } from '../../components/SeriesList'
+import { SeriesList, SeriesListPreload } from '../../components/SeriesList'
 
 import classes from './index.module.scss'
 import { EpisodeGroupsList } from '@/components/EpisodeGroupsList'
@@ -28,7 +28,7 @@ export type Props = {
 }
 
 export const LibraryList: React.FC<Props> = async (props) => {
-  const { className, episodeType } = props
+  const { className, episodeType = 'regular' } = props
 
   const yearListPromise = (async () => {
     let timestamp = new Date()
@@ -37,7 +37,7 @@ export const LibraryList: React.FC<Props> = async (props) => {
       yearsToRemove.push((timestamp.getFullYear() - 1).toFixed(0))
     }
     let yearsRaw = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/yearList/regular`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/yearList/${episodeType}`,
     )
     let yearsJson = (await yearsRaw.json()) as string[]
     if (yearsJson && Array.isArray(yearsJson)) {
@@ -48,7 +48,7 @@ export const LibraryList: React.FC<Props> = async (props) => {
   })()
 
   const latestEpisodesRaw = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/byYear/regular/latest`,
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/byYear/${episodeType}/latest`,
   )
   const latestEpisodesJson = (await latestEpisodesRaw.json()) as Episode[]
 
@@ -59,6 +59,7 @@ export const LibraryList: React.FC<Props> = async (props) => {
 
   return (
     <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>
+      <SeriesListPreload />
       <Fragment>
         <div className="container flex flex-col justify-between">
           <LibraryListComponent
@@ -71,7 +72,7 @@ export const LibraryList: React.FC<Props> = async (props) => {
                 />
               </div>
             }
-            bySeriesTab={<SeriesList />}
+            bySeriesTab={<SeriesList episodeType={episodeType} />}
             byPassageTab={<p>Bible books</p>}
           />
         </div>

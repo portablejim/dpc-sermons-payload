@@ -1,12 +1,54 @@
 'use client'
 
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { Fragment, use, useEffect, useRef, useState } from 'react'
 import qs from 'qs'
 
 import type { Page, Series } from '@/payload-types'
 import { CardSeries } from '../../components/CardSeries'
 
 import classes from './index.module.scss'
+
+export const getSeriesList = (seriesType: string): Promise<any> => {
+  const searchQuery = qs.stringify(
+    {
+      depth: 1,
+      sort: '-seriesDate',
+      where: {
+        seriesType: {
+          equals: seriesType,
+        },
+      },
+      limit: 0,
+    },
+    { encode: false },
+  )
+
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/series?${searchQuery}`, {
+    cache: 'force-cache',
+    next: {
+      revalidate: 300,
+    },
+  })
+    .then((r) => r.json())
+    .catch(() => {
+      return {
+        docs: [],
+        hasNextPage: false,
+        hasPrevPage: false,
+        nextPage: 1,
+        page: 1,
+        prevPage: 1,
+        totalDocs: 0,
+        totalPages: 1,
+      }
+    })
+}
+
+export const SeriesListPreload: React.FC<Props> = (props) => {
+  const { episodeType = 'regular' } = props
+  getSeriesList(episodeType)
+  return <></>
+}
 
 type Result = {
   docs: (Series | string)[]
@@ -21,14 +63,12 @@ type Result = {
 
 export type Props = {
   className?: string
-  limit?: number
-  onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
-  showPageRange?: boolean
-  sort?: string
+  episodeType?: string
+  seriesListPromise?: Promise<Response>
 }
 
-export const SeriesList: React.FC<Props> = props => {
-  const { className, limit = 10, onResultChange, showPageRange, sort = '-createdAt' } = props
+export const SeriesList: React.FC<Props> = (props) => {
+  const { className, episodeType = 'regular' } = props
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | undefined>(undefined)
@@ -76,21 +116,16 @@ export const SeriesList: React.FC<Props> = props => {
 
       const makeRequest = async () => {
         try {
-          const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/series?${searchQuery}`)
-
-          const json = await req.json()
-          if(timer != null) {
+          const json = await getSeriesList(episodeType)
+          if (timer != null) {
             clearTimeout(timer)
           }
 
-          const { docs } = json as { docs: (Page | Series)[] }
+          const { docs } = json as { docs: Series[] }
 
           if (docs && Array.isArray(docs)) {
             setResults(json)
             setIsLoading(false)
-            if (typeof onResultChange === 'function') {
-              onResultChange(json)
-            }
           }
         } catch (err) {
           console.warn(err) // eslint-disable-line no-console
@@ -108,7 +143,7 @@ export const SeriesList: React.FC<Props> = props => {
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [page, onResultChange])
+  }, [episodeType, page])
 
   return (
     <div className={classes.grid}>
