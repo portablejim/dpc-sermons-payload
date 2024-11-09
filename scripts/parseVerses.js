@@ -170,5 +170,4 @@ for (let eIndex = 0; eIndex < episodeList.docs.length; eIndex++) {
   })
   const data = await req.json()
   console.dir({ body: targetObjectStr, data }, { depth: null })
-  break
 }
