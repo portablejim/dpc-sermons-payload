@@ -6,6 +6,7 @@ import { SeriesList, SeriesListPreload } from '../../components/SeriesList'
 import classes from './index.module.scss'
 import { EpisodeGroupsList } from '@/components/EpisodeGroupsList'
 import { LibraryList as LibraryListComponent } from '@/components/LibraryList'
+import { BooksGroupsList, BooksListPreload } from '@/components/BooksGroupsList'
 
 type Result = {
   docs: (Series | string)[]
@@ -60,6 +61,7 @@ export const LibraryList: React.FC<Props> = async (props) => {
   return (
     <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>
       <SeriesListPreload />
+      <BooksListPreload />
       <Fragment>
         <div className="container flex flex-col justify-between">
           <LibraryListComponent
@@ -73,7 +75,7 @@ export const LibraryList: React.FC<Props> = async (props) => {
               </div>
             }
             bySeriesTab={<SeriesList episodeType={episodeType} />}
-            byPassageTab={<p>Bible books</p>}
+            byPassageTab={<BooksGroupsList episodeType={episodeType} />}
           />
         </div>
       </Fragment>
