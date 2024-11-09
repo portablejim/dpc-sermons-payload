@@ -14,8 +14,8 @@ export const generateMeta = async (args: { doc: Page }): Promise<Metadata> => {
     `${process.env.NEXT_PUBLIC_SERVER_URL}${doc.meta.image.url}`
 
   const title = doc?.meta?.title
-    ? doc?.meta?.title + ' | Payload Website Template'
-    : 'Payload Website Template'
+    ? doc?.meta?.title + ' | DPC Sermons & Files Hub'
+    : 'DPC Sermons & Files Hub'
 
   return {
     description: doc?.meta?.description,
@@ -44,7 +44,6 @@ export const generateSeriesMeta = async (args: { doc: Series }): Promise<Metadat
     doc.seriesImage.url !== undefined &&
     `${process.env.NEXT_PUBLIC_SERVER_URL}${doc.seriesImage?.url}`
 
-
   const title = doc?.title
 
   return {
@@ -70,15 +69,15 @@ export const generateEpisodeMeta = async (args: { doc: Episode }): Promise<Metad
 
   const ogImage =
     (typeof doc?.episodeImage === 'object' &&
-    doc.episodeImage !== null &&
-    doc.episodeImage.url !== null &&
-    doc.episodeImage.url !== undefined &&
-    `${process.env.NEXT_PUBLIC_SERVER_URL}${doc.episodeImage.url}`)
-    || (typeof doc?.series === 'object' && typeof doc.series?.seriesImage === 'object' &&
-    doc.series.seriesImage.url !== null &&
-    doc.series.seriesImage.url !== undefined &&
-    `${process.env.NEXT_PUBLIC_SERVER_URL}${doc.series?.seriesImage?.url}`)
-
+      doc.episodeImage !== null &&
+      doc.episodeImage.url !== null &&
+      doc.episodeImage.url !== undefined &&
+      `${process.env.NEXT_PUBLIC_SERVER_URL}${doc.episodeImage.url}`) ||
+    (typeof doc?.series === 'object' &&
+      typeof doc.series?.seriesImage === 'object' &&
+      doc.series.seriesImage.url !== null &&
+      doc.series.seriesImage.url !== undefined &&
+      `${process.env.NEXT_PUBLIC_SERVER_URL}${doc.series?.seriesImage?.url}`)
 
   const title = doc?.fullTitle
 

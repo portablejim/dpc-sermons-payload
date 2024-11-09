@@ -46,7 +46,7 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const generateTitle: GenerateTitle<Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
+  return doc?.title ? `${doc.title} | DPC Sermons & Files Hub` : 'DPC Sermons & Files Hub'
 }
 
 const generateURL: GenerateURL<Page> = ({ doc }) => {
@@ -123,7 +123,18 @@ export default buildConfig({
     },
     push: false,
   }),
-  collections: [BibleBooks, BibleChapters, CoverImages, Pages, Media, TalkAudio, TalkEpisodes, TalkSeries, TalkSpeakers, Users],
+  collections: [
+    BibleBooks,
+    BibleChapters,
+    CoverImages,
+    Pages,
+    Media,
+    TalkAudio,
+    TalkEpisodes,
+    TalkSeries,
+    TalkSpeakers,
+    Users,
+  ],
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   endpoints: [
