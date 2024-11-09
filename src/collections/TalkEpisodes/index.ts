@@ -20,7 +20,7 @@ export const TalkEpisodes: CollectionConfig = {
     useAsTitle: 'title',
     group: 'Sermons',
     defaultColumns: ['title', 'sermonDate', 'series'],
-    preview: doc => {
+    preview: (doc) => {
       return `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/next/preview?url=${encodeURIComponent(
         `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/posts/${doc?.slug}`,
       )}&secret=${process.env.PAYLOAD_PUBLIC_DRAFT_SECRET}`
@@ -35,19 +35,18 @@ export const TalkEpisodes: CollectionConfig = {
         originalDoc, // original document
       }) => {
         if (
-          data && (
-            operation === 'create' ||
+          data &&
+          (operation === 'create' ||
             data.fullTitle == null ||
             data.fullTitle.trim() == '' ||
             data.title != originalDoc.title ||
             data.series != originalDoc.series ||
             data.biblePassageText != originalDoc.biblePassageText ||
-            data.sermonDate != originalDoc.sermonDate
-          )
+            data.sermonDate != originalDoc.sermonDate)
         ) {
           let seriesTitle: null | string = null
           if (data.series) {
-            let payload = await getPayload({config})
+            let payload = await getPayload({ config })
             let foundSeries = await payload.findByID({
               collection: 'series',
               id: data.series,
@@ -156,7 +155,7 @@ export const TalkEpisodes: CollectionConfig = {
               required: true,
             },
           ],
-        }
+        },
       ],
     },
     {
@@ -351,7 +350,7 @@ export const TalkEpisodes: CollectionConfig = {
               return slugFormat(value)
             }
 
-            if (data && data.sermonDate && data.title) {
+            if (data !== undefined && data?.sermonDate && data?.title) {
               const titleSlug = slugFormat(data.title)
               const dateSlug = data.sermonDate.substring(0, 10)
               return `${dateSlug}-${titleSlug}`
@@ -373,7 +372,7 @@ export const TalkEpisodes: CollectionConfig = {
       hooks: {
         beforeValidate: [
           ({ data, operation }) => {
-            if (operation === 'create' && data && !data.fullTitle && data.title) {
+            if (operation === 'create' && data !== undefined && !data?.fullTitle && data?.title) {
               // Temporarily set title for validation
               data.fullTitle = data.title
             }
@@ -392,30 +391,30 @@ export const TalkEpisodes: CollectionConfig = {
         position: 'sidebar',
       },
       hooks: {
-        beforeValidate: [ensureGuid]
-      }
+        beforeValidate: [ensureGuid],
+      },
     },
   ],
   endpoints: [
     {
       path: '/yearList/:type',
       method: 'get',
-      handler: validYears
+      handler: validYears,
     },
     {
       path: '/byYear/:type/:year',
       method: 'get',
-      handler: episodeList
+      handler: episodeList,
     },
     {
       path: '/bookList/:type',
       method: 'get',
-      handler: validBooks
+      handler: validBooks,
     },
     {
       path: '/byBook/:type/:book',
       method: 'get',
-      handler: episodeByBookList
+      handler: episodeByBookList,
     },
   ],
 }
