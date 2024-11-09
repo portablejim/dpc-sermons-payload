@@ -11,11 +11,11 @@ import { SeriesList } from '@/blocks/SeriesList/Component'
 import { LibraryList } from '@/blocks/LibraryList/Component'
 import { LinkTileList } from '@/blocks/LinkTileList/Component'
 import { CodeBlock } from '@/blocks/Code/Component'
-import { CodeBlock as CodeBlocksBlock } from '@/blocks/CodeBlock/Component'
+import { RawCodeBlock } from '@/blocks/RawCodeBlock/Component'
 
 const blockComponents = {
-  code: CodeBlock,
-  'raw-code-block': CodeBlocksBlock,
+  //code: CodeBlock,
+  'raw-code-block': RawCodeBlock,
   content: ContentBlock,
   cta: CallToActionBlock,
   formBlock: FormBlock,

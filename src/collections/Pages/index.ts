@@ -21,7 +21,7 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
-import { CodeBlock } from '@/blocks/CodeBlock/config'
+import { RawCodeBlock } from '@/blocks/RawCodeBlock/config'
 export const Pages: CollectionConfig = {
   slug: 'pages',
   access: {
@@ -66,7 +66,16 @@ export const Pages: CollectionConfig = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, FormBlock, LinkTileList, LibraryList, Code, CodeBlock],
+              blocks: [
+                CallToAction,
+                Content,
+                MediaBlock,
+                FormBlock,
+                LinkTileList,
+                LibraryList,
+                Code,
+                RawCodeBlock,
+              ],
               required: true,
             },
           ],
