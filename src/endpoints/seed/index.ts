@@ -29,8 +29,8 @@ export const seed = async ({
     return
   }
 
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
+  const filename = fileURLToPath(import.meta.url)
+  const dirname = path.dirname(filename)
 
   const booksInfos: Array<{ name: string; order: number; shortName: string; slug: string }> = [
     { name: 'Genesis', order: 1, shortName: 'Gen', slug: '' },
@@ -99,7 +99,7 @@ const dirname = path.dirname(filename)
     { name: '3 John', order: 64, shortName: '3 John', slug: '' },
     { name: 'Jude', order: 65, shortName: 'Jude', slug: '' },
     { name: 'Revelation', order: 66, shortName: 'Rev', slug: '' },
-  ].map(i => {
+  ].map((i) => {
     if (i.slug === '') {
       i.slug = i.name.toLowerCase().replace(' ', '-')
     }
@@ -114,7 +114,7 @@ const dirname = path.dirname(filename)
         .toString()
         .replace(/\r\n/g, '\n') // Unify line endings
         .split('\n')
-        .map(l => l.split(','))
+        .map((l) => l.split(','))
 
       let chaptersList: Array<Array<{ chapterNum: number; numVerses: number }>> = []
       let currentBook = 'Genesis'
@@ -124,7 +124,7 @@ const dirname = path.dirname(filename)
         const currentLine = fullChaptersList[index]
         const currentLineBook = currentLine[0]
         const currentChapterNum = parseInt(currentLine[1])
-        const currentChapterLen = parseInt(currentLine[1])
+        const currentChapterLen = parseInt(currentLine[2])
         if (currentBook !== currentLineBook) {
           chaptersList.push(currentChaptersList)
           currentBook = currentLineBook
@@ -192,23 +192,23 @@ const dirname = path.dirname(filename)
 type SeriesJson = {
   string: {
     title: string
-    date: string,
-    imageUrl: string,
+    date: string
+    imageUrl: string
     episodes: {
-      author: string,
-      biblePassage: string,
-      dateFormatted: string,
-      dateRaw: string,
-      htmlFile: string,
-      length: string,
-      lengthTime: string,
-      lengthTimeSeconds: number,
-      longTitle: string,
-      mp3File: string,
-      series: string,
-      subtitle: string,
-      title: string,
-      vimeoUrl: string,
+      author: string
+      biblePassage: string
+      dateFormatted: string
+      dateRaw: string
+      htmlFile: string
+      length: string
+      lengthTime: string
+      lengthTimeSeconds: number
+      longTitle: string
+      mp3File: string
+      series: string
+      subtitle: string
+      title: string
+      vimeoUrl: string
     }[]
   }
 }
@@ -220,12 +220,11 @@ export const seedEpisodes = async ({
   payload: Payload
   req: PayloadRequest
 }): Promise<void> => {
-
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
+  const filename = fileURLToPath(import.meta.url)
+  const dirname = path.dirname(filename)
 
   let jsonPath = path.resolve(dirname, 'groupedBySeries.json')
-  let jsonData = readFileSync(jsonPath);
+  let jsonData = readFileSync(jsonPath)
   let data: SeriesJson = JSON.parse(jsonData.toString())
 
   const slugFormat = (val: string): string =>
@@ -238,21 +237,19 @@ const dirname = path.dirname(filename)
     collection: 'speakers',
   })
   let authorsMap = new Map<string, number>()
-  ;(await authorFind).docs.forEach(a => {
-    if(typeof a.name === 'string')
-    {
+  ;(await authorFind).docs.forEach((a) => {
+    if (typeof a.name === 'string') {
       authorsMap.set(a.name, a.id)
     }
   })
 
-  let pl = req.payload;
+  let pl = req.payload
 
   let seriesKeys = Object.keys(data)
   for (let index = 0; index < seriesKeys.length; index++) {
     let seriesOb = data[seriesKeys[index]]
     let seriesId: number | null = null
-    if(seriesOb.title && seriesOb.title.trim().length > 2)
-    {
+    if (seriesOb.title && seriesOb.title.trim().length > 2) {
       let trimmedTitle = seriesOb.title.trim()
       payload.logger.info(`Adding series: ${seriesOb.title}`)
       let existingSeries = await pl.find({
@@ -260,10 +257,10 @@ const dirname = path.dirname(filename)
         where: {
           title: {
             equals: trimmedTitle,
-          }
-        }
+          },
+        },
       })
-      if(existingSeries.totalDocs > 0) {
+      if (existingSeries.totalDocs > 0) {
         seriesId = existingSeries.docs[0].id
       } else {
         let createResult = await pl.create({
@@ -274,40 +271,41 @@ const dirname = path.dirname(filename)
             seriesImage: 1,
             slug: slugFormat(seriesOb.date.substring(0, 8) + seriesOb.title),
             expandedTitle: seriesOb.title,
-          }
+          },
         })
         seriesId = createResult.id
       }
     }
     for (let episodeIndex = 0; episodeIndex < seriesOb.episodes.length; episodeIndex++) {
-      const ep = seriesOb.episodes[episodeIndex];
+      const ep = seriesOb.episodes[episodeIndex]
 
       let episodeTitle = ep.title
-      if((!episodeTitle || episodeTitle.trim().length < 2) && ep.biblePassage && ep.biblePassage.length > 2)
-      {
+      if (
+        (!episodeTitle || episodeTitle.trim().length < 2) &&
+        ep.biblePassage &&
+        ep.biblePassage.length > 2
+      ) {
         episodeTitle = ep.biblePassage.trim()
       }
 
-    let authorId: number | undefined = undefined
-    if(ep.author && ep.author.length > 0 && authorsMap.has(ep.author)) {
-      authorId = authorsMap.get(ep.author)
-    }
-    else {
-      let authorCreateResult = await pl.create({
-        collection: 'speakers',
-        data: {
-          name: ep.author
-        }
-      })
-      authorsMap.set(ep.author, authorCreateResult.id)
-      authorId = authorCreateResult.id
-    }
+      let authorId: number | undefined = undefined
+      if (ep.author && ep.author.length > 0 && authorsMap.has(ep.author)) {
+        authorId = authorsMap.get(ep.author)
+      } else {
+        let authorCreateResult = await pl.create({
+          collection: 'speakers',
+          data: {
+            name: ep.author,
+          },
+        })
+        authorsMap.set(ep.author, authorCreateResult.id)
+        authorId = authorCreateResult.id
+      }
 
       payload.logger.info(`Adding episode: ${episodeTitle} for ${seriesId} | '${ep.vimeoUrl}'`)
 
-      let videoFormat: 'none' | 'vimeo' = 'none';
-      if(ep.vimeoUrl && ep.vimeoUrl.length > 0)
-      {
+      let videoFormat: 'none' | 'vimeo' = 'none'
+      if (ep.vimeoUrl && ep.vimeoUrl.length > 0) {
         videoFormat = 'vimeo'
       }
       let slug = slugFormat(ep.dateFormatted + '-' + episodeTitle)
@@ -333,11 +331,10 @@ const dirname = path.dirname(filename)
             slug: slugFormat(ep.dateFormatted + '-' + episodeTitle),
             fullTitle: seriesOb.fullTitle,
             _status: 'published',
-          }
+          },
         })
-      }
-      catch(e) {
-        payload.logger.info({e})
+      } catch (e) {
+        payload.logger.info({ e })
         throw e
       }
     }
