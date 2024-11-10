@@ -11,6 +11,7 @@ import { ImageMedia } from '../Media/ImageMedia'
 import RichText from '../RichText'
 
 import classes from './index.module.scss'
+import { EpisodeAudioPlayer } from '../EpisodeAudioPlayer'
 
 type Result = {
   docs: (Series | string)[]
@@ -117,23 +118,26 @@ let PlayerSection = ({
   return <></>
 }
 
-let AudioPlayerSection = ({
-  playerType,
-  mp3Url,
-}: {
-  playerType: AudioPlayerType
-  mp3Url: string | null
-}) => {
-  if (playerType === 'none' || mp3Url == null) {
+let AudioPlayerSection = ({ targetEpisode }: { targetEpisode: Episode }) => {
+  let audioPlayerType: AudioPlayerType = 'none'
+  if (targetEpisode.audioFormat === 'linked') {
+    audioPlayerType = 'linked'
+  } else if (
+    targetEpisode.audioFormat === 'uploaded' &&
+    typeof targetEpisode.uploadedAudioFile === 'object' &&
+    targetEpisode.uploadedAudioFile !== undefined
+  ) {
+    audioPlayerType = 'uploaded'
+  }
+
+  if (audioPlayerType === 'none') {
     return <></>
   } else {
     return (
       <>
         <h2 className={classes.partHeading}>Listen</h2>
         <div className={classes.audioPlayer}>
-          <audio controls={true}>
-            <source src={mp3Url} type="audio/mpeg" />
-          </audio>
+          <EpisodeAudioPlayer targetEpisode={targetEpisode} />
         </div>
       </>
     )
@@ -163,21 +167,6 @@ export const EpisodeShow: React.FC<Props> = (props) => {
   let [doPlay, setDoPlay] = useState(false)
 
   let targetSeries = targetEpisode.series
-
-  let audioPlayerType: AudioPlayerType = 'none'
-  let mp3Url: string | null = null
-  if (targetEpisode.audioFormat === 'linked') {
-    audioPlayerType = 'linked'
-    mp3Url = targetEpisode.linkedAudioUrl ?? null
-  } else if (
-    targetEpisode.audioFormat === 'uploaded' &&
-    typeof targetEpisode.uploadedAudioFile === 'object' &&
-    targetEpisode.uploadedAudioFile !== undefined
-  ) {
-    audioPlayerType = 'uploaded'
-    let baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? ''
-    mp3Url = baseUrl + '/talkaudio/' + (targetEpisode.uploadedAudioFile?.filename ?? '')
-  }
 
   let videoPlayerType: VideoPlayerType = 'none'
   if (targetEpisode.videoFormat === 'vimeo') {
@@ -231,7 +220,7 @@ export const EpisodeShow: React.FC<Props> = (props) => {
           setDoPlay(true)
         }}
       />
-      <AudioPlayerSection playerType={audioPlayerType} mp3Url={mp3Url} />
+      <AudioPlayerSection targetEpisode={targetEpisode} />
       <h2 className={classes.partHeading}>Talk Outline</h2>
       {targetEpisode.talkOutline ? <RichText content={targetEpisode.talkOutline} /> : <></>}
       <div className={classes.belowEpisode} />
