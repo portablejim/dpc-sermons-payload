@@ -1,10 +1,13 @@
 import React, { Fragment } from 'react'
 import Link from 'next/link'
+import NextImage from 'next/image'
 
 import { CoverImage, Episode, Page, Series } from '@/payload-types'
 import { Media } from '../Media'
+import type { Media as MediaType } from '@/payload-types'
 
 import classes from './index.module.scss'
+import { BACKGROUND_LOGO_SVG_WIDE, encodeSvg, svgToDataURI } from '@/utilities/iconsSvg'
 
 export const CardSeries: React.FC<{
   alignItems?: 'center'
@@ -15,7 +18,7 @@ export const CardSeries: React.FC<{
   mediaType: 'video' | 'audio'
   doc?: Series
   orientation?: 'horizontal' | 'vertical'
-}> = props => {
+}> = (props) => {
   const {
     showCategories,
     title: titleFromProps,
@@ -27,10 +30,19 @@ export const CardSeries: React.FC<{
 
   const { slug, title } = doc || {}
 
-  let targetImage: string | CoverImage = ''
+  let targetImage: string | CoverImage | MediaType = ''
   if (doc?.seriesImage) {
     if (typeof doc.seriesImage !== 'number') {
       targetImage = doc.seriesImage
+      if (doc.seriesImage.sizes?.card != undefined) {
+        targetImage = {
+          ...doc.seriesImage.sizes.card,
+          id: doc.seriesImage.id,
+          alt: doc.seriesImage.alt,
+          updatedAt: doc.seriesImage.updatedAt,
+          createdAt: doc.seriesImage.createdAt,
+        }
+      }
     }
   }
 
@@ -38,6 +50,8 @@ export const CardSeries: React.FC<{
   const titleToUse = titleFromProps || title
   const sanitizedDescription = doc?.subtitle?.replace(/\s/g, ' ') // replace non-breaking space with white space
   const href = `/series/${slug}`
+  const imageSrc =
+    typeof targetImage !== 'string' ? `${process.env.NEXT_PUBLIC_SERVER_URL}${targetImage.url}` : ''
 
   return (
     <div
@@ -48,11 +62,21 @@ export const CardSeries: React.FC<{
       <Link href={href} className={classes.mediaWrapper}>
         {!targetImage && <div className={classes.placeholder}>No image</div>}
         {targetImage && typeof targetImage !== 'string' && (
+          /*
           <Media
             imgClassName={classes.image}
             resource={targetImage}
             resourceType="coverImage"
             fill
+          />
+          */
+          <NextImage
+            alt={targetImage.alt || ''}
+            className={classes.image}
+            fill={true}
+            quality={90}
+            placeholder={svgToDataURI(BACKGROUND_LOGO_SVG_WIDE)}
+            src={`${process.env.NEXT_PUBLIC_SERVER_URL}${targetImage.url}`}
           />
         )}
       </Link>

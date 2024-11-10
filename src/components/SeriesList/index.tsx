@@ -24,7 +24,6 @@ export const getSeriesList = (seriesType: string): Promise<any> => {
   )
 
   return fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/series?${searchQuery}`, {
-    cache: 'force-cache',
     next: {
       revalidate: 300,
     },

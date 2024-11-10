@@ -12,7 +12,6 @@ import * as Accordion from '@radix-ui/react-accordion'
 
 export const getBooksList = (episodeType: string): Promise<BooksResult[]> => {
   return fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/bookList/${episodeType}`, {
-    cache: 'default',
     next: {
       revalidate: 600,
     },
@@ -25,7 +24,7 @@ export const getBooksList = (episodeType: string): Promise<BooksResult[]> => {
 
 export const BooksListPreload: React.FC<Props> = (props) => {
   const { episodeType = 'regular' } = props
-  getBooksList(episodeType)
+  let booksListRef = useRef(getBooksList(episodeType))
   return <></>
 }
 
