@@ -154,14 +154,18 @@ export const EpisodeRow: React.FC<{
                 <span className="font-bold">{doc?.title}</span>
               </Link>
             </span>
-            <span>
-              {hasSeries ? (
-                <>
-                  <Link href={seriesLink}>{seriesTitle}</Link>
-                </>
-              ) : (
-                seriesTitle
-              )}
+            <span className="flex flex-col sm:block">
+              <span>{sanitizedDescription}</span>
+              <span className="hidden px-1 sm:inline"> | </span>
+              <span>
+                {hasSeries ? (
+                  <>
+                    <Link href={seriesLink}>{seriesTitle}</Link>
+                  </>
+                ) : (
+                  seriesTitle
+                )}
+              </span>
             </span>
           </div>
           <div className="flex flex-row flex-shrink-0 flex-grow xs:flex-grow-0">

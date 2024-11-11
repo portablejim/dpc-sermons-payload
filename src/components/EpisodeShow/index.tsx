@@ -210,6 +210,18 @@ export const EpisodeShow: React.FC<Props> = (props) => {
       <p className={classes.subheading}>
         <em>{targetEpisode.biblePassageText}</em>
       </p>
+      <p className="text-center text-lg">
+        {targetSeries && typeof targetSeries !== 'number' ? targetSeries.title : ''}
+        {targetSeries &&
+        typeof targetSeries !== 'number' &&
+        targetEpisode.speaker &&
+        typeof targetEpisode.speaker !== 'number'
+          ? ' | '
+          : ''}
+        {targetEpisode.speaker && typeof targetEpisode.speaker !== 'number'
+          ? (targetEpisode.speaker?.name ?? '')
+          : ''}
+      </p>
       <PlayerSection
         videoType={videoPlayerType}
         doPlay={doPlay}
