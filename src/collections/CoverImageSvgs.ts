@@ -57,7 +57,7 @@ export const CoverImageSvgs: CollectionConfig = {
         { label: 'Bottom', value: '50% bottom-center' },
         { label: 'Bottom Right', value: 'bottom-right' },
       ],
-      defaultValue: 'center',
+      defaultValue: 'center-center',
     },
     {
       name: 'version',
