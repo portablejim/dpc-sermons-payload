@@ -14,6 +14,7 @@ export interface Config {
     'bible-books': BibleBook;
     'bible-chapters': BibleChapter;
     'cover-images': CoverImage;
+    'cover-image-svgs': CoverImageSvg;
     pages: Page;
     media: Media;
     'talk-audio': TalkAudio;
@@ -32,6 +33,7 @@ export interface Config {
     'bible-books': BibleBooksSelect<false> | BibleBooksSelect<true>;
     'bible-chapters': BibleChaptersSelect<false> | BibleChaptersSelect<true>;
     'cover-images': CoverImagesSelect<false> | CoverImagesSelect<true>;
+    'cover-image-svgs': CoverImageSvgsSelect<false> | CoverImageSvgsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'talk-audio': TalkAudioSelect<false> | TalkAudioSelect<true>;
@@ -134,6 +136,8 @@ export interface CoverImage {
   } | null;
   version?: number | null;
   guid?: string | null;
+  squareSvg?: (number | null) | CoverImageSvg;
+  cardSvg?: (number | null) | CoverImageSvg;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -154,7 +158,39 @@ export interface CoverImage {
       filesize?: number | null;
       filename?: string | null;
     };
+    thumbnail_webp?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    thumbnail_large?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
     card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card_webp?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card_large?: {
       url?: string | null;
       width?: number | null;
       height?: number | null;
@@ -171,6 +207,38 @@ export interface CoverImage {
       filename?: string | null;
     };
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cover-image-svgs".
+ */
+export interface CoverImageSvg {
+  id: number;
+  alt: string;
+  focalPoint?:
+    | (
+        | 'top-left'
+        | 'top-center'
+        | 'top-right'
+        | 'center-left'
+        | 'center-center'
+        | 'center-right'
+        | 'bottom-left'
+        | '50% bottom-center'
+        | 'bottom-right'
+      )
+    | null;
+  version?: number | null;
+  guid?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -786,6 +854,10 @@ export interface PayloadLockedDocument {
         value: number | CoverImage;
       } | null)
     | ({
+        relationTo: 'cover-image-svgs';
+        value: number | CoverImageSvg;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: number | Page;
       } | null)
@@ -902,6 +974,8 @@ export interface CoverImagesSelect<T extends boolean = true> {
   caption?: T;
   version?: T;
   guid?: T;
+  squareSvg?: T;
+  cardSvg?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -926,7 +1000,47 @@ export interface CoverImagesSelect<T extends boolean = true> {
               filesize?: T;
               filename?: T;
             };
+        thumbnail_webp?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        thumbnail_large?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
         card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card_webp?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card_large?:
           | T
           | {
               url?: T;
@@ -947,6 +1061,25 @@ export interface CoverImagesSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cover-image-svgs_select".
+ */
+export interface CoverImageSvgsSelect<T extends boolean = true> {
+  alt?: T;
+  focalPoint?: T;
+  version?: T;
+  guid?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

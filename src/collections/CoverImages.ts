@@ -33,10 +33,30 @@ export const CoverImages: CollectionConfig = {
     imageSizes: [
       {
         name: 'thumbnail',
-        width: 200,
-        height: 200,
+        width: 128,
+        height: 128,
         position: 'left bottom',
         withoutEnlargement: true,
+      },
+      {
+        name: 'thumbnail_webp',
+        width: 128,
+        height: 128,
+        position: 'left bottom',
+        withoutEnlargement: true,
+        formatOptions: {
+          format: 'webp',
+        },
+      },
+      {
+        name: 'thumbnail_large',
+        width: 256,
+        height: 256,
+        position: 'left bottom',
+        withoutEnlargement: true,
+        formatOptions: {
+          format: 'webp',
+        },
       },
       {
         name: 'card',
@@ -46,11 +66,34 @@ export const CoverImages: CollectionConfig = {
         withoutEnlargement: true,
       },
       {
+        name: 'card_webp',
+        width: 1024,
+        height: 576,
+        position: 'left bottom',
+        withoutEnlargement: true,
+        formatOptions: {
+          format: 'webp',
+        },
+      },
+      {
+        name: 'card_large',
+        width: 1920,
+        height: 1080,
+        position: 'left bottom',
+        withoutEnlargement: true,
+        formatOptions: {
+          format: 'webp',
+        },
+      },
+      {
         name: 'largeSquare',
         width: 1500,
         height: 1500,
         position: 'left bottom',
         withoutEnlargement: false,
+        formatOptions: {
+          format: 'webp',
+        },
       },
     ],
     resizeOptions: {
@@ -110,8 +153,26 @@ export const CoverImages: CollectionConfig = {
         position: 'sidebar',
       },
       hooks: {
-        beforeValidate: [ensureGuid]
-      }
+        beforeValidate: [ensureGuid],
+      },
+    },
+    {
+      name: 'squareSvg',
+      label: 'Square SVG (Override)',
+      type: 'upload',
+      relationTo: 'cover-image-svgs',
+      admin: {
+        description: 'A square SVG of the image to use instead',
+      },
+    },
+    {
+      name: 'cardSvg',
+      label: 'Square SVG (Override)',
+      type: 'upload',
+      relationTo: 'cover-image-svgs',
+      admin: {
+        description: 'A 16:9 SVG of the image to use instead',
+      },
     },
   ],
 }

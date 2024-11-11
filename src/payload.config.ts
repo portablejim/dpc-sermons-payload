@@ -41,6 +41,7 @@ import { Page } from 'src/payload-types'
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 import { seedHandlerEpisodes } from './endpoints/seedHandlerEpisodes'
+import { CoverImageSvgs } from './collections/CoverImageSvgs'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -127,6 +128,7 @@ export default buildConfig({
     BibleBooks,
     BibleChapters,
     CoverImages,
+    CoverImageSvgs,
     Pages,
     Media,
     TalkAudio,
