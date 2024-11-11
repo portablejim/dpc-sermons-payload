@@ -3,6 +3,7 @@ import * as migration_20241106_004615_sermonlisttype from './20241106_004615_ser
 import * as migration_20241106_101919_codeblock from './20241106_101919_codeblock';
 import * as migration_20241106_132835_uploadaudio from './20241106_132835_uploadaudio';
 import * as migration_20241106_135031_fixes from './20241106_135031_fixes';
+import * as migration_20241111_081701_coverImageSvgs from './20241111_081701_coverImageSvgs';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20241106_135031_fixes.up,
     down: migration_20241106_135031_fixes.down,
-    name: '20241106_135031_fixes'
+    name: '20241106_135031_fixes',
+  },
+  {
+    up: migration_20241111_081701_coverImageSvgs.up,
+    down: migration_20241111_081701_coverImageSvgs.down,
+    name: '20241111_081701_coverImageSvgs'
   },
 ];
