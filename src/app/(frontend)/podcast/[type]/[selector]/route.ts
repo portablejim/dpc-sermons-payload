@@ -5,6 +5,7 @@ import { Episode, TalkAudio } from '@/payload-types'
 import { equal } from 'assert'
 import { parseUrl } from 'next/dist/shared/lib/router/utils/parse-url'
 import uuidv5 from 'uuidv5'
+import { getStaticFile } from '@/utilities/getStaticFile'
 
 const ERROR_RSS = (baseUrl) => `<?xml version="1.0" encoding="utf-8" ?>
 <rss version="2.0">
@@ -263,7 +264,7 @@ export async function GET(
     }
   }
 
-  let podcastImage = baseUrl + '/dpcPodcast.png'
+  let podcastImage = getStaticFile('dpcPodcast.png')
 
   if (selectorParts[1] !== 'atom') {
     let episodeRssList = episodes?.docs.map((e) => {

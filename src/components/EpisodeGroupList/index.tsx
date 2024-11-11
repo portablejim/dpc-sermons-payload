@@ -9,9 +9,18 @@ import { EpisodeRow } from '../EpisodeRow'
 
 import classes from './index.module.scss'
 import { Spinner } from '@nextui-org/react'
-import { ICON_SVG_MINUS, ICON_SVG_MINUS_REACT, ICON_SVG_PLUS, ICON_SVG_PLUS_REACT, ICON_SVG_PODCAST, ICON_SVG_PODCAST_REACT, ICON_SVG_REACT, svgToDataURI } from '@/utilities/iconsSvg'
+import {
+  ICON_SVG_MINUS,
+  ICON_SVG_MINUS_REACT,
+  ICON_SVG_PLUS,
+  ICON_SVG_PLUS_REACT,
+  ICON_SVG_PODCAST,
+  ICON_SVG_PODCAST_REACT,
+  ICON_SVG_REACT,
+  svgToDataURI,
+} from '@/utilities/iconsSvg'
 import Image from 'next/image'
-import * as Accordion from "@radix-ui/react-accordion"
+import * as Accordion from '@radix-ui/react-accordion'
 import useOnScreen from '@/utilities/useInteraction'
 
 type Result = {
@@ -26,18 +35,31 @@ type Result = {
 }
 
 export type Props = {
-  title: string,
-  rssUrl: string | undefined,
-  episodeType: string,
-  episodeRange: string,
-  defaultOpen: boolean,
-  accordionsOpen?: string[],
+  title: string
+  rssUrl: string | undefined
+  episodeType: string
+  episodeRange: string
+  defaultOpen: boolean
+  accordionsOpen?: string[]
   initialEpisodeList?: Episode[]
+  fallbackSvg: string
+  fallbackPng: string
   onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
 }
 
-export const EpisodeGroupList: React.FC<Props> = props => {
-  const { title, rssUrl, episodeType, episodeRange, defaultOpen, accordionsOpen = [], initialEpisodeList = [], onResultChange } = props
+export const EpisodeGroupList: React.FC<Props> = (props) => {
+  const {
+    title,
+    rssUrl,
+    episodeType,
+    episodeRange,
+    defaultOpen,
+    accordionsOpen = [],
+    initialEpisodeList = [],
+    onResultChange,
+    fallbackSvg,
+    fallbackPng,
+  } = props
 
   const [isLoading, setIsLoading] = useState(initialEpisodeList.length === 0)
   const [error, setError] = useState<string | undefined>(undefined)
@@ -68,10 +90,12 @@ export const EpisodeGroupList: React.FC<Props> = props => {
 
       const makeRequest = async () => {
         try {
-          const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/byYear/${episodeType}/${episodeRange}`)
+          const req = await fetch(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/byYear/${episodeType}/${episodeRange}`,
+          )
 
-          const json = await req.json() as Episode[]
-          if(timer != null) {
+          const json = (await req.json()) as Episode[]
+          if (timer != null) {
             clearTimeout(timer)
           }
 
@@ -99,8 +123,7 @@ export const EpisodeGroupList: React.FC<Props> = props => {
       }
 
       void makeRequest()
-    }
-    else {
+    } else {
       setIsLoading(false)
     }
 
@@ -109,51 +132,72 @@ export const EpisodeGroupList: React.FC<Props> = props => {
     }
   }, [episodeType, episodeRange, isOpen, isVisible])
 
-  const accordionActionItem = isOpen ? 
-    <ICON_SVG_REACT className="w-6 h-6 fill-black dark:fill-white" role='img' label="Click to redce" ariaHidden={false} svgInner={ICON_SVG_MINUS_REACT} /> :
-    <ICON_SVG_REACT className="w-6 h-6 fill-black dark:fill-white" role='img' label="Click to expand" ariaHidden={false} svgInner={ICON_SVG_PLUS_REACT} />
+  const accordionActionItem = isOpen ? (
+    <ICON_SVG_REACT
+      className="w-6 h-6 fill-black dark:fill-white"
+      role="img"
+      label="Click to redce"
+      ariaHidden={false}
+      svgInner={ICON_SVG_MINUS_REACT}
+    />
+  ) : (
+    <ICON_SVG_REACT
+      className="w-6 h-6 fill-black dark:fill-white"
+      role="img"
+      label="Click to expand"
+      ariaHidden={false}
+      svgInner={ICON_SVG_PLUS_REACT}
+    />
+  )
 
   return (
-
-    <Accordion.AccordionItem ref={ref} className='accordionItem my-4' value={episodeRange}>
-    <div className="border-1">
+    <Accordion.AccordionItem ref={ref} className="accordionItem my-4" value={episodeRange}>
+      <div className="border-1">
         <div className="flex flex-row bg-gray-100 dark:bg-neutral-900">
-      <Accordion.AccordionHeader className='flex-grow px-2 py-2'>
-          <Accordion.AccordionTrigger className='flex-grow w-full'>
-          <div className="flex flex-row items-center">
-            <span className="px-2">
-              {accordionActionItem}
-            </span>
-            <h3 className="text-xl">{title}</h3>
-            <span className='flex-grow' />
-          </div>
-          </Accordion.AccordionTrigger>
-      </Accordion.AccordionHeader>
+          <Accordion.AccordionHeader className="flex-grow px-2 py-2">
+            <Accordion.AccordionTrigger className="flex-grow w-full">
+              <div className="flex flex-row items-center">
+                <span className="px-2">{accordionActionItem}</span>
+                <h3 className="text-xl">{title}</h3>
+                <span className="flex-grow" />
+              </div>
+            </Accordion.AccordionTrigger>
+          </Accordion.AccordionHeader>
           <div className="ml-2 sm:ml-8 py-2 pr-2 flex-shrink-0 flex flex-row items-center">
             <a href={rssUrl} title="RSS Podcast">
-              <ICON_SVG_REACT className="w-6 h-6 fill-black dark:fill-white" role='img' label="Podcast" ariaHidden={false} svgInner={ICON_SVG_PODCAST_REACT} />
-              </a>
+              <ICON_SVG_REACT
+                className="w-6 h-6 fill-black dark:fill-white"
+                role="img"
+                label="Podcast"
+                ariaHidden={false}
+                svgInner={ICON_SVG_PODCAST_REACT}
+              />
+            </a>
           </div>
         </div>
-      <Accordion.AccordionContent>
-        {isLoading ? (<Spinner />) : <></>}
-      <div className="pl-6 pr-2">
-      <ul>
-        {results.map((result, index) => {
-          if (typeof result === 'object' && result !== null) {
-            return (
-              <li key={index} className={classes.column}>
-                <EpisodeRow doc={result} mediaType="video" />
-              </li>
-            )
-          }
+        <Accordion.AccordionContent>
+          {isLoading ? <Spinner /> : <></>}
+          <div className="pl-6 pr-2">
+            <ul>
+              {results.map((result, index) => {
+                if (typeof result === 'object' && result !== null) {
+                  return (
+                    <li key={index} className={classes.column}>
+                      <EpisodeRow
+                        doc={result}
+                        fallbackSvg={fallbackSvg}
+                        fallbackPng={fallbackPng}
+                      />
+                    </li>
+                  )
+                }
 
-          return null
-        })}
-      </ul>
+                return null
+              })}
+            </ul>
+          </div>
+        </Accordion.AccordionContent>
       </div>
-      </Accordion.AccordionContent>
-    </div>
     </Accordion.AccordionItem>
   )
 }

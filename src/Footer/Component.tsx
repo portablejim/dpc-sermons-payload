@@ -6,6 +6,7 @@ import type { Footer } from '@/payload-types'
 
 import { ThemeSelector } from '@/providers/Theme/ThemeSelector'
 import { CMSLink } from '@/components/Link'
+import { getStaticFile } from '@/utilities/getStaticFile'
 
 export async function Footer() {
   const footer: Footer = await getCachedGlobal('footer')()
@@ -21,7 +22,7 @@ export async function Footer() {
             <img
               alt="DPC Logo"
               className="max-w-[3rem] invert-0"
-              src={baseUrl + '/dpc-mini-logo.png'}
+              src={getStaticFile('/dpc-mini-logo.png')}
             />
           </picture>
         </Link>

@@ -7,6 +7,7 @@ import classes from './index.module.scss'
 import { EpisodeGroupsList } from '@/components/EpisodeGroupsList'
 import { LibraryList as LibraryListComponent } from '@/components/LibraryList'
 import { BooksGroupsList, BooksListPreload } from '@/components/BooksGroupsList'
+import { getStaticFile } from '@/utilities/getStaticFile'
 
 type Result = {
   docs: (Series | string)[]
@@ -58,6 +59,9 @@ export const LibraryList: React.FC<Props> = async (props) => {
     latestEpisodes = latestEpisodesJson
   }
 
+  let fallbackImageUrlSvg = getStaticFile('dpcPodcastGenericLogo_plain.svg')
+  let fallbackImageUrlPng = getStaticFile('dpcPodcastGenericLogo_plain.png')
+
   return (
     <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>
       <SeriesListPreload />
@@ -71,6 +75,8 @@ export const LibraryList: React.FC<Props> = async (props) => {
                   initialEpisodeList={latestEpisodes}
                   episodeType={episodeType}
                   yearListPromise={yearListPromise}
+                  fallbackPng={fallbackImageUrlPng}
+                  fallbackSvg={fallbackImageUrlSvg}
                 />
               </div>
             }

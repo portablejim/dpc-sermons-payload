@@ -28,10 +28,20 @@ export type Props = {
   onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
   showPageRange?: boolean
   sort?: string
+  fallbackSvg: string
+  fallbackPng: string
 }
 
-export const EpisodeList: React.FC<Props> = props => {
-  const { className, limit = 10, onResultChange, showPageRange, sort = '-createdAt' } = props
+export const EpisodeList: React.FC<Props> = (props) => {
+  const {
+    className,
+    limit = 10,
+    onResultChange,
+    showPageRange,
+    sort = '-createdAt',
+    fallbackSvg,
+    fallbackPng,
+  } = props
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | undefined>(undefined)
@@ -78,10 +88,12 @@ export const EpisodeList: React.FC<Props> = props => {
 
       const makeRequest = async () => {
         try {
-          const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes?${searchQuery}`)
+          const req = await fetch(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes?${searchQuery}`,
+          )
 
           const json = await req.json()
-          if(timer != null) {
+          if (timer != null) {
             clearTimeout(timer)
           }
 
@@ -112,30 +124,16 @@ export const EpisodeList: React.FC<Props> = props => {
     }
   }, [page, onResultChange])
 
-  //const payload = await getPayloadHMR({ config: configPromise })
-
-  /*
-  const fetchedEpisodes = {docs: null}; await payload.find({
-    collection: 'episodes',
-    depth: 3,
-    limit,
-    where: {
-      sermonDate: {
-        greater_than: '2024-01-01',
-      },
-    },
-  })*/
-
   return (
     <div>
-        {isLoading ? (<Spinner />) : <></>}
+      {isLoading ? <Spinner /> : <></>}
       <ul>
         {results.docs?.map((result, index) => {
           if (typeof result === 'object' && result !== null) {
             return (
               <div className={classes.column} key={index}>
                 <li>
-                  <EpisodeRow doc={result} mediaType="video" />
+                  <EpisodeRow doc={result} fallbackSvg={fallbackSvg} fallbackPng={fallbackPng} />
                 </li>
               </div>
             )

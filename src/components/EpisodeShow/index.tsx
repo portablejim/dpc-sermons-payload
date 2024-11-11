@@ -12,6 +12,7 @@ import RichText from '../RichText'
 
 import classes from './index.module.scss'
 import { EpisodeAudioPlayer } from '../EpisodeAudioPlayer'
+import { getStaticFile } from '@/utilities/getStaticFile'
 
 type Result = {
   docs: (Series | string)[]
@@ -159,9 +160,9 @@ export const EpisodeShow: React.FC<Props> = (props) => {
   let hasCoverImage = false
   let targetImage: CoverImage | string = ''
   let targetImageUrl: StaticImageData | undefined = {
-    src: '/dpcPodcastGenericLogo_plain.svg',
-    height: 300,
-    width: 300,
+    src: getStaticFile('dpcPodcastGenericLogo_plain.svg'),
+    height: 1920,
+    width: 1080,
   }
 
   let [doPlay, setDoPlay] = useState(false)
@@ -197,7 +198,7 @@ export const EpisodeShow: React.FC<Props> = (props) => {
   }
   if (targetImageUrl === undefined || targetImageUrl === null) {
     targetImageUrl = {
-      src: '/dpcPodcastGenericLogo_plain.svg',
+      src: getStaticFile('dpcPodcastGenericLogo_plain.svg'),
       height: 1920,
       width: 1080,
     }

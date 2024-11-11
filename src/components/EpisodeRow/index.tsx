@@ -23,10 +23,11 @@ export const EpisodeRow: React.FC<{
   showCategories?: boolean
   hideImagesOnMobile?: boolean
   title?: string
-  mediaType: 'video' | 'audio'
   doc?: Episode
   paramSeries?: Series
   orientation?: 'horizontal' | 'vertical'
+  fallbackSvg: string
+  fallbackPng: string
 }> = (props) => {
   const {
     showCategories,
@@ -35,7 +36,8 @@ export const EpisodeRow: React.FC<{
     paramSeries,
     className,
     orientation = 'vertical',
-    mediaType,
+    fallbackSvg,
+    fallbackPng,
   } = props
 
   const { slug, title, sermonDate, speaker, series } = doc || {}
@@ -43,7 +45,7 @@ export const EpisodeRow: React.FC<{
   let hasCoverImage = false
   let targetImage: CoverImage | string = ''
   let targetImageUrl: StaticImageData | undefined = {
-    src: '/static/dpc-mini-logo.png',
+    src: fallbackSvg,
     height: 300,
     width: 300,
   }

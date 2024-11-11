@@ -15,16 +15,21 @@ import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
 
 import './globals.css'
+import { getStaticFile } from '@/utilities/getStaticFile'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
 
   return (
-    <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en-AU" suppressHydrationWarning>
+    <html
+      className={cn(GeistSans.variable, GeistMono.variable)}
+      lang="en-AU"
+      suppressHydrationWarning
+    >
       <head>
         <InitTheme />
-        <link href="/favicon.ico" rel="icon" sizes="256x256" />
-        <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+        <link href={getStaticFile('favicon.ico')} rel="icon" sizes="256x256" />
+        <link href={getStaticFile('favicon.svg')} rel="icon" type="image/svg+xml" />
       </head>
       <body suppressHydrationWarning>
         <Providers>
