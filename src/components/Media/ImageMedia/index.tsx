@@ -70,6 +70,7 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
       }}
       priority={priority}
       quality={90}
+      unoptimized={typeof src == 'string' ? src.includes('.svg') : src.src.includes('.svg')}
       sizes={sizes}
       src={src}
       width={!fill ? width : undefined}

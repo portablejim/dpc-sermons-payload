@@ -88,7 +88,5 @@ const queryEpisodeBySlug = cache(async ({ slug }: { slug: string }) => {
     },
   })
 
-  payload.logger.info({ result })
-
   return result.docs?.[0] || null
 })
