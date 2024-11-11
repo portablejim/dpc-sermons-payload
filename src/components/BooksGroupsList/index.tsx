@@ -22,7 +22,11 @@ export const getBooksList = (episodeType: string): Promise<BooksResult[]> => {
     })
 }
 
-export const BooksListPreload: React.FC<Props> = (props) => {
+export type BookListPreloadProps = {
+  episodeType: string
+}
+
+export const BooksListPreload: React.FC<BookListPreloadProps> = (props) => {
   const { episodeType = 'regular' } = props
   let booksListRef = useRef(getBooksList(episodeType))
   return <></>
@@ -49,10 +53,12 @@ export type Props = {
   className?: string
   episodeType?: string
   seriesListPromise?: Promise<Response>
+  fallbackSvg: string
+  fallbackPng: string
 }
 
 export const BooksGroupsList: React.FC<Props> = (props) => {
-  const { className, episodeType = 'regular' } = props
+  const { className, episodeType = 'regular', fallbackSvg, fallbackPng } = props
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | undefined>(undefined)
@@ -140,6 +146,8 @@ export const BooksGroupsList: React.FC<Props> = (props) => {
                 episodeType={episodeType}
                 episodeRange={result.book}
                 accordionsOpen={accordionState}
+                fallbackSvg={fallbackSvg}
+                fallbackPng={fallbackPng}
               />
             )
           }

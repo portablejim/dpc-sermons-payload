@@ -40,10 +40,20 @@ export type Props = {
   episodeRange: string
   accordionsOpen?: string[]
   onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
+  fallbackSvg: string
+  fallbackPng: string
 }
 
 export const BooksGroupList: React.FC<Props> = (props) => {
-  const { title, episodeType, episodeRange, accordionsOpen = [], onResultChange } = props
+  const {
+    title,
+    episodeType,
+    episodeRange,
+    accordionsOpen = [],
+    onResultChange,
+    fallbackSvg,
+    fallbackPng,
+  } = props
 
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | undefined>(undefined)
@@ -156,7 +166,11 @@ export const BooksGroupList: React.FC<Props> = (props) => {
                 if (typeof result === 'object' && result !== null) {
                   return (
                     <li key={index} className={classes.column}>
-                      <EpisodeRow doc={result} mediaType="video" />
+                      <EpisodeRow
+                        doc={result}
+                        fallbackSvg={fallbackSvg}
+                        fallbackPng={fallbackPng}
+                      />
                     </li>
                   )
                 }

@@ -1,4 +1,3 @@
-import { getStaticFile } from '@/utilities/getStaticFileServer'
 import React from 'react'
 
 interface LogoProps {

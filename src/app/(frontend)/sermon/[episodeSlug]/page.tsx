@@ -9,6 +9,7 @@ import { EpisodeShow } from '../../../../components/EpisodeShow'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import configPromise from '@payload-config'
 import { generateEpisodeMeta } from '@/utilities/generateMeta'
+import { getStaticFile } from '@/utilities/getStaticFile'
 
 // Payload Cloud caches all files through Cloudflare, so we don't need Next.js to cache them as well
 // This means that we can turn off Next.js data caching and instead rely solely on the Cloudflare CDN
@@ -49,10 +50,13 @@ export default async function Page({ params: paramsPromise }: Args) {
     return redirect(`../series/${episode.series.slug}/sermon/${episode.slug}`)
   }
 
+  let fallbackSvg = getStaticFile('dpcPodcastGenericLogo_plain.svg')
+  let fallbackPng = getStaticFile('dpcPodcastGenericLogo_plain.png')
+
   return (
     <>
       <div className="container">
-        <EpisodeShow targetEpisode={episode} />
+        <EpisodeShow targetEpisode={episode} fallbackSvg={fallbackSvg} fallbackPng={fallbackPng} />
       </div>
     </>
   )

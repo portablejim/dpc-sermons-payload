@@ -22,7 +22,7 @@ export async function Footer() {
             <img
               alt="DPC Logo"
               className="max-w-[3rem] invert-0"
-              src={getStaticFile('/dpc-mini-logo.png')}
+              src={getStaticFile('dpc-mini-logo.png')}
             />
           </picture>
         </Link>

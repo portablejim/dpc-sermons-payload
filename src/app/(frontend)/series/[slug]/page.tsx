@@ -11,6 +11,7 @@ import { SeriesShow } from '../../../../components/SeriesShow'
 
 import { generateSeriesMeta } from '@/utilities/generateMeta'
 import notFound from '../../not-found'
+import { getStaticFile } from '@/utilities/getStaticFile'
 
 type Args = {
   params: Promise<{
@@ -35,10 +36,17 @@ export default async function Page({ params: paramsPromise }: Args) {
     return <PayloadRedirects url={url} />
   }
 
+  let fallbackImageUrlSvg = getStaticFile('dpcPodcastGenericLogo_plain.svg')
+  let fallbackImageUrlPng = getStaticFile('dpcPodcastGenericLogo_plain.png')
+
   return (
     <>
       <div className="container">
-        <SeriesShow targetSeries={series} />
+        <SeriesShow
+          targetSeries={series}
+          fallbackSvg={fallbackImageUrlSvg}
+          fallbackPng={fallbackImageUrlPng}
+        />
       </div>
     </>
   )

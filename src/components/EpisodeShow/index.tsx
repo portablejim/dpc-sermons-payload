@@ -152,15 +152,17 @@ export type Props = {
   onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
   showPageRange?: boolean
   sort?: string
+  fallbackSvg: string
+  fallbackPng: string
 }
 
 export const EpisodeShow: React.FC<Props> = (props) => {
-  const { targetEpisode, sort = '-createdAt' } = props
+  const { targetEpisode, sort = '-createdAt', fallbackSvg, fallbackPng } = props
 
   let hasCoverImage = false
   let targetImage: CoverImage | string = ''
   let targetImageUrl: StaticImageData | undefined = {
-    src: getStaticFile('dpcPodcastGenericLogo_plain.svg'),
+    src: fallbackSvg,
     height: 1920,
     width: 1080,
   }
@@ -198,7 +200,7 @@ export const EpisodeShow: React.FC<Props> = (props) => {
   }
   if (targetImageUrl === undefined || targetImageUrl === null) {
     targetImageUrl = {
-      src: getStaticFile('dpcPodcastGenericLogo_plain.svg'),
+      src: fallbackSvg,
       height: 1920,
       width: 1080,
     }

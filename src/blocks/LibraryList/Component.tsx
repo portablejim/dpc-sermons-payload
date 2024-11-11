@@ -64,8 +64,8 @@ export const LibraryList: React.FC<Props> = async (props) => {
 
   return (
     <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>
-      <SeriesListPreload />
-      <BooksListPreload />
+      <SeriesListPreload episodeType={episodeType} />
+      <BooksListPreload episodeType={episodeType} />
       <Fragment>
         <div className="container flex flex-col justify-between">
           <LibraryListComponent
@@ -81,7 +81,13 @@ export const LibraryList: React.FC<Props> = async (props) => {
               </div>
             }
             bySeriesTab={<SeriesList episodeType={episodeType} />}
-            byPassageTab={<BooksGroupsList episodeType={episodeType} />}
+            byPassageTab={
+              <BooksGroupsList
+                episodeType={episodeType}
+                fallbackPng={fallbackImageUrlPng}
+                fallbackSvg={fallbackImageUrlSvg}
+              />
+            }
           />
         </div>
       </Fragment>

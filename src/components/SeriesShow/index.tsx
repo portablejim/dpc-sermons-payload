@@ -26,10 +26,12 @@ export type Props = {
   onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
   showPageRange?: boolean
   sort?: string
+  fallbackSvg: string
+  fallbackPng: string
 }
 
-export const SeriesShow: React.FC<Props> = props => {
-  const { targetSeries, sort = '-createdAt' } = props
+export const SeriesShow: React.FC<Props> = (props) => {
+  const { targetSeries, sort = '-createdAt', fallbackSvg, fallbackPng } = props
 
   return (
     <div>
@@ -43,7 +45,12 @@ export const SeriesShow: React.FC<Props> = props => {
             return (
               <div className={classes.column} key={index}>
                 <li>
-                  <EpisodeRow doc={result} paramSeries={targetSeries} mediaType="video" />
+                  <EpisodeRow
+                    doc={result}
+                    paramSeries={targetSeries}
+                    fallbackSvg={fallbackSvg}
+                    fallbackPng={fallbackPng}
+                  />
                 </li>
               </div>
             )

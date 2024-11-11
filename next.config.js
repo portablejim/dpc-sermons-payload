@@ -20,6 +20,19 @@ const nextConfig = {
   },
   reactStrictMode: true,
   redirects,
+  headers() {
+    return [
+      {
+        source: '/static/:filename*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-if-error=302400',
+          },
+        ],
+      },
+    ]
+  },
 }
 
 export default withPayload(nextConfig)

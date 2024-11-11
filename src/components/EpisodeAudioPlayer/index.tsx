@@ -124,7 +124,7 @@ export const EpisodeAudioPlayer: React.FC<Props> = (props) => {
     if (!defaultShown) {
       setShow(buttonPressed.active)
     }
-  }, [buttonPressed])
+  }, [buttonPressed, defaultShown])
 
   let targetSeries = targetEpisode.series
 
