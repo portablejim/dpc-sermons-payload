@@ -194,6 +194,15 @@ export const TalkEpisodes: CollectionConfig = {
       },
     },
     {
+      name: 'order',
+      label: 'Supplemental Order (Advanced)',
+      admin: {
+        description: 'Ordering for when multiple episodes are on the same day',
+      },
+      type: 'number',
+      defaultValue: 1,
+    },
+    {
       name: 'episodeImage',
       label: 'Episode Image',
       type: 'upload',

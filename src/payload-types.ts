@@ -646,6 +646,7 @@ export interface Episode {
   speaker?: (number | null) | Speaker;
   sermonDate: string;
   sermonDateYear?: number | null;
+  order?: number | null;
   episodeImage?: (number | null) | CoverImage;
   publishedAt?: string | null;
   videoFormat: 'vimeo' | 'youtube' | 'none';
@@ -1169,6 +1170,7 @@ export interface EpisodesSelect<T extends boolean = true> {
   speaker?: T;
   sermonDate?: T;
   sermonDateYear?: T;
+  order?: T;
   episodeImage?: T;
   publishedAt?: T;
   videoFormat?: T;
