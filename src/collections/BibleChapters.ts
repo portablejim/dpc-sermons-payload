@@ -18,7 +18,7 @@ const BibleChapters: CollectionConfig = {
   fields: [
     {
       name: 'id',
-      type: 'number'
+      type: 'number',
     },
     {
       name: 'book',

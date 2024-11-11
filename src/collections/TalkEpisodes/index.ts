@@ -170,6 +170,7 @@ export const TalkEpisodes: CollectionConfig = {
       admin: {
         date: {
           pickerAppearance: 'dayOnly',
+          displayFormat: 'dd/MM/yyyy',
         },
       },
     },
