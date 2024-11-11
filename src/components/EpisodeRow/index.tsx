@@ -43,7 +43,7 @@ export const EpisodeRow: React.FC<{
   let hasCoverImage = false
   let targetImage: CoverImage | string = ''
   let targetImageUrl: StaticImageData | undefined = {
-    src: '/dpc-mini-logo.png',
+    src: '/static/dpc-mini-logo.png',
     height: 300,
     width: 300,
   }

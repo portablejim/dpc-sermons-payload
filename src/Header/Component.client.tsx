@@ -11,9 +11,10 @@ import { HeaderNav } from './Nav'
 
 interface HeaderClientProps {
   header: Header
+  logoUrl: string
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
+export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl }) => {
   /* Storing the value in a useState to avoid hydration errors */
   const [theme, setTheme] = useState<string | null>(null)
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
@@ -34,9 +35,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
       {...(theme ? { 'data-theme': theme } : {})}
     >
       <Link href="/">
-        <Logo />
+        <Logo logoUrl={logoUrl} />
       </Link>
-      <p className='grow pl-4 self-center sm:text-lg'><em className='not-italic font-bold'>DPC Hub</em><span className='sm:inline'>: </span><span className='subtitle block md:inline'> For Sermons and Files</span></p>
+      <p className="grow pl-4 self-center sm:text-lg">
+        <em className="not-italic font-bold">DPC Hub</em>
+        <span className="sm:inline">: </span>
+        <span className="subtitle block md:inline"> For Sermons and Files</span>
+      </p>
       <HeaderNav header={header} />
     </header>
   )
