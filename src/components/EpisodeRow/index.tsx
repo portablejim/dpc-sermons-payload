@@ -98,32 +98,6 @@ export const EpisodeRow: React.FC<{
     detailsButtonText = 'Details / Watch'
   }
 
-  let listenButton = <></>
-  if (doc?.audioFormat !== 'none') {
-    listenButton = (
-      <div className="flex-shrink-0 flex listenButtons">
-        <button
-          aria-pressed="false"
-          className="px-2 h-10 mx-1 leading-10 text-nowrap border-gray-200 border-solid border-1 hidden md:block aria-pressed:bg-neutral-950 aria-pressed:text-neutral-50"
-        >
-          Listen
-        </button>
-        <button
-          aria-pressed="false"
-          className="px-2 h-10 mx-1 leading-10 flex-shrink-0 flex items-center text-nowrap border-gray-200 border-solid border-1 md:hidden aria-pressed:bg-neutral-950 aria-pressed:text-neutral-50"
-        >
-          <ICON_SVG_REACT
-            className="w-6 h-6 fill-black dark:fill-white"
-            role="img"
-            label="Listen"
-            ariaHidden={false}
-            svgInner={ICON_SVG_MUSIC_REACT}
-          />
-        </button>
-      </div>
-    )
-  }
-
   const hasCategories = false
   const titleToUse = titleFromProps || title
   const sanitizedDescription = doc?.biblePassageText?.replace(/\s/g, ' ') // replace non-breaking space with white space

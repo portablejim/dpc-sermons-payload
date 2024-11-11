@@ -91,7 +91,7 @@ export const ListenButton: React.FC<ListenButtonProps> = (props) => {
         >
           <ICON_SVG_REACT
             className={
-              'w-6 h-6' +
+              'w-6 h-6 ' +
               (buttonPressed.active ? 'fill-white dark:fill-black' : 'fill-black dark:fill-white')
             }
             role="img"
