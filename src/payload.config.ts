@@ -124,6 +124,9 @@ export default buildConfig({
     },
     push: false,
   }),
+  graphQL: {
+    disable: true,
+  },
   collections: [
     BibleBooks,
     BibleChapters,
