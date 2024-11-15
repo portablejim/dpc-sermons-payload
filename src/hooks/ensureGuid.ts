@@ -1,9 +1,9 @@
-import { FieldHook } from "payload";
+import { FieldHook } from 'payload'
 
 export const ensureGuid: FieldHook<any, any, any> = ({ value }) => {
-    if (typeof value !== 'string' || value.length < 2) {
-        return crypto.randomUUID()
-    }
+  if (typeof value !== 'string' || value.length !== 36) {
+    return crypto.randomUUID()
+  }
 
-    return value;
+  return value
 }
