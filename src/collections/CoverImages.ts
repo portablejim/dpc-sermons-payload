@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url'
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { ensureGuid } from '@/hooks/ensureGuid'
+import { coverImage } from '@/endpoints/coverImageHandler'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -92,7 +93,10 @@ export const CoverImages: CollectionConfig = {
         position: 'left bottom',
         withoutEnlargement: false,
         formatOptions: {
-          format: 'webp',
+          format: 'jpeg',
+          options: {
+            mozjpeg: true,
+          },
         },
       },
     ],
@@ -100,6 +104,13 @@ export const CoverImages: CollectionConfig = {
       position: 'left bottom',
     },
   },
+  endpoints: [
+    {
+      path: '/byVersion/:id/:versionId/:type/:filename',
+      method: 'get',
+      handler: coverImage,
+    },
+  ],
   access: {
     create: authenticated,
     delete: authenticated,
