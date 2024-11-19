@@ -133,16 +133,37 @@ let PlayerSection = ({
 }
 
 let AudioPlayerSection = ({ targetEpisode }: { targetEpisode: Episode }) => {
+  let downloadButtonData: { label: string; url: string }[] = []
   let audioPlayerType: AudioPlayerType = 'none'
   if (targetEpisode.audioFormat === 'linked') {
     audioPlayerType = 'linked'
+    if (targetEpisode.linkedAudioUrl) {
+      downloadButtonData.push({ label: 'Download', url: targetEpisode.linkedAudioUrl })
+    }
   } else if (
     targetEpisode.audioFormat === 'uploaded' &&
     typeof targetEpisode.uploadedAudioFile === 'object' &&
     targetEpisode.uploadedAudioFile !== undefined
   ) {
     audioPlayerType = 'uploaded'
+    if (
+      targetEpisode.uploadedAudioFile?.status == 'initial' &&
+      targetEpisode.uploadedAudioFile?.filename
+    ) {
+      downloadButtonData.push({ label: 'Download', url: targetEpisode.uploadedAudioFile?.filename })
+    }
   }
+
+  let downloadButtons = downloadButtonData.map((dbd, i) => (
+    <a
+      key={i}
+      href={dbd.url}
+      className="border-gray-500 border-1 px-3 py-2 rounded-full "
+      download={true}
+    >
+      {dbd.label}
+    </a>
+  ))
 
   if (audioPlayerType === 'none') {
     return <></>
@@ -153,6 +174,7 @@ let AudioPlayerSection = ({ targetEpisode }: { targetEpisode: Episode }) => {
         <div className={classes.audioPlayer}>
           <EpisodeAudioPlayer targetEpisode={targetEpisode} />
         </div>
+        <div className="py-4">{downloadButtons}</div>
       </>
     )
   }
