@@ -8,6 +8,7 @@ import { ImageMedia } from '../Media/ImageMedia'
 
 import classes from './index.module.scss'
 import {
+  BACKGROUND_LOGO_SVG_WIDE,
   ICON_SVG_CHEVRON_RIGHT,
   ICON_SVG_CHEVRON_RIGHT_REACT,
   ICON_SVG_MUSIC,
@@ -50,6 +51,8 @@ export const EpisodeRow: React.FC<{
     width: 300,
   }
 
+  let imgSources: { url: string; type: string | undefined; focalPoint: string }[] = []
+
   let targetSeries = series
   if (paramSeries !== undefined && typeof paramSeries !== 'number') {
     targetSeries = paramSeries
@@ -57,7 +60,6 @@ export const EpisodeRow: React.FC<{
 
   if (doc && doc.episodeImage && typeof doc.episodeImage !== 'number') {
     targetImage = doc.episodeImage
-    targetImageUrl = undefined
   } else if (
     targetSeries &&
     typeof targetSeries !== 'number' &&
@@ -65,16 +67,87 @@ export const EpisodeRow: React.FC<{
     targetSeries?.seriesImage?.url
   ) {
     targetImage = targetSeries?.seriesImage
-    targetImageUrl = undefined
   }
 
-  if (typeof targetImage !== 'string' && targetImage.sizes?.thumbnail) {
-    targetImageUrl = {
-      src: targetImage.sizes.thumbnail.url ?? '',
-      height: targetImage.sizes.thumbnail.height ?? 150,
-      width: targetImage.sizes.thumbnail.width ?? 150,
+  if (typeof targetImage !== 'string') {
+    if (
+      typeof targetImage.squareSvg != 'number' &&
+      targetImage.squareSvg !== undefined &&
+      targetImage.squareSvg !== null &&
+      targetImage.squareSvg?.id !== null
+    ) {
+      imgSources.push({
+        url: `/api/cover-image-svgs/byVersion/${targetImage?.squareSvg?.id}/${targetImage?.squareSvg?.version}/${targetImage?.squareSvg?.filename} 1x`,
+        type: targetImage.squareSvg.mimeType ?? 'image/svg+xml',
+        focalPoint: targetImage.squareSvg.focalPoint ?? 'center-center',
+      })
+    }
+    if (targetImage.sizes?.thumbnail_webp?.url && targetImage.sizes?.thumbnail_large?.url) {
+      imgSources.push({
+        url: `/api/cover-images/byVersion/${targetImage?.id}/${targetImage?.version}/thumbnail_webp/${targetImage?.filename} 1x, /api/cover-images/byVersion/${targetImage?.id}/${targetImage?.version}/thumbnail_large/${targetImage?.filename} 2x`,
+        type: targetImage.sizes?.thumbnail_webp.mimeType ?? undefined,
+        focalPoint: 'center-center',
+      })
+    } else if (targetImage.sizes?.thumbnail_webp?.url) {
+      imgSources.push({
+        url: `/api/cover-images/byVersion/${targetImage?.id}/${targetImage?.version}/thumbnail_webp/${targetImage?.filename}`,
+        type: targetImage.sizes?.thumbnail_webp.mimeType ?? undefined,
+        focalPoint: 'center-center',
+      })
+    } else if (targetImage.sizes?.thumbnail_large?.url) {
+      imgSources.push({
+        url: `/api/cover-images/byVersion/${targetImage?.id}/${targetImage?.version}/thumbnail_large/${targetImage?.filename}`,
+        type: targetImage.sizes?.thumbnail_large.mimeType ?? undefined,
+        focalPoint: 'center-center',
+      })
+    }
+    if (targetImage.sizes?.thumbnail) {
+      targetImageUrl = {
+        src: `/api/cover-images/byVersion/${targetImage?.id}/${targetImage?.version}/thumbnail/${targetImage?.filename}`,
+        height: targetImage.sizes.thumbnail.height ?? 150,
+        width: targetImage.sizes.thumbnail.width ?? 150,
+      }
+    } else {
+      targetImageUrl = {
+        src: targetImage.url ?? '',
+        height: targetImage.height ?? 150,
+        width: targetImage.width ?? 150,
+      }
     }
   }
+
+  let sourcesList = imgSources.map((s, i) => {
+    let sourceClassName = 'object-cover'
+    if (s.focalPoint == 'top-left') {
+      sourceClassName += ' object-left-top'
+    }
+    if (s.focalPoint == 'top-center') {
+      sourceClassName += ' object-top'
+    }
+    if (s.focalPoint == 'top-right') {
+      sourceClassName += ' object-right-top'
+    }
+    if (s.focalPoint == 'center-left') {
+      sourceClassName += ' object-left'
+    }
+    if (s.focalPoint == 'center-center') {
+      sourceClassName += ' object-center'
+    }
+    if (s.focalPoint == 'center-right') {
+      sourceClassName += ' object-right'
+    }
+    if (s.focalPoint == 'bottom-left') {
+      sourceClassName += ' object-left-bottom'
+    }
+    if (s.focalPoint == 'bottom-center') {
+      sourceClassName += ' object-bottom'
+    }
+    if (s.focalPoint == 'bottom-right') {
+      sourceClassName += ' object-right-bottom'
+    }
+
+    return <source key={i} srcSet={s.url} className={sourceClassName} type={s.type} />
+  })
 
   const displayDate = sermonDate?.substring(0, 10).split('-').reverse().join('/')
 
@@ -104,6 +177,9 @@ export const EpisodeRow: React.FC<{
   const titleToUse = titleFromProps || title
   const sanitizedDescription = doc?.biblePassageText?.replace(/\s/g, ' ') // replace non-breaking space with white space
 
+  let loaderImage = svgToDataURI(BACKGROUND_LOGO_SVG_WIDE)
+  let loaderImageUrl = `url("${loaderImage}")`
+
   return (
     <div className="border-b-1 border-b-grey-900 py-2">
       <EpisodeAudioPlayerContext>
@@ -112,15 +188,15 @@ export const EpisodeRow: React.FC<{
             .filter(Boolean)
             .join(' ')}
         >
-          <div className={classes.imageContainer} aria-hidden={true}>
-            <ImageMedia
-              className={classes.generalCoverImage}
-              alt=""
-              src={targetImageUrl}
-              resource={targetImage}
-              resourceType="coverImage"
-              fill={true}
-            />
+          <div
+            className={classes.imageContainer}
+            aria-hidden={true}
+            style={{ backgroundImage: loaderImageUrl }}
+          >
+            <picture className="w-full h-full bg-cover bg-center">
+              {sourcesList}
+              <img src={targetImageUrl.src} alt="" />
+            </picture>
           </div>
           <div className={classes.generalRowDescription}>
             <span className="flex flex-col sm:flex-row">

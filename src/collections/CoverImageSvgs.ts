@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url'
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { ensureGuid } from '@/hooks/ensureGuid'
+import { coverImageSvg } from '@/endpoints/coverImageHandler'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -31,6 +32,13 @@ export const CoverImageSvgs: CollectionConfig = {
     focalPoint: false,
     crop: false,
   },
+  endpoints: [
+    {
+      path: '/byVersion/:id/:versionId/:filename',
+      method: 'get',
+      handler: coverImageSvg,
+    },
+  ],
   access: {
     create: authenticated,
     delete: authenticated,
@@ -54,7 +62,7 @@ export const CoverImageSvgs: CollectionConfig = {
         { label: 'Centre', value: 'center-center' },
         { label: 'Right', value: 'center-right' },
         { label: 'Bottom Left', value: 'bottom-left' },
-        { label: 'Bottom', value: '50% bottom-center' },
+        { label: 'Bottom', value: 'bottom-center' },
         { label: 'Bottom Right', value: 'bottom-right' },
       ],
       defaultValue: 'center-center',

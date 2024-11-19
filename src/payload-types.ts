@@ -224,7 +224,7 @@ export interface CoverImageSvg {
         | 'center-center'
         | 'center-right'
         | 'bottom-left'
-        | '50% bottom-center'
+        | 'bottom-center'
         | 'bottom-right'
       )
     | null;
