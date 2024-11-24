@@ -1,4 +1,5 @@
-import type { CollectionConfig } from 'payload'
+import { getPayload, type CollectionConfig } from 'payload'
+import config from '@payload-config'
 
 import {
   FixedToolbarFeature,
@@ -26,11 +27,48 @@ export const TalkAudio: CollectionConfig = {
   },
   admin: {
     group: 'Media',
+    useAsTitle: 'originalFilename',
   },
   hooks: {
+    beforeOperation: [
+      async (req) => {
+        if (req.operation === 'create') {
+          if (req.req.data && req.req.data.uuid == undefined) {
+            req.req.data.guid = crypto.randomUUID()
+          }
+          if (req.req?.file?.name != undefined && req.req?.file?.name != null) {
+            let filenameExtension =
+              req.req.file.name.substring(
+                req.req.file.name.lastIndexOf('.') + 1,
+                req.req.file.name.length,
+              ) || ''
+            if (req.req.data) {
+              req.req.data.originalFilename = req.req.file.name
+              req.req.file.name = req.req?.data?.guid + '.' + filenameExtension
+            }
+          }
+          let payload = getPayload({ config })
+          ;(await payload).logger.info({
+            stage: 'beforeOp',
+            reqData: req.req.data,
+            reqFile: req.req.file,
+          })
+        }
+      },
+    ],
+    beforeChange: [
+      ({ collection, context, data, req }) => {
+        req.payload.logger.info({ stage: 'beforeChange', context, data })
+      },
+    ],
     afterChange: [getFileData],
   },
   fields: [
+    {
+      name: 'originalFilename',
+      type: 'text',
+      required: false,
+    },
     {
       name: 'alt',
       type: 'text',
@@ -171,14 +209,21 @@ export const TalkAudio: CollectionConfig = {
       label: 'GUID',
       unique: true,
       index: true,
-      hidden: true,
       admin: {
         readOnly: true,
         position: 'sidebar',
       },
       hooks: {
-        beforeValidate: [ensureGuid],
-      }
+        beforeValidate: [
+          ({ data, req }) => {
+            req.payload.logger.info({ stage: 'beforeGuidValidate1', data })
+          },
+          ensureGuid,
+          ({ data, req }) => {
+            req.payload.logger.info({ stage: 'beforeGuidValidate2', data })
+          },
+        ],
+      },
     },
   ],
   upload: {

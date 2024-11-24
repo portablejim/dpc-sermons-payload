@@ -215,7 +215,7 @@ export interface CoverImage {
 export interface CoverImageSvg {
   id: number;
   alt: string;
-  focalPoint?:
+  svgFocalPoint?:
     | (
         | 'top-left'
         | 'top-center'
@@ -656,6 +656,7 @@ export interface CodeBlock {
  */
 export interface TalkAudio {
   id: number;
+  originalFilename?: string | null;
   alt?: string | null;
   uploadQuality?: ('best' | 'good' | 'medium' | 'low') | null;
   lengthSeconds?: number | null;
@@ -1068,7 +1069,7 @@ export interface CoverImagesSelect<T extends boolean = true> {
  */
 export interface CoverImageSvgsSelect<T extends boolean = true> {
   alt?: T;
-  focalPoint?: T;
+  svgFocalPoint?: T;
   version?: T;
   guid?: T;
   updatedAt?: T;
@@ -1246,6 +1247,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "talk-audio_select".
  */
 export interface TalkAudioSelect<T extends boolean = true> {
+  originalFilename?: T;
   alt?: T;
   uploadQuality?: T;
   lengthSeconds?: T;
