@@ -52,7 +52,7 @@ export const CoverImageSvgs: CollectionConfig = {
       required: true,
     },
     {
-      name: 'focalPoint',
+      name: 'svgFocalPoint',
       type: 'select',
       options: [
         { label: 'Top Left', value: 'top-left' },
