@@ -28,7 +28,6 @@ export const getFileData: AfterChangeHook = ({ doc, previousDoc, req: { payload 
   const dirname = path.dirname(filename)
   const targetFilename = path.resolve(dirname, '../../public/talkaudio', doc.filename)
   payload.logger.info(targetFilename)
-  payload.logger.info({ doc, previousDoc })
   let ffprobeOutput = ffmpeg.ffprobe(targetFilename, function (err, metadata) {
     if (!err) {
       let fileDuration = parseInt(metadata.format.duration)
