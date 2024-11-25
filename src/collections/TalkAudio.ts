@@ -31,9 +31,17 @@ export const TalkAudio: CollectionConfig = {
   },
   hooks: {
     beforeOperation: [
-      async (req) => {
+      (req) => {
         if (req.operation === 'create') {
-          if (req.req.data && req.req.data.uuid == undefined) {
+          let payload = getPayload({ config })
+          payload.then((payload) =>
+            payload.logger.info({
+              stage: 'beforeOp1',
+              reqData: req.req.data,
+              reqFile: req.req.file,
+            }),
+          )
+          if (req.req.data && (req.req.data.guid == undefined || req.req.data.guid == null)) {
             req.req.data.guid = crypto.randomUUID()
           }
           if (req.req?.file?.name != undefined && req.req?.file?.name != null) {
@@ -47,12 +55,13 @@ export const TalkAudio: CollectionConfig = {
               req.req.file.name = req.req?.data?.guid + '.' + filenameExtension
             }
           }
-          let payload = getPayload({ config })
-          ;(await payload).logger.info({
-            stage: 'beforeOp',
-            reqData: req.req.data,
-            reqFile: req.req.file,
-          })
+          payload.then((payload) =>
+            payload.logger.info({
+              stage: 'beforeOp2',
+              reqData: req.req.data,
+              reqFile: req.req.file,
+            }),
+          )
         }
       },
     ],
@@ -215,12 +224,12 @@ export const TalkAudio: CollectionConfig = {
       },
       hooks: {
         beforeValidate: [
-          ({ data, req }) => {
-            req.payload.logger.info({ stage: 'beforeGuidValidate1', data })
+          ({ data, value, req }) => {
+            req.payload.logger.info({ stage: 'beforeGuidValidate1', data, value })
           },
           ensureGuid,
-          ({ data, req }) => {
-            req.payload.logger.info({ stage: 'beforeGuidValidate2', data })
+          ({ data, value, req }) => {
+            req.payload.logger.info({ stage: 'beforeGuidValidate2', data, value })
           },
         ],
       },
