@@ -4,6 +4,7 @@ import * as migration_20241106_101919_codeblock from './20241106_101919_codebloc
 import * as migration_20241106_132835_uploadaudio from './20241106_132835_uploadaudio';
 import * as migration_20241106_135031_fixes from './20241106_135031_fixes';
 import * as migration_20241111_081701_coverImageSvgs from './20241111_081701_coverImageSvgs';
+import * as migration_20241125_065915_nameTalkAudio from './20241125_065915_nameTalkAudio';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20241111_081701_coverImageSvgs.up,
     down: migration_20241111_081701_coverImageSvgs.down,
-    name: '20241111_081701_coverImageSvgs'
+    name: '20241111_081701_coverImageSvgs',
+  },
+  {
+    up: migration_20241125_065915_nameTalkAudio.up,
+    down: migration_20241125_065915_nameTalkAudio.down,
+    name: '20241125_065915_nameTalkAudio'
   },
 ];
