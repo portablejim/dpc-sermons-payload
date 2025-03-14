@@ -79,7 +79,7 @@ export const EpisodeRow: React.FC<{
       imgSources.push({
         url: `/api/cover-image-svgs/byVersion/${targetImage?.squareSvg?.id}/${targetImage?.squareSvg?.version}/${targetImage?.squareSvg?.filename} 1x`,
         type: targetImage.squareSvg.mimeType ?? 'image/svg+xml',
-        focalPoint: targetImage.squareSvg.focalPoint ?? 'center-center',
+        focalPoint: targetImage.squareSvg.svgFocalPoint ?? 'center-center',
       })
     }
     if (targetImage.sizes?.thumbnail_webp?.url && targetImage.sizes?.thumbnail_large?.url) {
