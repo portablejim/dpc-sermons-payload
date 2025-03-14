@@ -2,8 +2,6 @@
 
 import React, { Fragment, useEffect, useRef, useState } from 'react'
 
-//import configPromise from '@payload-config'
-//import { getPayloadHMR } from '@payloadcms/next/utilities'
 import type { Episode, Page, Series } from '@/payload-types'
 import { EpisodeRow } from '../EpisodeRow'
 

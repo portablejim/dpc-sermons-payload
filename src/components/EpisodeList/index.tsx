@@ -1,14 +1,12 @@
 'use client'
 
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import qs from 'qs'
 
-import configPromise from '@payload-config'
-import type { Episode, Page, Series } from '@/payload-types'
+import type { Episode } from '@/payload-types'
 import { EpisodeRow } from '../EpisodeRow'
 
 import classes from './index.module.scss'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
 import { Spinner } from '@nextui-org/react'
 
 type Result = {

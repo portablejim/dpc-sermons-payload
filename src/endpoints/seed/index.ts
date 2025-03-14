@@ -1,9 +1,6 @@
-import { Episode, Series } from '@/payload-types'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
-import fs, { readFile, readFileSync } from 'fs'
+import fs, { readFileSync } from 'fs'
 import path from 'path'
-import { getPayload, type Payload, type PayloadRequest } from 'payload'
-import config from '@payload-config'
+import { type Payload, type PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
 // Next.js revalidation errors are normal when seeding the database without a server running

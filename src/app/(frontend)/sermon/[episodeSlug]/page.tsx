@@ -2,11 +2,10 @@ import React, { cache } from 'react'
 import { Metadata } from 'next'
 import { draftMode } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
-import payload from 'payload'
+import payload, { getPayload } from 'payload'
 
 import { Episode } from '@/payload-types'
 import { EpisodeShow } from '../../../../components/EpisodeShow'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
 import configPromise from '@payload-config'
 import { generateEpisodeMeta } from '@/utilities/generateMeta'
 import { getStaticFile } from '@/utilities/getStaticFile'
@@ -74,7 +73,7 @@ export async function generateMetadata({ params: paramsPromise }): Promise<Metad
 const queryEpisodeBySlug = cache(async ({ slug }: { slug: string }) => {
   const { isEnabled: draft } = await draftMode()
 
-  const payload = await getPayloadHMR({ config: configPromise })
+  const payload = await getPayload({ config: configPromise })
 
   const result = await payload.find({
     collection: 'episodes',

@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
@@ -12,6 +11,7 @@ import { SeriesShow } from '../../../../components/SeriesShow'
 import { generateSeriesMeta } from '@/utilities/generateMeta'
 import notFound from '../../not-found'
 import { getStaticFile } from '@/utilities/getStaticFile'
+import { getPayload } from 'payload'
 
 type Args = {
   params: Promise<{
@@ -68,7 +68,7 @@ export async function generateMetadata({ params: paramsPromise }): Promise<Metad
 const querySeriesBySlug = cache(async ({ slug }: { slug: string }) => {
   const { isEnabled: draft } = await draftMode()
 
-  const payload = await getPayloadHMR({ config: configPromise })
+  const payload = await getPayload({ config: configPromise })
 
   const result = await payload.find({
     collection: 'series',

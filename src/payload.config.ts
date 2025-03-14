@@ -181,7 +181,7 @@ export default buildConfig({
       },
     }),
     nestedDocsPlugin({
-      collections: ['categories'],
+      collections: [],
     }),
     seoPlugin({
       generateTitle,
