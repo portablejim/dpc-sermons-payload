@@ -1,15 +1,7 @@
 'use client'
 import React, { useCallback, useEffect } from 'react'
 
-import {
-  useField,
-  useFieldProps,
-  Button,
-  TextInput,
-  FieldLabel,
-  useFormFields,
-  useForm,
-} from '@payloadcms/ui'
+import { useField, Button, TextInput, FieldLabel, useFormFields, useForm } from '@payloadcms/ui'
 
 import { formatSlug } from './formatSlug'
 import './index.scss'
@@ -25,8 +17,9 @@ export const SlugComponent: React.FC<SlugComponentProps> = ({
   fieldToUse,
   checkboxFieldPath: checkboxFieldPathFromProps,
 }) => {
+  /*
   const { label } = field
-  const { path, readOnly: readOnlyFromProps } = useFieldProps()
+  const { path, readOnly: readOnlyFromProps } = props
 
   const checkboxFieldPath = path.includes('.')
     ? `${path}.${checkboxFieldPathFromProps}`
@@ -87,4 +80,6 @@ export const SlugComponent: React.FC<SlugComponentProps> = ({
       <TextInput value={value} onChange={setValue} path={path} readOnly={Boolean(readOnly)} />
     </div>
   )
+    */
+  return <></>
 }
