@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-import {nextui} from "@nextui-org/react"
+import { heroui } from "@heroui/react"
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   content: [
@@ -7,10 +7,10 @@ export default {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
+    './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   darkMode: ['selector', '[data-theme="dark"]', 'class'],
-  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography'), nextui()],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography'), heroui()],
   prefix: '',
   safelist: [
     'lg:col-span-4',
@@ -28,19 +28,19 @@ export default {
   ],
   theme: {
     screens: {
-      'xs': '25rem',
+      xs: '25rem',
       // => @media (min-width: 400px) { ... }
 
-      'sm': '40rem',
+      sm: '40rem',
       // => @media (min-width: 640px) { ... }
 
-      'md': '48rem',
+      md: '48rem',
       // => @media (min-width: 768px) { ... }
 
-      'lg': '64rem',
+      lg: '64rem',
       // => @media (min-width: 1024px) { ... }
 
-      'xl': '80rem',
+      xl: '80rem',
       // => @media (min-width: 1280px) { ... }
 
       '2xl': '96rem',

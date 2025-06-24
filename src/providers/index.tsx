@@ -2,16 +2,16 @@ import React from 'react'
 
 import { HeaderThemeProvider } from './HeaderTheme'
 import { ThemeProvider } from './Theme'
-import { NextUIProvider } from '@nextui-org/react'
+import { HeroUIProvider } from "@heroui/react"
 
 export const Providers: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
   return (
     <ThemeProvider>
-      <NextUIProvider>
+      <HeroUIProvider>
         <HeaderThemeProvider>{children}</HeaderThemeProvider>
-      </NextUIProvider>
+      </HeroUIProvider>
     </ThemeProvider>
   )
 }

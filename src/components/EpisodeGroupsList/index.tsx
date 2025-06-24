@@ -2,7 +2,7 @@
 
 import React, { Suspense, use, useState } from 'react'
 import type { Episode } from '@/payload-types'
-import { Spinner } from '@nextui-org/react'
+import { Spinner } from "@heroui/react"
 import { EpisodeGroupList } from '../EpisodeGroupList'
 import * as Accordion from '@radix-ui/react-accordion'
 

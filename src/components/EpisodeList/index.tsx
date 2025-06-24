@@ -7,7 +7,7 @@ import type { Episode } from '@/payload-types'
 import { EpisodeRow } from '../EpisodeRow'
 
 import classes from './index.module.scss'
-import { Spinner } from '@nextui-org/react'
+import { Spinner } from "@heroui/react"
 
 type Result = {
   docs: (Episode | string)[]

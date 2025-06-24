@@ -1,4 +1,4 @@
-import { desc, eq } from 'drizzle-orm/expressions'
+import { desc, eq } from 'drizzle-orm'
 import { type PayloadHandler } from 'payload'
 
 export const validYears: PayloadHandler = async (req): Promise<Response> => {

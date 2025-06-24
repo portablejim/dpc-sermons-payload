@@ -6,7 +6,7 @@ import type { Episode, Page, Series } from '@/payload-types'
 import { EpisodeRow } from '../EpisodeRow'
 
 import classes from './index.module.scss'
-import { Spinner } from '@nextui-org/react'
+import { Spinner } from "@heroui/react"
 import {
   ICON_SVG_MINUS,
   ICON_SVG_MINUS_REACT,

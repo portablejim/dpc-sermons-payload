@@ -1,4 +1,4 @@
-import { desc, eq } from 'drizzle-orm/expressions'
+import { desc, eq } from 'drizzle-orm'
 import { existsSync, readFileSync } from 'fs'
 import { type PayloadHandler } from 'payload'
 

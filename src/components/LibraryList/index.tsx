@@ -1,7 +1,7 @@
 'use client'
 
 import React, { Fragment, ReactNode } from 'react'
-import { Tab, Tabs } from '@nextui-org/react'
+import { Tab, Tabs } from "@heroui/react"
 
 import type { Episode, Series } from '@/payload-types'
 
