@@ -1690,6 +1690,12 @@ export interface Header {
           url?: string | null;
           label: string;
         };
+        activeUrlMatch?:
+          | {
+              regex?: string | null;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -1714,6 +1720,12 @@ export interface Footer {
           url?: string | null;
           label: string;
         };
+        activeUrlMatch?:
+          | {
+              regex?: string | null;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -1737,6 +1749,12 @@ export interface HeaderSelect<T extends boolean = true> {
               url?: T;
               label?: T;
             };
+        activeUrlMatch?:
+          | T
+          | {
+              regex?: T;
+              id?: T;
+            };
         id?: T;
       };
   updatedAt?: T;
@@ -1759,6 +1777,12 @@ export interface FooterSelect<T extends boolean = true> {
               reference?: T;
               url?: T;
               label?: T;
+            };
+        activeUrlMatch?:
+          | T
+          | {
+              regex?: T;
+              id?: T;
             };
         id?: T;
       };

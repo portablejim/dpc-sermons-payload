@@ -16,8 +16,19 @@ export const Footer: GlobalConfig = {
         link({
           appearances: false,
         }),
+        {
+          name: 'activeUrlMatch',
+          label: 'Active URl Matches',
+          type: 'array',
+          fields: [
+            {
+              name: 'regex',
+              type: 'text',
+            },
+          ],
+        },
       ],
-      maxRows: 6,
+      maxRows: 30,
     },
   ],
   hooks: {
