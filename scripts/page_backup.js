@@ -12,7 +12,6 @@ import { createHash } from 'crypto'
 let targetId = process.argv[2]
 let targetFilename = process.argv[3]
 
-console.log({ targetId, targetFilename })
 const backupPage = async (targetId, targetFilename) => {
   const payload = await getPayload({ config })
 
@@ -71,7 +70,7 @@ const backupPage = async (targetId, targetFilename) => {
 
   targetPage = await payload.findByID({
     collection: 'pages',
-    id: 4,
+    id: targetId,
     depth: 0,
   })
 
@@ -80,7 +79,6 @@ const backupPage = async (targetId, targetFilename) => {
     media: Object.fromEntries(mediaMap),
     page: targetPage,
   }
-  console.log(outputObj)
 
   let outputStr = TOML.stringify(outputObj)
 
