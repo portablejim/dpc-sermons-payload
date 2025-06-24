@@ -18,11 +18,9 @@ const backupPage = async (targetId, targetFilename) => {
 
   let targetPage = await payload.findByID({
     collection: 'pages',
-    id: 4,
+    id: targetId,
   })
 
-  let mediaSet = new Set()
-  let imageSet = new Set()
   let imageMap = new Map()
   let mediaMap = new Map()
 
