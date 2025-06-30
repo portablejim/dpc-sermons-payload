@@ -99,7 +99,7 @@ export const Media: CollectionConfig = {
         if(typeof mediaFind.filename != 'string') {
           return Response.error()
         }
-        let filePath = path.resolve(dirname, '../../public/media', mediaFind.filename)
+        let filePath = path.resolve(dirname, '../../public/upload/media', mediaFind.filename)
         let mediaBody = readFileSync(filePath)
         let fileNameSafe = encodeURIComponent(mediaFind.filename)
         return new Response(mediaBody, {

@@ -209,7 +209,7 @@ export const TalkAudio: CollectionConfig = {
   ],
   upload: {
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
-    staticDir: path.resolve(dirname, '../../public/talkaudio'),
+    staticDir: path.resolve(dirname, '../../public/upload/talkaudio'),
     mimeTypes: ['audio/*'],
   },
 }

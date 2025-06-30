@@ -27,7 +27,7 @@ export const CoverImageSvgs: CollectionConfig = {
     useAsTitle: 'alt',
   },
   upload: {
-    staticDir: path.resolve(dirname, '../../public/cover-image-svg'),
+    staticDir: path.resolve(dirname, '../../public/upload/cover-image-svg'),
     mimeTypes: ['image/svg'],
     focalPoint: false,
     crop: false,

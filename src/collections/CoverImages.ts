@@ -27,7 +27,7 @@ export const CoverImages: CollectionConfig = {
     useAsTitle: 'alt',
   },
   upload: {
-    staticDir: path.resolve(dirname, '../../public/cover-images'),
+    staticDir: path.resolve(dirname, '../../public/upload/cover-images'),
     mimeTypes: ['image/*'],
     focalPoint: true,
     crop: true,
