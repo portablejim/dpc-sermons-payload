@@ -9,6 +9,7 @@ import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
 import { episodeList, validYears } from '@/endpoints/episodeHandler'
 import { ensureGuid } from '@/hooks/ensureGuid'
 import { validBooks, episodeByBookList } from '@/endpoints/episodeBookHandler'
+import { Episode } from '@/payload-types'
 
 export const TalkEpisodes: CollectionConfig = {
   slug: 'episodes',
@@ -334,6 +335,25 @@ export const TalkEpisodes: CollectionConfig = {
       type: 'checkbox',
       hidden: true,
       defaultValue: false,
+      hooks: {
+        beforeChange: [
+          ({ data, operation, value}) => {
+            let dataObject: Partial<Episode>|undefined = data;
+            if(dataObject?.audioFormat === "linked" && dataObject?.linkedAudioUrl && dataObject?.linkedAudioUrl.length > 0) {
+              if(dataObject?.linkedAudioFiletype
+                && dataObject?.linkedAudioFiletype.length > 1
+                && dataObject?.linkedAudioFileSize
+                && dataObject?.linkedAudioFileSize > 0
+                && dataObject?.linkedAudioLength
+                && dataObject?.linkedAudioLength > 0
+              ) {
+                return true;
+              }
+            }
+            return value;
+          }
+        ],
+      }
     },
     {
       name: 'talkOutline',
