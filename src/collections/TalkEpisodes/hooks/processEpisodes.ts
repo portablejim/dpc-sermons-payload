@@ -1,6 +1,5 @@
 import { AfterChangeHook } from 'node_modules/payload/dist/collections/config/types'
 
-import { revalidatePath } from 'next/cache'
 import { Episode } from '@/payload-types'
 import * as os from 'node:os'
 import path from 'path'
@@ -19,14 +18,16 @@ export const fetchEpisodeMetadata = async (
   ep: Episode,
   tempDir: string,
 ): Promise<EpisodeMetadata | null> => {
-  if (
-    (ep.linkedAudioFiletype &&
+  if ( ep.audioFormat == 'linked' &&
+    (
+      (ep.linkedAudioFiletype &&
       ep.linkedAudioFiletype.length > 1 &&
       ep.linkedAudioFileSize &&
       ep.linkedAudioFileSize > 0 &&
       ep.linkedAudioLength &&
-      ep.linkedAudioLength > 0) ||
-    !isValidHttpUrl(ep.linkedAudioUrl)
+      ep.linkedAudioLength > 0)
+      || !isValidHttpUrl(ep.linkedAudioUrl)
+    )
   ) {
     return null
   }
@@ -129,8 +130,8 @@ export const processEpisode: AfterChangeHook = (inputArgs) => {
             linkedAudioLength: outputEpisode.audioLength,
           },
         })
-        revalidateEpisode(inputArgs)
       }
+      revalidateEpisode(inputArgs)
     });
   }
 

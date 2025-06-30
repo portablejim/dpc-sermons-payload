@@ -10,6 +10,7 @@ import { episodeList, validYears } from '@/endpoints/episodeHandler'
 import { ensureGuid } from '@/hooks/ensureGuid'
 import { validBooks, episodeByBookList } from '@/endpoints/episodeBookHandler'
 import { Episode } from '@/payload-types'
+import { processEpisode } from '@/collections/TalkEpisodes/hooks/processEpisodes'
 
 export const TalkEpisodes: CollectionConfig = {
   slug: 'episodes',
@@ -83,7 +84,7 @@ export const TalkEpisodes: CollectionConfig = {
       },
     ],
     beforeChange: [populatePublishedAt],
-    afterChange: [revalidateEpisode],
+    afterChange: [processEpisode],
     afterRead: [populateAuthors],
   },
   versions: {
