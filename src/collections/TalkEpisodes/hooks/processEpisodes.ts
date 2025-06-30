@@ -65,6 +65,9 @@ export const fetchEpisodeMetadata = async (
     } catch (e) {
       return null
     }
+    finally {
+      fs.unlink(audioDataPath, () => {});
+    }
   }
   //return { fileType: ep.linkedAudioFiletype ?? null, fileSize: ep.linkedAudioFileSize ?? null, audioLength: ep.linkedAudioLength ?? null}
   return null;
