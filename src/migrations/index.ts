@@ -6,6 +6,7 @@ import * as migration_20241106_135031_fixes from './20241106_135031_fixes';
 import * as migration_20241111_081701_coverImageSvgs from './20241111_081701_coverImageSvgs';
 import * as migration_20241125_065915_nameTalkAudio from './20241125_065915_nameTalkAudio';
 import * as migration_20250630_075435 from './20250630_075435';
+import * as migration_20250701_131354_adminApiKey from './20250701_131354_adminApiKey';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20250630_075435.up,
     down: migration_20250630_075435.down,
-    name: '20250630_075435'
+    name: '20250630_075435',
+  },
+  {
+    up: migration_20250701_131354_adminApiKey.up,
+    down: migration_20250701_131354_adminApiKey.down,
+    name: '20250701_131354_adminApiKey'
   },
 ];
