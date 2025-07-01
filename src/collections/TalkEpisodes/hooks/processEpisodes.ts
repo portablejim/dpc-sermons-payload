@@ -68,18 +68,27 @@ export const fetchEpisodeMetadata = async (
     }
     try {
       fs.writeFileSync(audioDataPath, Buffer.from(audioData))
-      const lengthOutput = child_process.execFileSync('ffprobe', [
-        '-v',
-        'error',
-        '-show_entries',
-        'format=duration',
-        '-of',
-        'default=noprint_wrappers=1:nokey=1',
-        audioDataPath,
-      ], {
+      const lengthOutput = child_process.execFileSync(
+        'ffprobe',
+        [
+          '-v',
+          'error',
+          '-show_entries',
+          'format=duration',
+          '-of',
+          'default=noprint_wrappers=1:nokey=1',
+          audioDataPath,
+        ],
+        {
+          stdio: 'pipe',
+        },
+      )
+      const formatOutput = child_process.execFileSync('file', ['--mime-type', audioDataPath], {
         stdio: 'pipe',
       })
-      const fileType = audioDataResponse.headers.get('Content-Type') ?? ''
+      const fileTypeParts = formatOutput.toString('utf-8').split(' ')
+      const fileType =
+        fileTypeParts.length > 0 ? fileTypeParts[fileTypeParts.length - 1] : fileTypeParts[0]
       const fileSize = audioData.byteLength
       let audioLength = 0
       const lengthOutputStr = lengthOutput.toString('utf8')
@@ -88,13 +97,13 @@ export const fetchEpisodeMetadata = async (
     } catch (err) {
       if (err.code) {
         // Spawning child process failed
-        console.error(err.code);
+        console.error(err.code)
       } else {
         // Child was spawned but exited with non-zero exit code
         // Error contains any stdout and stderr from the child
-        const { stdout, stderr } = err;
+        const { stdout, stderr } = err
 
-        console.error({ stdout, stderr });
+        console.error({ stdout, stderr })
       }
       return null
     } finally {
@@ -125,29 +134,37 @@ export const processEpisodesRaw = (payload: BasePayload) => {
       },
     })
     .then((oldEpisodesResponse) => {
-      if(oldEpisodesResponse.totalDocs > 0)
-      {
-        const currentDate = new Date().toISOString();
-        console.log(currentDate + ': Episodes to process: ' + oldEpisodesResponse.totalDocs.toString(10))
+      if (oldEpisodesResponse.totalDocs > 0) {
+        const currentDate = new Date().toISOString()
+        console.log(
+          currentDate + ': Episodes to process: ' + oldEpisodesResponse.totalDocs.toString(10),
+        )
       }
       oldEpisodesResponse.docs.map(async (ep) => {
         const outputEpisode = await fetchEpisodeMetadata(ep, tempDir)
-        console.log({ outputEpisode })
+        console.log({ id: ep.id, ...outputEpisode })
         if (outputEpisode != null) {
-          await payload.update({
-            collection: 'episodes',
-            id: ep.id,
-            data: {
-              linkedAudioFiletype: outputEpisode.fileType,
-              linkedAudioFileSize: outputEpisode.fileSize,
-              linkedAudioLength: outputEpisode.audioLength,
-            },
-          })
-        }
-        try {
-          revalidateEpisodeRaw(ep, payload)
-        } catch (e) {
-          //console.error(e)
+          try {
+            const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL
+            const episodeId = ep.id
+            const API_KEY = process.env.INTEGRATION_API_KEY
+            const req = await fetch(`${baseUrl}/api/episodes/${episodeId}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `users API-Key ${API_KEY}`,
+              },
+              body: JSON.stringify({
+                linkedAudioFiletype: outputEpisode.fileType,
+                linkedAudioFileSize: outputEpisode.fileSize,
+                linkedAudioLength: outputEpisode.audioLength,
+              }),
+            })
+            const data = await req.json()
+            console.log(data)
+          } catch (err) {
+            console.log(err)
+          }
         }
       })
     })
@@ -156,7 +173,8 @@ export const processEpisodesRaw = (payload: BasePayload) => {
 export const processEpisode: AfterChangeHook = (inputArgs) => {
   const doc = inputArgs.doc
   const payload = inputArgs.req.payload
-  if (doc.linkedAudioUrl && doc.linkedAudioUrl?.length > 1) {
+  if (doc.hasValidMedia === false && doc.linkedAudioUrl && doc.linkedAudioUrl?.length > 1) {
+    payload.logger.debug('Validating metadata')
     const tempDir = os.tmpdir()
     fetchEpisodeMetadata(doc, tempDir).then(async (outputEpisode) => {
       if (outputEpisode != null) {
@@ -169,13 +187,12 @@ export const processEpisode: AfterChangeHook = (inputArgs) => {
             linkedAudioLength: outputEpisode.audioLength,
           },
         })
-      }
-      try {
+      } else {
         revalidateEpisode(inputArgs)
-      } catch (e) {
-        //console.error(e)
       }
     })
+  } else {
+    revalidateEpisode(inputArgs)
   }
 
   return doc

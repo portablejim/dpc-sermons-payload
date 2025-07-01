@@ -9,13 +9,7 @@ import { BasePayload } from 'payload'
 // Only revalidate existing docs that are published
 // Don't scope to `operation` in order to purge static demo posts
 export const revalidateEpisode: AfterChangeHook = ({ doc, req: { payload } }) => {
-  try {
-    return revalidateEpisodeRaw(doc, payload)
-  }
-  catch (e) {
-
-  }
-  return doc;
+  return revalidateEpisodeRaw(doc, payload)
 }
 
 export const revalidateEpisodeRaw = (doc: Episode, payload: BasePayload) => {

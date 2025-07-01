@@ -84,7 +84,7 @@ export const TalkEpisodes: CollectionConfig = {
       },
     ],
     beforeChange: [populatePublishedAt],
-    afterChange: [revalidateEpisode],
+    afterChange: [processEpisode],
     afterRead: [populateAuthors],
   },
   versions: {
