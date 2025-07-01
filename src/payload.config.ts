@@ -97,8 +97,7 @@ export default buildConfig({
           enabledCollections: ['pages'],
           fields: ({ defaultFields }) => {
             const defaultFieldsWithoutUrl = defaultFields.filter((field) => {
-              if ('name' in field && field.name === 'url') return false
-              return true
+              return !('name' in field && field.name === 'url');
             })
 
             return [
@@ -161,7 +160,7 @@ export default buildConfig({
     redirectsPlugin({
       collections: ['pages'],
       overrides: {
-        // @ts-expect-error
+        // @ts-expect-error Unsure why this will error.
         fields: ({ defaultFields }) => {
           return defaultFields.map((field) => {
             if ('name' in field && field.name === 'from') {

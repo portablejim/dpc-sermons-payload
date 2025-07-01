@@ -32,4 +32,20 @@ export default [
       '**/*.min.js',
     ],
   },
+  {
+    name: 'unused-only-warn',
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'warn',
+    }
+  },
+  {
+    name: 'relax-for-migrations',
+    files: [
+      'src/migrations/*.ts',
+    ],
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
+  }
 ]
