@@ -1,9 +1,8 @@
-
 export const isValidHttpUrl = (candidateString: string | URL | null | undefined) => {
   let url: URL
 
-  if(candidateString === null || candidateString === undefined) {
-    return false;
+  if (candidateString === null || candidateString === undefined) {
+    return false
   }
 
   try {

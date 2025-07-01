@@ -9,25 +9,24 @@ import { isValidHttpUrl } from '@/utilities/isValidHttpUrl'
 import { revalidateEpisode } from '@/collections/TalkEpisodes/hooks/revalidateEpisode'
 
 export type EpisodeMetadata = {
-  fileType: string,
-  fileSize: number,
-  audioLength: number,
+  fileType: string
+  fileSize: number
+  audioLength: number
 }
 
 export const fetchEpisodeMetadata = async (
   ep: Episode,
   tempDir: string,
 ): Promise<EpisodeMetadata | null> => {
-  if ( ep.audioFormat == 'linked' &&
-    (
-      (ep.linkedAudioFiletype &&
+  if (
+    ep.audioFormat == 'linked' &&
+    ((ep.linkedAudioFiletype &&
       ep.linkedAudioFiletype.length > 1 &&
       ep.linkedAudioFileSize &&
       ep.linkedAudioFileSize > 0 &&
       ep.linkedAudioLength &&
-      ep.linkedAudioLength > 0)
-      || !isValidHttpUrl(ep.linkedAudioUrl)
-    )
+      ep.linkedAudioLength > 0) ||
+      !isValidHttpUrl(ep.linkedAudioUrl))
   ) {
     return null
   }
@@ -65,38 +64,38 @@ export const fetchEpisodeMetadata = async (
       return { fileType, fileSize, audioLength }
     } catch (e) {
       return null
-    }
-    finally {
-      fs.unlink(audioDataPath, () => {});
+    } finally {
+      fs.unlink(audioDataPath, () => {})
     }
   }
   //return { fileType: ep.linkedAudioFiletype ?? null, fileSize: ep.linkedAudioFileSize ?? null, audioLength: ep.linkedAudioLength ?? null}
-  return null;
+  return null
 }
 // Revalidate the post in the background, so the user doesn't have to wait
 // Notice that the hook itself is not async and we are not awaiting `revalidate`
 export const processEpisodes: AfterChangeHook = (inputArgs) => {
-  let doc = inputArgs.doc;
-  let payload = inputArgs.req.payload;
-  if(doc.linkedAudioUrl && doc.linkedAudioUrl?.length > 1) {
-    let tempDir = os.tmpdir();
-    payload.find({
-      collection: 'episodes',
-      where: {
-        hasValidMedia: {
-          equals: false
+  let doc = inputArgs.doc
+  let payload = inputArgs.req.payload
+  if (doc.linkedAudioUrl && doc.linkedAudioUrl?.length > 1) {
+    let tempDir = os.tmpdir()
+    payload
+      .find({
+        collection: 'episodes',
+        where: {
+          hasValidMedia: {
+            equals: false,
+          },
+          audioFormat: {
+            equals: 'linked',
+          },
         },
-        audioFormat: {
-          equals: 'linked'
-        }
-      }
-    })
-      .then(oldEpisodesResponse => {
+      })
+      .then((oldEpisodesResponse) => {
         oldEpisodesResponse.docs.map(async (ep) => {
-          let outputEpisode = await fetchEpisodeMetadata(ep, tempDir);
-          if(outputEpisode != null) {
+          let outputEpisode = await fetchEpisodeMetadata(ep, tempDir)
+          if (outputEpisode != null) {
             await payload.update({
-              collection: "episodes",
+              collection: 'episodes',
               id: ep.id,
               data: {
                 linkedAudioFiletype: outputEpisode.fileType,
@@ -105,7 +104,7 @@ export const processEpisodes: AfterChangeHook = (inputArgs) => {
               },
             })
           }
-        });
+        })
         revalidateEpisode(inputArgs)
       })
   }
@@ -113,16 +112,15 @@ export const processEpisodes: AfterChangeHook = (inputArgs) => {
   return doc
 }
 
-
 export const processEpisode: AfterChangeHook = (inputArgs) => {
-  let doc = inputArgs.doc;
-  let payload = inputArgs.req.payload;
-  if(doc.linkedAudioUrl && doc.linkedAudioUrl?.length > 1) {
-    let tempDir = os.tmpdir();
+  let doc = inputArgs.doc
+  let payload = inputArgs.req.payload
+  if (doc.linkedAudioUrl && doc.linkedAudioUrl?.length > 1) {
+    let tempDir = os.tmpdir()
     fetchEpisodeMetadata(doc, tempDir).then(async (outputEpisode) => {
-      if(outputEpisode != null) {
+      if (outputEpisode != null) {
         await payload.update({
-          collection: "episodes",
+          collection: 'episodes',
           id: doc.id,
           data: {
             linkedAudioFiletype: outputEpisode.fileType,
@@ -132,7 +130,7 @@ export const processEpisode: AfterChangeHook = (inputArgs) => {
         })
       }
       revalidateEpisode(inputArgs)
-    });
+    })
   }
 
   return doc
