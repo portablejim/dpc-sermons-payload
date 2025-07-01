@@ -84,7 +84,7 @@ export const TalkEpisodes: CollectionConfig = {
       },
     ],
     beforeChange: [populatePublishedAt],
-    afterChange: [processEpisode],
+    afterChange: [revalidateEpisode],
     afterRead: [populateAuthors],
   },
   versions: {
@@ -349,6 +349,9 @@ export const TalkEpisodes: CollectionConfig = {
                 && dataObject?.linkedAudioLength > 0
               ) {
                 return true;
+              }
+              else {
+                return false;
               }
             }
             return value;

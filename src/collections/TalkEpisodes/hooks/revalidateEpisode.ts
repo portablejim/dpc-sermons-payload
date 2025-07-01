@@ -1,12 +1,24 @@
 import { AfterChangeHook } from 'node_modules/payload/dist/collections/config/types'
 
 import { revalidatePath } from 'next/cache'
+import { Episode } from '@/payload-types'
+import { BasePayload } from 'payload'
 
 // Revalidate the post in the background, so the user doesn't have to wait
 // Notice that the hook itself is not async and we are not awaiting `revalidate`
 // Only revalidate existing docs that are published
 // Don't scope to `operation` in order to purge static demo posts
 export const revalidateEpisode: AfterChangeHook = ({ doc, req: { payload } }) => {
+  try {
+    return revalidateEpisodeRaw(doc, payload)
+  }
+  catch (e) {
+
+  }
+  return doc;
+}
+
+export const revalidateEpisodeRaw = (doc: Episode, payload: BasePayload) => {
   if (doc._status === 'published') {
     revalidatePath(`/sermon/${doc.slug}`)
     revalidatePath(`/podcast/${doc.episodeType}/${doc.sermonDateYear}.xml`)

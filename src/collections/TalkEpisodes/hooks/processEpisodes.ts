@@ -6,7 +6,12 @@ import path from 'path'
 import fs from 'fs'
 import * as child_process from 'node:child_process'
 import { isValidHttpUrl } from '@/utilities/isValidHttpUrl'
-import { revalidateEpisode } from '@/collections/TalkEpisodes/hooks/revalidateEpisode'
+import {
+  revalidateEpisode,
+  revalidateEpisodeRaw,
+} from '@/collections/TalkEpisodes/hooks/revalidateEpisode'
+import { BasePayload } from 'payload'
+import { text } from 'node:stream/consumers'
 
 export type EpisodeMetadata = {
   fileType: string
@@ -28,41 +33,69 @@ export const fetchEpisodeMetadata = async (
       ep.linkedAudioLength > 0) ||
       !isValidHttpUrl(ep.linkedAudioUrl))
   ) {
+    if (
+      ep.hasValidMedia == false &&
+      ep.linkedAudioFiletype &&
+      ep.linkedAudioFiletype.length > 1 &&
+      ep.linkedAudioFileSize &&
+      ep.linkedAudioFileSize > 0 &&
+      ep.linkedAudioLength &&
+      ep.linkedAudioLength > 0
+    ) {
+      return {
+        fileType: ep.linkedAudioFiletype,
+        fileSize: ep.linkedAudioFileSize,
+        audioLength: ep.linkedAudioLength,
+      }
+    }
     return null
   }
 
   if (ep.linkedAudioUrl !== null && ep.linkedAudioUrl !== undefined) {
     const audioDataResponse = await fetch(ep.linkedAudioUrl)
     if (!audioDataResponse.ok) {
+      console.log('Response not ok')
       return null
     }
 
     const audioDataBlob = await audioDataResponse.blob()
     const audioData = await audioDataBlob.arrayBuffer()
-    const audioDataFilename = crypto.randomUUID()
+    const audioDataFilename = 'ffprobe-' + crypto.randomUUID()
     const audioDataPath = path.join(tempDir, audioDataFilename)
     if (audioData === null) {
+      console.log('No audio data')
       return null
     }
     try {
       fs.writeFileSync(audioDataPath, Buffer.from(audioData))
-      const lengthOutput = child_process.execFile('ffprobe', [
+      const lengthOutput = child_process.execFileSync('ffprobe', [
         '-v',
         'error',
-        '-show-entries',
+        '-show_entries',
         'format=duration',
         '-of',
         'default=noprint_wrappers=1:nokey=1',
         audioDataPath,
-      ])
+      ], {
+        stdio: 'pipe',
+      })
       const fileType = audioDataResponse.headers.get('Content-Type') ?? ''
       const fileSize = audioData.byteLength
       let audioLength = 0
-      if (lengthOutput.stdout !== null) {
-        audioLength = parseFloat(lengthOutput.stdout.toString())
-      }
+      const lengthOutputStr = lengthOutput.toString('utf8')
+      audioLength = parseFloat(lengthOutputStr)
       return { fileType, fileSize, audioLength }
-    } catch (e) {
+    } catch (err) {
+      if (err.code) {
+        // Spawning child process failed
+        console.error(err.code);
+      } else {
+        // Child was spawned but exited with non-zero exit code
+        // Error contains any stdout and stderr from the child
+        const { stdout, stderr } = err;
+
+        console.error({ stdout, stderr });
+      }
       return null
     } finally {
       fs.unlink(audioDataPath, () => {})
@@ -74,42 +107,50 @@ export const fetchEpisodeMetadata = async (
 // Revalidate the post in the background, so the user doesn't have to wait
 // Notice that the hook itself is not async and we are not awaiting `revalidate`
 export const processEpisodes: AfterChangeHook = (inputArgs) => {
-  const doc = inputArgs.doc
-  const payload = inputArgs.req.payload
-  if (doc.linkedAudioUrl && doc.linkedAudioUrl?.length > 1) {
-    const tempDir = os.tmpdir()
-    payload
-      .find({
-        collection: 'episodes',
-        where: {
-          hasValidMedia: {
-            equals: false,
-          },
-          audioFormat: {
-            equals: 'linked',
-          },
-        },
-      })
-      .then((oldEpisodesResponse) => {
-        oldEpisodesResponse.docs.map(async (ep) => {
-          const outputEpisode = await fetchEpisodeMetadata(ep, tempDir)
-          if (outputEpisode != null) {
-            await payload.update({
-              collection: 'episodes',
-              id: ep.id,
-              data: {
-                linkedAudioFiletype: outputEpisode.fileType,
-                linkedAudioFileSize: outputEpisode.fileSize,
-                linkedAudioLength: outputEpisode.audioLength,
-              },
-            })
-          }
-        })
-        revalidateEpisode(inputArgs)
-      })
-  }
+  return processEpisodesRaw(inputArgs.req.payload)
+}
 
-  return doc
+export const processEpisodesRaw = (payload: BasePayload) => {
+  const tempDir = os.tmpdir()
+  payload
+    .find({
+      collection: 'episodes',
+      where: {
+        hasValidMedia: {
+          equals: false,
+        },
+        audioFormat: {
+          equals: 'linked',
+        },
+      },
+    })
+    .then((oldEpisodesResponse) => {
+      if(oldEpisodesResponse.totalDocs > 0)
+      {
+        const currentDate = new Date().toISOString();
+        console.log(currentDate + ': Episodes to process: ' + oldEpisodesResponse.totalDocs.toString(10))
+      }
+      oldEpisodesResponse.docs.map(async (ep) => {
+        const outputEpisode = await fetchEpisodeMetadata(ep, tempDir)
+        console.log({ outputEpisode })
+        if (outputEpisode != null) {
+          await payload.update({
+            collection: 'episodes',
+            id: ep.id,
+            data: {
+              linkedAudioFiletype: outputEpisode.fileType,
+              linkedAudioFileSize: outputEpisode.fileSize,
+              linkedAudioLength: outputEpisode.audioLength,
+            },
+          })
+        }
+        try {
+          revalidateEpisodeRaw(ep, payload)
+        } catch (e) {
+          //console.error(e)
+        }
+      })
+    })
 }
 
 export const processEpisode: AfterChangeHook = (inputArgs) => {
@@ -129,7 +170,11 @@ export const processEpisode: AfterChangeHook = (inputArgs) => {
           },
         })
       }
-      revalidateEpisode(inputArgs)
+      try {
+        revalidateEpisode(inputArgs)
+      } catch (e) {
+        //console.error(e)
+      }
     })
   }
 
