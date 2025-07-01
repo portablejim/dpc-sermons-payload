@@ -27,8 +27,7 @@ export default async function Page({ params: paramsPromise }: Args) {
     return notFound()
   }
 
-  let series: SeriesType | null
-  series = await querySeriesBySlug({
+  const series: SeriesType | null = await querySeriesBySlug({
     slug,
   })
 

@@ -77,7 +77,6 @@ export const episodeByBookList: PayloadHandler = async (req): Promise<Response> 
       sort: '-sermonDate',
       limit: 0,
     })
-    episodeFind.docs
     return Response.json(episodeFind.docs)
   }
 }

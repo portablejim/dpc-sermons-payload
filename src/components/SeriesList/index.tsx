@@ -8,7 +8,7 @@ import { CardSeries } from '../../components/CardSeries'
 
 import classes from './index.module.scss'
 
-export const getSeriesList = (seriesType: string): Promise<any> => {
+export const getSeriesList = (seriesType: string): Promise<Result> => {
   const searchQuery = qs.stringify(
     {
       depth: 1,
@@ -127,7 +127,7 @@ export const SeriesList: React.FC<Props> = (props) => {
             setIsLoading(false)
           }
         } catch (err) {
-          console.warn(err)  
+          console.warn(err)
           setIsLoading(false)
           setError(`Unable to load "series" data at this time.`)
         }

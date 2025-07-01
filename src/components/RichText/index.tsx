@@ -5,6 +5,7 @@ import { serializeLexical } from './serialize'
 
 type Props = {
   className?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: Record<string, any>
   enableGutter?: boolean
   enableProse?: boolean

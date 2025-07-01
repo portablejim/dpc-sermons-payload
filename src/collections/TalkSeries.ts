@@ -15,13 +15,18 @@ const getExpandedTitle = (doc): string => {
 }
 const getSlug = (doc: Series): string => setSlugField({ value: doc.slug, data: doc })
 
-const setSlugField = ({ value, data }: { value?: any; data?: any }): string => {
+const setSlugField = ({ value, data }: { value?: string; data?: unknown }): string => {
   const slugFormat = (val: string): string =>
     val
       .replace(/ /g, '-')
       .replace(/[^\w-]+/g, '')
       .toLowerCase()
-  if (
+  const dataIsObject = data !== null &&
+    typeof data === 'object' &&
+    'id' in data &&
+    'seriesDate' in data &&
+    'title' in data
+  if (dataIsObject &&
     data.id !== undefined &&
     data.id !== null &&
     value !== undefined &&
@@ -32,17 +37,17 @@ const setSlugField = ({ value, data }: { value?: any; data?: any }): string => {
     return slugFormat(value)
   }
 
-  if (typeof data.seriesDate === 'string' && typeof data.title === 'string') {
+  if (dataIsObject && typeof data.seriesDate === 'string' && typeof data.title === 'string') {
     const titleSlug = slugFormat(data.title)
     const dateSlug = data.seriesDate.substring(2, 7)
     return `${dateSlug}-${titleSlug}`
-  } else if (typeof data.seriesDate === 'object' && typeof data.title === 'string') {
+  } else if (dataIsObject && typeof data.title === 'string') {
     const titleSlug = slugFormat(data.title)
-    const dateSlug = data.seriesDate.toISOString().substring(2, 7)
-    return `${dateSlug}-${titleSlug}`
+    //const dateSlug = data.seriesDate.toISOString().substring(2, 7)
+    return `${titleSlug}`
   }
 
-  return value
+  return value || ''
 }
 
 const TalkSeries: CollectionConfig = {

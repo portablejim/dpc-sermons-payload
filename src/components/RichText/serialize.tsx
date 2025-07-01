@@ -2,7 +2,7 @@ import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { CodeBlock, CodeBlockProps } from '@/blocks/Code/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import React, { Fragment, JSX } from 'react'
-import { CMSLink } from '@/components/Link'
+import { CMSLink, CMSLinkReferenceType } from '@/components/Link'
 import { DefaultNodeTypes, SerializedBlockNode } from '@payloadcms/richtext-lexical'
 
 import {
@@ -158,7 +158,7 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
                     aria-checked={node.checked ? 'true' : 'false'}
                     className={` ${node.checked ? '' : ''}`}
                     key={index}
-                     
+
                     role="checkbox"
                     tabIndex={-1}
                     value={node?.value}
@@ -188,7 +188,7 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
                 <CMSLink
                   key={index}
                   newTab={Boolean(fields?.newTab)}
-                  reference={fields.doc as any}
+                  reference={fields.doc as CMSLinkReferenceType}
                   type={fields.linkType === 'internal' ? 'reference' : 'custom'}
                   url={fields.url}
                 >

@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import { heroui } from "@heroui/react"
+import twanimate from "tailwindcss-animate"
+import twcss_typography from "@tailwindcss/typography"
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   content: [
@@ -10,7 +12,7 @@ export default {
     './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   darkMode: ['selector', '[data-theme="dark"]', 'class'],
-  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography'), heroui()],
+  plugins: [twanimate, twcss_typography, heroui()],
   prefix: '',
   safelist: [
     'lg:col-span-4',

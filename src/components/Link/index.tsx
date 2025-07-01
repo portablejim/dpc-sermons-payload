@@ -5,20 +5,22 @@ import React from 'react'
 
 import type { Episode, Page, Series } from '@/payload-types'
 
-type CMSLinkType = {
+export type CMSLinkType = {
   appearance?: 'inline' | ButtonProps['variant']
   children?: React.ReactNode
   className?: string
   label?: string | null
   newTab?: boolean | null
-  reference?: {
-    relationTo: 'pages'
-    value: Page | Episode | Series | string | number
-  } | null
+  reference?: CMSLinkReferenceType
   size?: ButtonProps['size'] | null
   type?: 'custom' | 'reference' | null
   url?: string | null
 }
+
+export type CMSLinkReferenceType = {
+  relationTo: 'pages'
+  value: Page | Episode | Series | string | number
+} | null
 
 export const CMSLink: React.FC<CMSLinkType> = (props) => {
   const {

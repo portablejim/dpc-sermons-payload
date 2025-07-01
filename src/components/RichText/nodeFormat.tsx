@@ -1,7 +1,7 @@
-// @ts-nocheck
 //This copy-and-pasted from lexical here: https://github.com/facebook/lexical/blob/c2ceee223f46543d12c574e62155e619f9a18a5d/packages/lexical/src/LexicalConstants.ts
 
 import type { ElementFormatType, TextFormatType } from 'lexical'
+// @ts-expect-error Since this is copied and pasted this error is suppressed
 import type { TextDetailType, TextModeType } from 'lexical/nodes/LexicalTextNode'
 
 /**

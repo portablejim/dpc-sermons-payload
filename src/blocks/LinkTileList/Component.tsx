@@ -10,7 +10,7 @@ import { Gutter } from '@payloadcms/ui/elements/Gutter'
 export type Props = {
   className?: string
   limit?: number
-  onResultChange?: (result: any) => void  
+  onResultChange?: (result: unknown) => void
   showPageRange?: boolean
   sort?: string
 }
