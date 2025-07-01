@@ -43,7 +43,7 @@ export const EpisodeRow: React.FC<{
 
   const { slug, title, sermonDate, speaker, series } = doc || {}
 
-  let hasCoverImage = false
+  const hasCoverImage = false
   let targetImage: CoverImage | string = ''
   let targetImageUrl: StaticImageData | undefined = {
     src: fallbackSvg,
@@ -51,7 +51,7 @@ export const EpisodeRow: React.FC<{
     width: 300,
   }
 
-  let imgSources: { url: string; type: string | undefined; focalPoint: string }[] = []
+  const imgSources: { url: string; type: string | undefined; focalPoint: string }[] = []
 
   let targetSeries = series
   if (paramSeries !== undefined && typeof paramSeries !== 'number') {
@@ -116,7 +116,7 @@ export const EpisodeRow: React.FC<{
     }
   }
 
-  let sourcesList = imgSources.map((s, i) => {
+  const sourcesList = imgSources.map((s, i) => {
     let sourceClassName = 'object-cover'
     if (s.focalPoint == 'top-left') {
       sourceClassName += ' object-left-top'
@@ -177,8 +177,8 @@ export const EpisodeRow: React.FC<{
   const titleToUse = titleFromProps || title
   const sanitizedDescription = doc?.biblePassageText?.replace(/\s/g, ' ') // replace non-breaking space with white space
 
-  let loaderImage = svgToDataURI(BACKGROUND_LOGO_SVG_WIDE)
-  let loaderImageUrl = `url("${loaderImage}")`
+  const loaderImage = svgToDataURI(BACKGROUND_LOGO_SVG_WIDE)
+  const loaderImageUrl = `url("${loaderImage}")`
 
   return (
     <div className="border-b-1 border-b-grey-900 py-2">

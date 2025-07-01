@@ -36,8 +36,8 @@ export default async function Page({ params: paramsPromise }: Args) {
     return <PayloadRedirects url={url} />
   }
 
-  let fallbackImageUrlSvg = getStaticFile('dpcPodcastGenericLogo_plain.svg')
-  let fallbackImageUrlPng = getStaticFile('dpcPodcastGenericLogo_plain.png')
+  const fallbackImageUrlSvg = getStaticFile('dpcPodcastGenericLogo_plain.svg')
+  const fallbackImageUrlPng = getStaticFile('dpcPodcastGenericLogo_plain.png')
 
   return (
     <>

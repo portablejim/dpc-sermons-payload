@@ -1,5 +1,5 @@
 import { useFormFields } from '@payloadcms/ui'
-import { useEffect } from 'react' // eslint-disable-line no-unused-vars
+import { useEffect } from 'react'  
 
 const buildDependentFieldUpdater = (path, dependencies, fn) => {
   // Returns an empty do-nothing component which does however take care of the updating

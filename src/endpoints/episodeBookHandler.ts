@@ -4,14 +4,14 @@ import { type PayloadHandler } from 'payload'
 export const validBooks: PayloadHandler = async (req): Promise<Response> => {
   const { payload, routeParams } = req
 
-  let episodeType = routeParams?.type ?? ''
+  const episodeType = routeParams?.type ?? ''
 
   const episodesTable = payload.db.tables.episodes
   const episodesBiblePassagesTable = payload.db.tables.episodes_bible_passages
   const bibleChaptersTable = payload.db.tables.bible_chapters
   const bibleBooksTable = payload.db.tables.bible_books
 
-  let yearSelect = await payload.db.drizzle
+  const yearSelect = await payload.db.drizzle
     .selectDistinct({
       book: bibleChaptersTable.book,
       bookName: bibleBooksTable.name,
@@ -27,7 +27,7 @@ export const validBooks: PayloadHandler = async (req): Promise<Response> => {
     .orderBy(bibleChaptersTable.book)
     .innerJoin(bibleBooksTable, eq(bibleBooksTable.id, bibleChaptersTable.book))
 
-  let output = yearSelect //.filter(ys => typeof ys.year === 'string').map(ys => ys.year as string)
+  const output = yearSelect //.filter(ys => typeof ys.year === 'string').map(ys => ys.year as string)
 
   return Response.json(output)
 }
@@ -35,8 +35,8 @@ export const validBooks: PayloadHandler = async (req): Promise<Response> => {
 export const episodeByBookList: PayloadHandler = async (req): Promise<Response> => {
   const { payload, routeParams } = req
 
-  let currentBook = <string | undefined>routeParams?.book ?? ''
-  let episodeType = <string | undefined>routeParams?.type ?? ''
+  const currentBook = <string | undefined>routeParams?.book ?? ''
+  const episodeType = <string | undefined>routeParams?.type ?? ''
 
   if (currentBook === '') {
     return Response.json(
@@ -47,7 +47,7 @@ export const episodeByBookList: PayloadHandler = async (req): Promise<Response> 
       },
     )
   } else {
-    let parsedBook = parseInt(currentBook)
+    const parsedBook = parseInt(currentBook)
     if (isNaN(parsedBook)) {
       return Response.json(
         {},
@@ -58,7 +58,7 @@ export const episodeByBookList: PayloadHandler = async (req): Promise<Response> 
       )
     }
 
-    let episodeFind = await payload.find({
+    const episodeFind = await payload.find({
       collection: 'episodes',
       where: {
         and: [

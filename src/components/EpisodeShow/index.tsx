@@ -27,9 +27,9 @@ type Result = {
   totalPages: number
 }
 
-let BackButton = ({ series }: { series: number | Series }) => {
+const BackButton = ({ series }: { series: number | Series }) => {
   if (typeof series !== 'number') {
-    let label = '< ' + series.title
+    const label = '< ' + series.title
     return (
       <>
         <Button className={classes.backButton} appearance="default" href=".." label={label} />
@@ -43,7 +43,7 @@ let BackButton = ({ series }: { series: number | Series }) => {
 type VideoPlayerType = 'none' | 'vimeo' | 'youtube'
 type AudioPlayerType = 'none' | 'linked' | 'uploaded'
 
-let PlayerSection = ({
+const PlayerSection = ({
   videoType,
   doPlay,
   targetImageUrl,
@@ -132,8 +132,8 @@ let PlayerSection = ({
   return <></>
 }
 
-let AudioPlayerSection = ({ targetEpisode }: { targetEpisode: Episode }) => {
-  let downloadButtonData: { label: string; url: string }[] = []
+const AudioPlayerSection = ({ targetEpisode }: { targetEpisode: Episode }) => {
+  const downloadButtonData: { label: string; url: string }[] = []
   let audioPlayerType: AudioPlayerType = 'none'
   if (targetEpisode.audioFormat === 'linked') {
     audioPlayerType = 'linked'
@@ -154,7 +154,7 @@ let AudioPlayerSection = ({ targetEpisode }: { targetEpisode: Episode }) => {
     }
   }
 
-  let downloadButtons = downloadButtonData.map((dbd, i) => (
+  const downloadButtons = downloadButtonData.map((dbd, i) => (
     <a
       key={i}
       href={dbd.url}
@@ -184,7 +184,7 @@ export type Props = {
   targetEpisode: Episode
   className?: string
   limit?: number
-  onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
+  onResultChange?: (result: Result) => void  
   showPageRange?: boolean
   sort?: string
   fallbackSvg: string
@@ -202,9 +202,9 @@ export const EpisodeShow: React.FC<Props> = (props) => {
     width: 1080,
   }
 
-  let [doPlay, setDoPlay] = useState(false)
+  const [doPlay, setDoPlay] = useState(false)
 
-  let targetSeries = targetEpisode.series
+  const targetSeries = targetEpisode.series
 
   let videoPlayerType: VideoPlayerType = 'none'
   if (targetEpisode.videoFormat === 'vimeo') {
@@ -213,7 +213,7 @@ export const EpisodeShow: React.FC<Props> = (props) => {
 
   let vimeoUrl = ''
   if (targetEpisode && targetEpisode.videoUrl) {
-    let videoUrlParts = targetEpisode.videoUrl.match(
+    const videoUrlParts = targetEpisode.videoUrl.match(
       /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/,
     )
     if (videoUrlParts) {

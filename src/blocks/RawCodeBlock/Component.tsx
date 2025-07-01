@@ -18,13 +18,13 @@ export const RawCodeBlock: React.FC<Props> = ({
   limitWidth = true,
 }) => {
   function htmlDecode(input) {
-    var e = document.createElement('div')
+    const e = document.createElement('div')
     e.innerHTML = input
     return e.childNodes.length === 0 ? '' : e.childNodes[0].nodeValue
   }
 
-  let bodyCodeSet = bodyCode || ''
-  let cssCodeSet = cssCode || ''
+  const bodyCodeSet = bodyCode || ''
+  const cssCodeSet = cssCode || ''
 
   let cssClasses = 'codeBlock '
   if (limitWidth) {

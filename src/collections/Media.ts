@@ -67,16 +67,16 @@ export const Media: CollectionConfig = {
         if(typeof req?.routeParams?.id != 'string') {
           return Response.error()
         }
-        let mediaFind = await req.payload.findByID({
+        const mediaFind = await req.payload.findByID({
           collection: 'media',
           id: req.routeParams.id
         })
         if(typeof mediaFind.filename != 'string') {
           return Response.error()
         }
-        let filePath = path.resolve(dirname, '../../public/media', mediaFind.filename)
-        let mediaBody = readFileSync(filePath)
-        let fileNameSafe = encodeURIComponent(mediaFind.filename)
+        const filePath = path.resolve(dirname, '../../public/media', mediaFind.filename)
+        const mediaBody = readFileSync(filePath)
+        const fileNameSafe = encodeURIComponent(mediaFind.filename)
         return new Response(mediaBody, {
           headers: new Headers({
             'content-type': mediaFind.mimeType ?? '',
@@ -92,16 +92,16 @@ export const Media: CollectionConfig = {
         if(typeof req?.routeParams?.id != 'string') {
           return Response.error()
         }
-        let mediaFind = await req.payload.findByID({
+        const mediaFind = await req.payload.findByID({
           collection: 'media',
           id: req.routeParams.id
         })
         if(typeof mediaFind.filename != 'string') {
           return Response.error()
         }
-        let filePath = path.resolve(dirname, '../../public/upload/media', mediaFind.filename)
-        let mediaBody = readFileSync(filePath)
-        let fileNameSafe = encodeURIComponent(mediaFind.filename)
+        const filePath = path.resolve(dirname, '../../public/upload/media', mediaFind.filename)
+        const mediaBody = readFileSync(filePath)
+        const fileNameSafe = encodeURIComponent(mediaFind.filename)
         return new Response(mediaBody, {
           headers: new Headers({
             'content-type': mediaFind.mimeType ?? '',

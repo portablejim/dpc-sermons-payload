@@ -17,7 +17,7 @@ export const SeedBible: React.FC = async () => {
     where: {},
   })
 
-  let totalBooks = result.totalDocs
+  const totalBooks = result.totalDocs
   console.log({ result })
 
   if (totalBooks > 0) {

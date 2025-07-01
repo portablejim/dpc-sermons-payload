@@ -66,7 +66,7 @@ export const ListenButton: React.FC<ListenButtonProps> = (props) => {
     }
   }
   if (audioFormat !== 'none') {
-    let colorClassPart = buttonPressed.active
+    const colorClassPart = buttonPressed.active
       ? 'bg-neutral-950 text-neutral-50 dark:bg-neutral-50 dark:text-neutral-950'
       : ''
     return (
@@ -117,7 +117,7 @@ type AudioPlayerType = 'none' | 'linked' | 'uploaded'
 export const EpisodeAudioPlayer: React.FC<Props> = (props) => {
   const { targetEpisode, defaultShown = true } = props
 
-  let [show, setShow] = useState(defaultShown)
+  const [show, setShow] = useState(defaultShown)
   const buttonPressed = useContext(AudioPlayerContext)
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export const EpisodeAudioPlayer: React.FC<Props> = (props) => {
     }
   }, [buttonPressed, defaultShown])
 
-  let targetSeries = targetEpisode.series
+  const targetSeries = targetEpisode.series
 
   let audioPlayerType: AudioPlayerType = 'none'
   let mp3Url: string | undefined = undefined
@@ -139,7 +139,7 @@ export const EpisodeAudioPlayer: React.FC<Props> = (props) => {
     targetEpisode.uploadedAudioFile !== undefined
   ) {
     audioPlayerType = 'uploaded'
-    let baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? ''
+    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? ''
     mp3Url = baseUrl + '/talkaudio/' + (targetEpisode.uploadedAudioFile?.filename ?? '')
   }
 

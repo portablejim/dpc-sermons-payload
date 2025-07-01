@@ -10,7 +10,7 @@ import { Gutter } from '@payloadcms/ui/elements/Gutter'
 export type Props = {
   className?: string
   limit?: number
-  onResultChange?: (result: any) => void // eslint-disable-line no-unused-vars
+  onResultChange?: (result: any) => void  
   showPageRange?: boolean
   sort?: string
 }

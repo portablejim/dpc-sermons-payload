@@ -24,7 +24,7 @@ export type Props = {
   className?: string
   episodeType?: string
   limit?: number
-  onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
+  onResultChange?: (result: Result) => void  
   showPageRange?: boolean
   sort?: string
 }
@@ -33,15 +33,15 @@ export const LibraryList: React.FC<Props> = async (props) => {
   const { className, episodeType = 'regular' } = props
 
   const yearListPromise = (async () => {
-    let timestamp = new Date()
-    let yearsToRemove = [timestamp.getFullYear().toFixed(0)]
+    const timestamp = new Date()
+    const yearsToRemove = [timestamp.getFullYear().toFixed(0)]
     if (timestamp.getMonth() < 7) {
       yearsToRemove.push((timestamp.getFullYear() - 1).toFixed(0))
     }
-    let yearsRaw = await fetch(
+    const yearsRaw = await fetch(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/yearList/${episodeType}`,
     )
-    let yearsJson = (await yearsRaw.json()) as string[]
+    const yearsJson = (await yearsRaw.json()) as string[]
     if (yearsJson && Array.isArray(yearsJson)) {
       return yearsJson.filter((y) => !yearsToRemove.includes(y))
     } else {
@@ -59,8 +59,8 @@ export const LibraryList: React.FC<Props> = async (props) => {
     latestEpisodes = latestEpisodesJson
   }
 
-  let fallbackImageUrlSvg = getStaticFile('dpcPodcastGenericLogo_plain.svg')
-  let fallbackImageUrlPng = getStaticFile('dpcPodcastGenericLogo_plain.png')
+  const fallbackImageUrlSvg = getStaticFile('dpcPodcastGenericLogo_plain.svg')
+  const fallbackImageUrlPng = getStaticFile('dpcPodcastGenericLogo_plain.png')
 
   return (
     <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>

@@ -24,7 +24,7 @@ export const revalidateEpisode: AfterChangeHook = ({ doc, req: { payload } }) =>
           id: doc.series,
         })
         .then((docSeries) => {
-          let fullSermonPath = `/series/${docSeries.slug}/sermon/${doc.slug}`
+          const fullSermonPath = `/series/${docSeries.slug}/sermon/${doc.slug}`
           revalidatePath(fullSermonPath)
           payload.logger.info(`Revalidated ${fullSermonPath}.`)
         })

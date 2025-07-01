@@ -37,7 +37,7 @@ export type Props = {
   episodeType: string
   episodeRange: string
   accordionsOpen?: string[]
-  onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
+  onResultChange?: (result: Result) => void  
   fallbackSvg: string
   fallbackPng: string
 }
@@ -63,7 +63,7 @@ export const BooksGroupList: React.FC<Props> = (props) => {
   const ref = useRef<HTMLDivElement>(null)
   const isVisible = useOnScreen(ref)
 
-  let isOpen = accordionsOpen.includes(episodeRange)
+  const isOpen = accordionsOpen.includes(episodeRange)
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null
@@ -101,7 +101,7 @@ export const BooksGroupList: React.FC<Props> = (props) => {
             */
           }
         } catch (err) {
-          console.warn(err) // eslint-disable-line no-console
+          console.warn(err)  
           setIsLoading(false)
           setError(`Unable to load "series" data at this time.`)
         }

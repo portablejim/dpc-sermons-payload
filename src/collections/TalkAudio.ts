@@ -37,7 +37,7 @@ export const TalkAudio: CollectionConfig = {
             req.req.data.guid = crypto.randomUUID()
           }
           if (req.req?.file?.name != undefined && req.req?.file?.name != null) {
-            let filenameExtension =
+            const filenameExtension =
               req.req.file.name.substring(
                 req.req.file.name.lastIndexOf('.') + 1,
                 req.req.file.name.length,

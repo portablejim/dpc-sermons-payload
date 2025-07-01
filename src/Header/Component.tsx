@@ -8,7 +8,7 @@ import { getStaticFile } from '@/utilities/getStaticFile'
 export async function Header() {
   const header: Header = await getCachedGlobal('header', 1)()
 
-  let logoUrl = getStaticFile('dpc-mini-logo.png')
+  const logoUrl = getStaticFile('dpc-mini-logo.png')
 
   return <HeaderClient header={header} logoUrl={logoUrl} />
 }

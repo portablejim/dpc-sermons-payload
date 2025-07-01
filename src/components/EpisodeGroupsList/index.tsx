@@ -21,7 +21,7 @@ export type Props = {
   episodeType?: string
   initialEpisodeList?: Episode[]
   yearListPromise?: Promise<string[]>
-  onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
+  onResultChange?: (result: Result) => void  
   fallbackSvg: string
   fallbackPng: string
 }
@@ -44,7 +44,7 @@ const MoreEpisodeList: React.FC<MoreEpisodesProps> = (props) => {
   return (
     <>
       {episodeYearList.map((year) => {
-        let yearRssUrl = `${baseUrl}/podcast/${episodeType}/${year}.rss`
+        const yearRssUrl = `${baseUrl}/podcast/${episodeType}/${year}.rss`
         const yearTitle = year
 
         return (
@@ -76,7 +76,7 @@ export const EpisodeGroupsList: React.FC<Props> = (props) => {
 
   const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL ?? ''
 
-  let latestRssUrl = `${baseUrl}/podcast/${episodeType}/latest.rss`
+  const latestRssUrl = `${baseUrl}/podcast/${episodeType}/latest.rss`
 
   const [accordionState, setAccordionState] = useState(['latest'])
 

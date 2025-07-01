@@ -22,7 +22,7 @@ type Result = {
 export type Props = {
   className?: string
   limit?: number
-  onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
+  onResultChange?: (result: Result) => void  
   showPageRange?: boolean
   sort?: string
 }

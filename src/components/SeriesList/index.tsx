@@ -127,7 +127,7 @@ export const SeriesList: React.FC<Props> = (props) => {
             setIsLoading(false)
           }
         } catch (err) {
-          console.warn(err) // eslint-disable-line no-console
+          console.warn(err)  
           setIsLoading(false)
           setError(`Unable to load "series" data at this time.`)
         }

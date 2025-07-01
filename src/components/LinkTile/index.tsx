@@ -42,7 +42,7 @@ export const LinkTile: React.FC<Props> = props => {
     targetUrl = linkTile.url ?? ''
   }
 
-  let overlayStyle = { backgroundColor: linkTile.overlayColour ?? 'transparent' }
+  const overlayStyle = { backgroundColor: linkTile.overlayColour ?? 'transparent' }
 
   return (
     <Link href={targetUrl} target={linkTile.newTab ? '_blank' : ''}>

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url'
 import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
 
-let ffmpeg = require('fluent-ffmpeg')
+const ffmpeg = require('fluent-ffmpeg')
 
 // Revalidate the post in the background, so the user doesn't have to wait
 // Notice that the hook itself is not async and we are not awaiting `revalidate`
@@ -28,7 +28,7 @@ export const getFileData: AfterChangeHook = ({ doc, previousDoc, req: { payload 
   const dirname = path.dirname(filename)
   const targetFilename = path.resolve(dirname, '../../public/talkaudio', doc.filename)
   payload.logger.info(targetFilename)
-  let ffprobeOutput = ffmpeg.ffprobe(targetFilename, function (err, metadata) {
+  const ffprobeOutput = ffmpeg.ffprobe(targetFilename, function (err, metadata) {
     if (!err) {
       let fileDuration = parseInt(metadata.format.duration)
       if (isNaN(fileDuration)) {

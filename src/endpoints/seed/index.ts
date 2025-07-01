@@ -104,16 +104,16 @@ export const seed = async ({
   })
 
   // Chapter list fetched from https://versenotes.org/a-list-of-books-in-the-bible-by-number-of-chapters/
-  let csvPath = path.resolve(dirname, 'bible-chapters.csv')
+  const csvPath = path.resolve(dirname, 'bible-chapters.csv')
   fs.readFile(csvPath, async (err, data) => {
     if (data) {
-      let fullChaptersList = data
+      const fullChaptersList = data
         .toString()
         .replace(/\r\n/g, '\n') // Unify line endings
         .split('\n')
         .map((l) => l.split(','))
 
-      let chaptersList: Array<Array<{ chapterNum: number; numVerses: number }>> = []
+      const chaptersList: Array<Array<{ chapterNum: number; numVerses: number }>> = []
       let currentBook = 'Genesis'
       let currentChaptersList: Array<{ chapterNum: number; numVerses: number }> = []
 
@@ -134,7 +134,7 @@ export const seed = async ({
 
       for (let bookIndex = 0; bookIndex < booksInfos.length; bookIndex++) {
         const bookInfo = booksInfos[bookIndex]
-        let bookData = {
+        const bookData = {
           id: bookInfo.order,
           name: bookInfo.name,
           order: bookInfo.order,
@@ -142,17 +142,17 @@ export const seed = async ({
           slug: bookInfo.slug,
         }
         payload.logger.info(`Seeding ${bookInfo.name}...`)
-        let bookRecord = await payload.create({
+        const bookRecord = await payload.create({
           collection: 'bible-books',
           data: bookData,
         })
 
-        let chaptersInfos = chaptersList[bookIndex]
+        const chaptersInfos = chaptersList[bookIndex]
         for (let chapterIndex = 0; chapterIndex < chaptersInfos.length; chapterIndex++) {
-          let chapterInfo = chaptersInfos[chapterIndex]
+          const chapterInfo = chaptersInfos[chapterIndex]
 
           let chapterName = bookInfo.name
-          let globalOrder = bookInfo.order * 1000 + chapterInfo.chapterNum
+          const globalOrder = bookInfo.order * 1000 + chapterInfo.chapterNum
           let shortName = bookInfo.shortName
           let slug = bookInfo.slug
           let hasNoChapters = true
@@ -162,7 +162,7 @@ export const seed = async ({
             slug = `${bookInfo.slug}-${chapterInfo.chapterNum}`
             hasNoChapters = false
           }
-          let chapterData = {
+          const chapterData = {
             id: globalOrder,
             book: bookRecord.id,
             name: chapterName,
@@ -220,9 +220,9 @@ export const seedEpisodes = async ({
   const filename = fileURLToPath(import.meta.url)
   const dirname = path.dirname(filename)
 
-  let jsonPath = path.resolve(dirname, 'groupedBySeries.json')
-  let jsonData = readFileSync(jsonPath)
-  let data: SeriesJson = JSON.parse(jsonData.toString())
+  const jsonPath = path.resolve(dirname, 'groupedBySeries.json')
+  const jsonData = readFileSync(jsonPath)
+  const data: SeriesJson = JSON.parse(jsonData.toString())
 
   const slugFormat = (val: string): string =>
     val
@@ -230,26 +230,26 @@ export const seedEpisodes = async ({
       .replace(/[^\w-]+/g, '')
       .toLowerCase()
 
-  let authorFind = payload.find({
+  const authorFind = payload.find({
     collection: 'speakers',
   })
-  let authorsMap = new Map<string, number>()
+  const authorsMap = new Map<string, number>()
   ;(await authorFind).docs.forEach((a) => {
     if (typeof a.name === 'string') {
       authorsMap.set(a.name, a.id)
     }
   })
 
-  let pl = req.payload
+  const pl = req.payload
 
-  let seriesKeys = Object.keys(data)
+  const seriesKeys = Object.keys(data)
   for (let index = 0; index < seriesKeys.length; index++) {
-    let seriesOb = data[seriesKeys[index]]
+    const seriesOb = data[seriesKeys[index]]
     let seriesId: number | null = null
     if (seriesOb.title && seriesOb.title.trim().length > 2) {
-      let trimmedTitle = seriesOb.title.trim()
+      const trimmedTitle = seriesOb.title.trim()
       payload.logger.info(`Adding series: ${seriesOb.title}`)
-      let existingSeries = await pl.find({
+      const existingSeries = await pl.find({
         collection: 'series',
         where: {
           title: {
@@ -260,7 +260,7 @@ export const seedEpisodes = async ({
       if (existingSeries.totalDocs > 0) {
         seriesId = existingSeries.docs[0].id
       } else {
-        let createResult = await pl.create({
+        const createResult = await pl.create({
           collection: 'series',
           data: {
             title: trimmedTitle,
@@ -289,7 +289,7 @@ export const seedEpisodes = async ({
       if (ep.author && ep.author.length > 0 && authorsMap.has(ep.author)) {
         authorId = authorsMap.get(ep.author)
       } else {
-        let authorCreateResult = await pl.create({
+        const authorCreateResult = await pl.create({
           collection: 'speakers',
           data: {
             name: ep.author,
@@ -305,10 +305,10 @@ export const seedEpisodes = async ({
       if (ep.vimeoUrl && ep.vimeoUrl.length > 0) {
         videoFormat = 'vimeo'
       }
-      let slug = slugFormat(ep.dateFormatted + '-' + episodeTitle)
+      const slug = slugFormat(ep.dateFormatted + '-' + episodeTitle)
 
       try {
-        let episodeCreateResult = await pl.create({
+        const episodeCreateResult = await pl.create({
           collection: 'episodes',
           data: {
             title: episodeTitle,

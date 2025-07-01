@@ -70,15 +70,15 @@ export async function GET(
   const { headers } = request
   const selectorParts = selectorRaw.split('.', 2)
 
-  let baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? ''
+  const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? ''
 
-  let acceptHeaders = headers
+  const acceptHeaders = headers
     .get('Accept')
     ?.split(',')
     .map((acc) => acc.trim().split(';')[0])
   let disposition = 'inline'
-  let parsedRequestUrl = new URL(request.url)
-  let parsedUrl = new URL(parsedRequestUrl.pathname, baseUrl)
+  const parsedRequestUrl = new URL(request.url)
+  const parsedUrl = new URL(parsedRequestUrl.pathname, baseUrl)
   if (
     parsedRequestUrl.searchParams.has('download') &&
     parsedRequestUrl.searchParams.get('download') === 'true'
@@ -99,7 +99,7 @@ export async function GET(
     mimeTypeRss = 'application/rss+xml'
   }
 
-  let urlUUID = uuidv5('url', parsedUrl.toString())
+  const urlUUID = uuidv5('url', parsedUrl.toString())
 
   if (selectorParts.length <= 1) {
     if (selectorRaw != 'latest' && isNaN(parseInt(selectorRaw))) {
@@ -168,7 +168,7 @@ export async function GET(
   // Either: latest.xml / latest.rss / latest.atom
   // Or: <year>.xml / <year>.rss / <year>.atom
 
-  let payload = getPayload({ config })
+  const payload = getPayload({ config })
   ;(await payload).logger.info({ acceptHeaders })
 
   let titleTalkType = 'Bible'
@@ -191,10 +191,10 @@ export async function GET(
   let podcastTitle = `DPC ${titleTalkType} Talks`
   let podcastFilename = `dpc-${filenameTalkType}-talks`
   if (filter === 'latest') {
-    let timestamp = new Date()
-    let thisYear = timestamp.getFullYear()
-    let lastYear = thisYear - 1
-    let targetYears = [thisYear]
+    const timestamp = new Date()
+    const thisYear = timestamp.getFullYear()
+    const lastYear = thisYear - 1
+    const targetYears = [thisYear]
     if (timestamp.getMonth() < 7) {
       targetYears.push(lastYear)
     }
@@ -225,8 +225,8 @@ export async function GET(
       showHiddenFields: true,
     })
   } else if (typeof filter === 'number') {
-    let startDate = filter.toFixed(0).padStart(4, '0') + '-01-01'
-    let endDate = filter.toFixed(0).padStart(4, '0') + '-12-31'
+    const startDate = filter.toFixed(0).padStart(4, '0') + '-01-01'
+    const endDate = filter.toFixed(0).padStart(4, '0') + '-12-31'
 
     podcastTitle = `DPC ${titleTalkType} Talks (${filter}${titleTalkTypeSuffix})`
     podcastFilename = `dpc-${filenameTalkType}-talks-${filter}${filenameTalkTypeSuffix}`
@@ -264,10 +264,10 @@ export async function GET(
     }
   }
 
-  let podcastImage = getStaticFile('dpcPodcast.png')
+  const podcastImage = getStaticFile('dpcPodcast.png')
 
   if (selectorParts[1] !== 'atom') {
-    let episodeRssList = episodes?.docs.map((e) => {
+    const episodeRssList = episodes?.docs.map((e) => {
       let audioMimetype = ''
       let audioUrl = ''
       let audioLength = ''
@@ -284,7 +284,7 @@ export async function GET(
         e.uploadedAudioFile !== undefined &&
         e.uploadedAudioFile !== null
       ) {
-        let audioFile: TalkAudio = e.uploadedAudioFile
+        const audioFile: TalkAudio = e.uploadedAudioFile
         audioMimetype = audioFile.mimeType ?? ''
         audioUrl = baseUrl + '/' + (audioFile.url ?? '')
         audioLength = Math.round(audioFile.filesize ?? 0).toFixed(0)
@@ -314,7 +314,7 @@ export async function GET(
       }
 
       let seriesMarkup = ''
-      let itemPubDate = buildRFC822Date(e.sermonDate)
+      const itemPubDate = buildRFC822Date(e.sermonDate)
       let speakerName = ''
       if (typeof e.speaker !== 'number' && e.speaker?.name) {
         speakerName = e.speaker?.name
@@ -322,8 +322,8 @@ export async function GET(
       let seriesName = ''
       if (typeof e.series !== 'number') {
         seriesName = encodeURIComponent(e.series?.title ?? '')
-        let seriesDate = e.series?.seriesDate.substring(0, 10) ?? ''
-        let seriesNum = parseInt(seriesDate.replaceAll('-', ''))
+        const seriesDate = e.series?.seriesDate.substring(0, 10) ?? ''
+        const seriesNum = parseInt(seriesDate.replaceAll('-', ''))
         seriesMarkup = `<podcast:season name="${e.series?.title}">${seriesNum}</podcast:season>`
       }
 
@@ -337,7 +337,7 @@ export async function GET(
         videoMarkup = `<podcast:contentLink>${e.videoUrl}</podcast:contentLink>`
       }
 
-      let subtitle = e.subtitle ?? ''
+      const subtitle = e.subtitle ?? ''
 
       let itunesImageStr = ''
       if (itemImage.trim().length > 0) {
@@ -360,9 +360,9 @@ export async function GET(
     </item>`
     })
 
-    let episodesBody = episodeRssList.join('')
+    const episodesBody = episodeRssList.join('')
 
-    let rssBody = `<?xml version="1.0" encoding="utf-8" ?>
+    const rssBody = `<?xml version="1.0" encoding="utf-8" ?>
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
 xmlns:content="http://purl.org/rss/1.0/modules/content/"
 xmlns:podcast="https://podcastindex.org/namespace/1.0"

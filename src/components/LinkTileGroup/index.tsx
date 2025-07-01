@@ -32,9 +32,9 @@ export const LinkTileGroup: React.FC<Props & LinkTileListProps> = props => {
     showTitle = true
   }
 
-  let linkTileNum = linkTiles?.length ?? 0
-  let tileList = linkTiles?.map(lt => <LinkTile key={lt.id} linkTile={lt.linkTile} />) ?? []
-  let descriptionRichText = description ?? []
+  const linkTileNum = linkTiles?.length ?? 0
+  const tileList = linkTiles?.map(lt => <LinkTile key={lt.id} linkTile={lt.linkTile} />) ?? []
+  const descriptionRichText = description ?? []
 
   return (
     <div className="linkTileGroup">

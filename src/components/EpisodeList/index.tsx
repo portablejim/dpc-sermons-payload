@@ -23,7 +23,7 @@ type Result = {
 export type Props = {
   className?: string
   limit?: number
-  onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
+  onResultChange?: (result: Result) => void  
   showPageRange?: boolean
   sort?: string
   fallbackSvg: string
@@ -105,7 +105,7 @@ export const EpisodeList: React.FC<Props> = (props) => {
             }
           }
         } catch (err) {
-          console.warn(err) // eslint-disable-line no-console
+          console.warn(err)  
           setIsLoading(false)
           setError(`Unable to load "series" data at this time.`)
         }

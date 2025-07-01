@@ -49,8 +49,8 @@ export default async function Page({ params: paramsPromise }: Args) {
     return redirect(`../series/${episode.series.slug}/sermon/${episode.slug}`)
   }
 
-  let fallbackSvg = getStaticFile('dpcPodcastGenericLogo_plain.svg')
-  let fallbackPng = getStaticFile('dpcPodcastGenericLogo_plain.png')
+  const fallbackSvg = getStaticFile('dpcPodcastGenericLogo_plain.svg')
+  const fallbackPng = getStaticFile('dpcPodcastGenericLogo_plain.png')
 
   return (
     <>

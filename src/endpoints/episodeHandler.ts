@@ -4,17 +4,17 @@ import { type PayloadHandler } from 'payload'
 export const validYears: PayloadHandler = async (req): Promise<Response> => {
   const { payload, routeParams } = req
 
-  let episodeType = routeParams?.type ?? ''
+  const episodeType = routeParams?.type ?? ''
 
   const episodesTable = payload.db.tables.episodes
 
-  let yearSelect = await payload.db.drizzle
+  const yearSelect = await payload.db.drizzle
     .selectDistinct({ year: episodesTable.sermonDateYear })
     .from(episodesTable)
     .where(eq(episodesTable.episodeType, episodeType))
     .orderBy(desc(episodesTable.sermonDateYear))
 
-  let output = yearSelect.filter((ys) => typeof ys.year === 'string').map((ys) => ys.year as string)
+  const output = yearSelect.filter((ys) => typeof ys.year === 'string').map((ys) => ys.year as string)
 
   return Response.json(output)
 }
@@ -22,11 +22,11 @@ export const validYears: PayloadHandler = async (req): Promise<Response> => {
 export const episodeList: PayloadHandler = async (req): Promise<Response> => {
   const { payload, routeParams } = req
 
-  let currentRange = <string | undefined>routeParams?.year ?? 'latest'
-  let episodeType = <string | undefined>routeParams?.type ?? ''
+  const currentRange = <string | undefined>routeParams?.year ?? 'latest'
+  const episodeType = <string | undefined>routeParams?.type ?? ''
 
   if (currentRange === 'all') {
-    let episodeFind = await payload.find({
+    const episodeFind = await payload.find({
       collection: 'episodes',
       where: {
         episodeType: {
@@ -41,13 +41,13 @@ export const episodeList: PayloadHandler = async (req): Promise<Response> => {
   } else {
     let validYears: number[] = []
     if (currentRange === 'latest') {
-      let timestamp = new Date()
+      const timestamp = new Date()
       validYears = [timestamp.getFullYear()]
       if (timestamp.getMonth() < 7) {
         validYears.push(timestamp.getFullYear() - 1)
       }
     } else {
-      let parsedRange = parseInt(currentRange)
+      const parsedRange = parseInt(currentRange)
       if (isNaN(parsedRange)) {
         return Response.json(
           {},
@@ -60,7 +60,7 @@ export const episodeList: PayloadHandler = async (req): Promise<Response> => {
       validYears.push(parsedRange)
     }
 
-    let episodeFind = await payload.find({
+    const episodeFind = await payload.find({
       collection: 'episodes',
       where: {
         and: [

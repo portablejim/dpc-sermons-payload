@@ -48,8 +48,8 @@ export const TalkEpisodes: CollectionConfig = {
         ) {
           let seriesTitle: null | string = null
           if (data.series) {
-            let payload = await getPayload({ config })
-            let foundSeries = await payload.findByID({
+            const payload = await getPayload({ config })
+            const foundSeries = await payload.findByID({
               collection: 'series',
               id: data.series,
               depth: 1,
@@ -59,7 +59,7 @@ export const TalkEpisodes: CollectionConfig = {
             })
             seriesTitle = typeof foundSeries.title === 'string' ? foundSeries.title : null
           }
-          let outputParts: string[] = []
+          const outputParts: string[] = []
           if (data.sermonDate) {
             const sermonDateYear = data.sermonDate.substring(2, 4)
             const sermonDateMonth = data.sermonDate.substring(5, 7)
@@ -339,7 +339,7 @@ export const TalkEpisodes: CollectionConfig = {
       hooks: {
         beforeChange: [
           ({ data, operation, value}) => {
-            let dataObject: Partial<Episode>|undefined = data;
+            const dataObject: Partial<Episode>|undefined = data;
             if(dataObject?.audioFormat === "linked" && dataObject?.linkedAudioUrl && dataObject?.linkedAudioUrl.length > 0) {
               if(dataObject?.linkedAudioFiletype
                 && dataObject?.linkedAudioFiletype.length > 1
