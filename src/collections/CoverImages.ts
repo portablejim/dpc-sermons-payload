@@ -207,7 +207,7 @@ export const CoverImages: CollectionConfig = {
     },
     {
       name: 'cardSvg',
-      label: 'Square SVG (Override)',
+      label: 'Card SVG (Override)',
       type: 'upload',
       relationTo: 'cover-image-svgs',
       admin: {
