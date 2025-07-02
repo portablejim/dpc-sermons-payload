@@ -20,7 +20,7 @@ export const coverImage: PayloadHandler = async (req): Promise<Response> => {
       fileData?.sizes?.thumbnail?.filename != undefined &&
       fileData?.sizes?.thumbnail?.filename != null
     ) {
-      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/cover-images/${fileData?.sizes?.thumbnail?.filename}`
+      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/upload/cover-images/${fileData?.sizes?.thumbnail?.filename}`
       if (existsSync(candidateFilePath)) {
         const fileBytes = readFileSync(candidateFilePath)
         return new Response(fileBytes, {
@@ -48,7 +48,7 @@ export const coverImage: PayloadHandler = async (req): Promise<Response> => {
       fileData?.sizes?.thumbnail_webp?.filename != undefined &&
       fileData?.sizes?.thumbnail_webp?.filename != null
     ) {
-      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/cover-images/${fileData?.sizes?.thumbnail_webp?.filename}`
+      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/upload/cover-images/${fileData?.sizes?.thumbnail_webp?.filename}`
       payload.logger.info({ candidateFilePath })
       if (existsSync(candidateFilePath)) {
         const fileBytes = readFileSync(candidateFilePath)
@@ -78,7 +78,7 @@ export const coverImage: PayloadHandler = async (req): Promise<Response> => {
       fileData?.sizes?.thumbnail_large?.filename != undefined &&
       fileData?.sizes?.thumbnail_large?.filename != null
     ) {
-      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/cover-images/${fileData?.sizes?.thumbnail_large?.filename}`
+      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/upload/cover-images/${fileData?.sizes?.thumbnail_large?.filename}`
       if (existsSync(candidateFilePath)) {
         const fileBytes = readFileSync(candidateFilePath)
         return new Response(fileBytes, {
@@ -104,7 +104,7 @@ export const coverImage: PayloadHandler = async (req): Promise<Response> => {
   }
   if (imageType === 'card') {
     if (fileData?.sizes?.card?.filename != undefined && fileData?.sizes?.card?.filename != null) {
-      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/cover-images/${fileData?.sizes?.card?.filename}`
+      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/upload/cover-images/${fileData?.sizes?.card?.filename}`
       if (existsSync(candidateFilePath)) {
         const fileBytes = readFileSync(candidateFilePath)
         return new Response(fileBytes, {
@@ -132,7 +132,7 @@ export const coverImage: PayloadHandler = async (req): Promise<Response> => {
       fileData?.sizes?.card_webp?.filename != undefined &&
       fileData?.sizes?.card_webp?.filename != null
     ) {
-      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/cover-images/${fileData?.sizes?.card_webp?.filename}`
+      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/upload/cover-images/${fileData?.sizes?.card_webp?.filename}`
       if (existsSync(candidateFilePath)) {
         const fileBytes = readFileSync(candidateFilePath)
         return new Response(fileBytes, {
@@ -160,7 +160,7 @@ export const coverImage: PayloadHandler = async (req): Promise<Response> => {
       fileData?.sizes?.card_large?.filename != undefined &&
       fileData?.sizes?.card_large?.filename != null
     ) {
-      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/cover-images/${fileData?.sizes?.card_large?.filename}`
+      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/upload/cover-images/${fileData?.sizes?.card_large?.filename}`
       if (existsSync(candidateFilePath)) {
         const fileBytes = readFileSync(candidateFilePath)
         return new Response(fileBytes, {
@@ -188,7 +188,7 @@ export const coverImage: PayloadHandler = async (req): Promise<Response> => {
       fileData?.sizes?.largeSquare?.filename != undefined &&
       fileData?.sizes?.largeSquare?.filename != null
     ) {
-      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/cover-images/${fileData?.sizes?.largeSquare?.filename}`
+      const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/upload/cover-images/${fileData?.sizes?.largeSquare?.filename}`
       if (existsSync(candidateFilePath)) {
         const fileBytes = readFileSync(candidateFilePath)
         const fileByteLength = fileBytes.byteLength
@@ -229,7 +229,7 @@ export const coverImageSvg: PayloadHandler = async (req): Promise<Response> => {
     id: imageId,
   })
 
-  const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/cover-image-svg/${fileData?.filename}`
+  const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/upload/cover-image-svg/${fileData?.filename}`
   if (existsSync(candidateFilePath)) {
     const fileBytes = readFileSync(candidateFilePath)
     const fileByteLength = fileBytes.byteLength

@@ -108,7 +108,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
         })
       : talkAudioList.docs.forEach((talkAudioInstance) => {
           try {
-            let filePath = 'public/talkaudio/' + talkAudioInstance.filename
+            let filePath = 'public/upload/talkaudio/' + talkAudioInstance.filename
             let fileData = readFileSync(filePath)
             let fileHash = createHash('sha1').update(fileData).digest('hex')
             let fileMeta = {

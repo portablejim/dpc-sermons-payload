@@ -26,7 +26,7 @@ export const getFileData: AfterChangeHook = ({ doc, previousDoc, req: { payload 
   }
   const filename = fileURLToPath(import.meta.url)
   const dirname = path.dirname(filename)
-  const targetFilename = path.resolve(dirname, '../../public/talkaudio', doc.filename)
+  const targetFilename = path.resolve(dirname, '../../public/upload/talkaudio', doc.filename)
   payload.logger.info(targetFilename)
   const ffprobeOutput = ffmpeg.ffprobe(targetFilename, function (err, metadata) {
     if (!err) {

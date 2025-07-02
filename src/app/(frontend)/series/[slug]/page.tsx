@@ -55,13 +55,13 @@ export async function generateStaticParams() {
   return []
 }
 
-export async function generateMetadata({ params: paramsPromise }): Promise<Metadata> {
+export async function generateMetadata({ params: paramsPromise }): Promise<Metadata | null> {
   const { slug = 'home' } = await paramsPromise
   const page = await querySeriesBySlug({
     slug,
   })
 
-  return generateSeriesMeta({ doc: page })
+  return page !== null ? generateSeriesMeta({ doc: page }) : null
 }
 
 const querySeriesBySlug = cache(async ({ slug }: { slug: string }) => {
@@ -81,5 +81,24 @@ const querySeriesBySlug = cache(async ({ slug }: { slug: string }) => {
     },
   })
 
-  return result.docs?.[0] || null
+  if(result.docs.length < 1) {
+    return null;
+  }
+
+  const resultDoc = result.docs[0]
+
+  const episodesList = await payload.find({
+    collection: 'episodes',
+    where: {
+      series: {
+        equals: resultDoc.id
+      }
+    },
+    sort: "-sermonDate",
+  })
+  if(episodesList != undefined) {
+    resultDoc.episodes = episodesList
+  }
+
+  return resultDoc
 })

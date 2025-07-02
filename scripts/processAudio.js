@@ -61,11 +61,11 @@ const processAudio = async () => {
     /*
     let processedFile = await execFileSync(
       'ffmpeg',
-      ['-y', '-i', 'public/talkaudio/' + audioFile.filename, 'testing.mp3'],
+      ['-y', '-i', 'public/upload/talkaudio/' + audioFile.filename, 'testing.mp3'],
       { stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 100 * 1024 * 1024 },
     )
       */
-    let processedFile = await convertToMp3('public/talkaudio/' + audioFile.filename)
+    let processedFile = await convertToMp3('public/upload/talkaudio/' + audioFile.filename)
     console.log({ processedFile: processedFile.toString() })
     break
     //console.log(JSON.stringify(processedFile))

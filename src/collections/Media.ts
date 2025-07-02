@@ -57,7 +57,7 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
-    staticDir: path.resolve(dirname, '../../public/media'),
+    staticDir: path.resolve(dirname, '../../public/upload/media'),
   },
   endpoints: [
     {
@@ -74,7 +74,7 @@ export const Media: CollectionConfig = {
         if(typeof mediaFind.filename != 'string') {
           return Response.error()
         }
-        const filePath = path.resolve(dirname, '../../public/media', mediaFind.filename)
+        const filePath = path.resolve(dirname, '../../public/upload/media', mediaFind.filename)
         const mediaBody = readFileSync(filePath)
         const fileNameSafe = encodeURIComponent(mediaFind.filename)
         return new Response(mediaBody, {

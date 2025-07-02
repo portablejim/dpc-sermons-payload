@@ -49,7 +49,7 @@ const backupPage = async (targetId, targetFilename) => {
         if (linkTile?.linkTile?.linkedMedia) {
           let targetFile = linkTile?.linkTile?.linkedMedia
           if (!imageMap.has(targetFile.id)) {
-            let filePath = 'public/media/' + targetFile.filename
+            let filePath = 'public/upload/media/' + targetFile.filename
             let fileData = readFileSync(filePath)
             let fileHash = createHash('sha1').update(fileData).digest('hex')
             let fileMeta = {
