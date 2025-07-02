@@ -121,10 +121,10 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
-    push: true,
+    push: !!process.env.DB_DEVELOPMENT || false,
   }),
   graphQL: {
-    disable: true,
+    disable: !process.env.DB_DEVELOPMENT && true,
   },
   collections: [
     BibleBooks,
