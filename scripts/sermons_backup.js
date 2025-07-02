@@ -15,11 +15,6 @@ let targetFilename = process.argv[3]
 const backupSermons = async (seriesListString, targetFilename) => {
   const payload = await getPayload({ config })
 
-  let targetPage = await payload.findByID({
-    collection: 'pages',
-    id: 4,
-  })
-
   let imageMap = new Map()
   let imageSvgMap = new Map()
   let seriesMap = new Map()
@@ -39,6 +34,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
       collection: 'series',
       pagination: false,
       depth: 0,
+      showHiddenFields: true,
     })
   } else {
     seriesList = await payload.find({
@@ -50,12 +46,14 @@ const backupSermons = async (seriesListString, targetFilename) => {
       },
       pagination: false,
       depth: 0,
+      showHiddenFields: true,
     })
   }
   seriesList = await payload.find({
     collection: 'series',
     pagination: false,
     depth: 0,
+    showHiddenFields: true,
   })
 
   seriesList.docs.forEach((seriesInstance) => {
@@ -78,6 +76,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
               in: Array.from(seriesSet).join(','),
             },
           },
+          showHiddenFields: true,
         })
       : { docs: [], totalDocs: 0 }
 
@@ -105,6 +104,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
               in: Array.from(audioFileSet).join(','),
             },
           },
+          showHiddenFields: true,
         })
       : talkAudioList.docs.forEach((talkAudioInstance) => {
           try {
@@ -124,6 +124,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
               mimeType: talkAudioInstance.mimeType,
               data: fileData.toString('base64'),
               hash: fileHash,
+              guid: talkAudioInstance.guid,
             }
             audioFileMap.set(talkAudioInstance.id, fileMeta)
           } catch (e) {
@@ -159,6 +160,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
               in: Array.from(imageSet).join(','),
             },
           },
+          showHiddenFields: true,
         })
       : { docs: [], totalDocs: 0 }
 
@@ -186,6 +188,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
         caption: coverImageInstance.caption,
         data: fileData.toString('base64'),
         hash: fileHash,
+        guid: coverImageInstance.guid,
       }
       imageMap.set(coverImageInstance.id, fileMeta)
     } catch (e) {
@@ -222,6 +225,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
         mimeType: coverImageSvgInstance.mimeType,
         data: fileData.toString('base64'),
         hash: fileHash,
+        guid: coverImageSvgInstance.guid,
       }
       imageSvgMap.set(coverImageSvgInstance.id, coverImageSvgInstance)
     } catch (e) {
@@ -239,7 +243,6 @@ const backupSermons = async (seriesListString, targetFilename) => {
     episodes: Object.fromEntries(episodeMap),
     audioFiles: Object.fromEntries(audioFileMap),
     speakers: Object.fromEntries(speakerMap),
-    page: targetPage,
   }
 
   let outputStr = TOML.stringify(outputObj)

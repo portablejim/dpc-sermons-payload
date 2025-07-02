@@ -18,6 +18,7 @@ const backupPage = async (targetId, targetFilename) => {
   let targetPage = await payload.findByID({
     collection: 'pages',
     id: targetId,
+    showHiddenFields: true,
   })
 
   let imageMap = new Map()
@@ -25,25 +26,33 @@ const backupPage = async (targetId, targetFilename) => {
 
   targetPage.layout.forEach((layoutInstance) => {
     if (layoutInstance.blockType == 'linkTileList' && layoutInstance.linkTiles) {
-      layoutInstance.linkTiles.forEach((linkTile) => {
+      layoutInstance.linkTiles.forEach(async (linkTile) => {
         if (linkTile?.linkTile?.backgroundImage) {
           let targetImage = linkTile?.linkTile?.backgroundImage
           if (!imageMap.has(targetImage.id)) {
-            let filePath = 'public/cover-images/' + targetImage.filename
-            let fileData = readFileSync(filePath)
-            let fileHash = createHash('sha1').update(fileData).digest('hex')
-            let fileMeta = {
-              id: targetImage.id,
-              filename: targetImage.filename,
-              mimeType: targetImage.mimeType,
-              focusX: targetImage.focusX,
-              focusY: targetImage.focusY,
-              alt: targetImage.alt,
-              caption: targetImage.caption,
-              data: fileData.toString('base64'),
-              hash: fileHash,
+            try {
+              let filePath = 'public/upload/cover-images/' + targetImage.filename
+              let fileData = readFileSync(filePath)
+              let fileHash = createHash('sha1').update(fileData).digest('hex')
+              let fileMeta = {
+                id: targetImage.id,
+                filename: targetImage.filename,
+                mimeType: targetImage.mimeType,
+                width: targetImage.width,
+                height: targetImage.height,
+                focusX: targetImage.focusX,
+                focusY: targetImage.focusY,
+                alt: targetImage.alt,
+                caption: targetImage.caption,
+                data: fileData.toString('base64'),
+                hash: fileHash,
+                guid: targetImage.guid,
+              }
+              console.log({ fileMeta, targetImage })
+              imageMap.set(targetImage.id, fileMeta)
+            } catch (e) {
+              payload.logger.error(`Error while saving ${targetImage.filename}.`)
             }
-            imageMap.set(targetImage.id, fileMeta)
           }
         }
         if (linkTile?.linkTile?.linkedMedia) {
@@ -60,6 +69,7 @@ const backupPage = async (targetId, targetFilename) => {
               caption: JSON.stringify(targetFile.caption),
               data: fileData.toString('base64'),
               hash: fileHash,
+              guid: targetFile.guid,
             }
             mediaMap.set(targetFile.id, fileMeta)
           }
