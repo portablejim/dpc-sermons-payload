@@ -7,6 +7,7 @@ import * as migration_20241111_081701_coverImageSvgs from './20241111_081701_cov
 import * as migration_20241125_065915_nameTalkAudio from './20241125_065915_nameTalkAudio';
 import * as migration_20250630_075435 from './20250630_075435';
 import * as migration_20250701_131354_adminApiKey from './20250701_131354_adminApiKey';
+import * as migration_20250702_055220_cover_image_purpose from './20250702_055220_cover_image_purpose';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20250701_131354_adminApiKey.up,
     down: migration_20250701_131354_adminApiKey.down,
-    name: '20250701_131354_adminApiKey'
+    name: '20250701_131354_adminApiKey',
+  },
+  {
+    up: migration_20250702_055220_cover_image_purpose.up,
+    down: migration_20250702_055220_cover_image_purpose.down,
+    name: '20250702_055220_cover_image_purpose'
   },
 ];

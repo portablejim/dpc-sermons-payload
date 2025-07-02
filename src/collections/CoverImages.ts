@@ -119,18 +119,35 @@ export const CoverImages: CollectionConfig = {
   },
   fields: [
     {
+      name: 'name',
+      label: 'Name',
+      type: 'text',
+      required: false,
+    },
+    {
       name: 'alt',
       type: 'text',
       required: true,
     },
     {
-      name: 'caption',
-      type: 'richText',
-      editor: lexicalEditor({
-        features: ({ rootFeatures }) => {
-          return [...rootFeatures, FixedToolbarFeature(), InlineToolbarFeature()]
+      name: 'purpose',
+      type: 'select',
+      hasMany: true,
+      label: 'Image Purpose',
+      options: [
+        {
+          label: 'Hub Image',
+          value: 'hub-image',
         },
-      }),
+        {
+          label: 'Sermon Series Image',
+          value: 'series-image',
+        },
+        {
+          label: 'Other',
+          value: 'other',
+        },
+      ]
     },
     {
       name: 'version',
@@ -166,6 +183,18 @@ export const CoverImages: CollectionConfig = {
       hooks: {
         beforeValidate: [ensureGuid],
       },
+    },
+    {
+      name: 'sha1sum',
+      label: 'SHA1 Hash',
+      type: 'text',
+      hidden: true,
+    },
+    {
+      name: 'hashInvalid',
+      type: 'checkbox',
+      defaultValue: false,
+      hidden: true,
     },
     {
       name: 'squareSvg',

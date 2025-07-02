@@ -179,24 +179,13 @@ export interface BibleChapter {
  */
 export interface CoverImage {
   id: number;
+  name?: string | null;
   alt: string;
-  caption?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  purpose?: ('hub-image' | 'series-image' | 'other')[] | null;
   version?: number | null;
   guid?: string | null;
+  sha1sum?: string | null;
+  hashInvalid?: boolean | null;
   /**
    * A square SVG of the image to use instead
    */
@@ -1067,10 +1056,13 @@ export interface BibleChaptersSelect<T extends boolean = true> {
  * via the `definition` "cover-images_select".
  */
 export interface CoverImagesSelect<T extends boolean = true> {
+  name?: T;
   alt?: T;
-  caption?: T;
+  purpose?: T;
   version?: T;
   guid?: T;
+  sha1sum?: T;
+  hashInvalid?: T;
   squareSvg?: T;
   cardSvg?: T;
   updatedAt?: T;
