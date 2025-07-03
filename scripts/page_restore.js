@@ -58,6 +58,7 @@ const findExistingImage = async (payload, bgImgOldObject) => {
       .findByID({
         collection: 'cover-images',
         id: bgImgOldObject.id,
+        showHiddenFields: true,
       })
       .catch(() => {
         return null
@@ -118,6 +119,7 @@ const restorePage = async (targetId, targetFilename) => {
   })
   const coverImagesIdMap = new Map()
 
+  //console.log(util.inspect(restoreFileToml.page, false, null, true))
   let layoutNew = await Promise.all(
     restoreFileToml.page.layout.map(async (layout) => {
       if (layout.blockType === 'linkTileList') {
@@ -127,19 +129,19 @@ const restorePage = async (targetId, targetFilename) => {
             const bgImgOldObject = coverImagesMap.get(bgImgOldId.toString())
             if (!coverImagesIdMap.has(bgImgOldId)) {
               if (bgImgOldObject) {
-                const existingImage = await findExistingImage(payload, bgImgOldObject)
-                if (existingImage) {
+                const existingImageId = await findExistingImage(payload, bgImgOldObject)
+                if (existingImageId) {
                   // If an image is found, no mapping needs to be done.
-                  coverImagesIdMap.set(bgImgOldObject.id, existingImage.id)
+                  coverImagesIdMap.set(bgImgOldObject.id, existingImageId)
                 } else {
                   // Image not found, it needs to be added.
 
                   if (bgImgOldObject.squareSvg) {
                     const bgImgSvgOldObject = cov
-                    const existingSquareSvg = await findExistingSvgImage(payload, bgImgSvgOldObject)
-                    if (existingSquareSvg) {
+                    const existingSquareSvgId = await findExistingSvgImage(payload, bgImgSvgOldObject)
+                    if (existingSquareSvgId) {
                       // If an svg image is found, no mapping needs to be done.
-                      coverSvgImagesIdMap.set(bgImgSvgObject.id, existingSquareSvg.id)
+                      coverSvgImagesIdMap.set(bgImgSvgObject.id, existingSquareSvgId)
                     } else {
                       // Square SVG not found, it needs to be added.
                       const newSvgImgFile = new File(
@@ -162,10 +164,10 @@ const restorePage = async (targetId, targetFilename) => {
                   }
                   if (bgImgOldObject.coverSvg) {
                     const bgImgSvgOldObject = cov
-                    const existingcoverSvg = await findExistingSvgImage(payload, bgImgSvgOldObject)
-                    if (existingcoverSvg) {
+                    const existingcoverSvgId = await findExistingSvgImage(payload, bgImgSvgOldObject)
+                    if (existingcoverSvgId) {
                       // If an svg image is found, no mapping needs to be done.
-                      coverSvgImagesIdMap.set(bgImgSvgObject.id, existingcoverSvg.id)
+                      coverSvgImagesIdMap.set(bgImgSvgObject.id, existingcoverSvgId)
                     } else {
                       // Cover SVG not found, it needs to be added.
                       const newSvgImgFile = new File(
@@ -200,13 +202,13 @@ const restorePage = async (targetId, targetFilename) => {
                       purpose: bgImgOldObject.purpose ?? [],
                       squareSvg:
                         bgImgOldObject.squareSvg != null &&
-                        coverImagesMap.has(bgImgOldObject.squareSvg)
-                          ? coverImagesMap.get(bgImgOldObject.squareSvg)
+                        coverImagesMap.has(bgImgOldObject.squareSvg.toString())
+                          ? coverImagesMap.get(bgImgOldObject.squareSvg.toString())
                           : null,
                       coverSvg:
                         bgImgOldObject.coverSvg != null &&
-                        coverImagesMap.has(bgImgOldObject.coverSvg)
-                          ? coverImagesMap.get(bgImgOldObject.coverSvg)
+                        coverImagesMap.has(bgImgOldObject.coverSvg.toString())
+                          ? coverImagesMap.get(bgImgOldObject.coverSvg.toString())
                           : null,
                       guid: bgImgOldObject.guid ?? null,
                     },
@@ -217,6 +219,8 @@ const restorePage = async (targetId, targetFilename) => {
               } else {
                 console.log('Error getting image id ' + bgImgOldId)
               }
+            } else {
+              console.log('Unmapped image id ' + bgImgOldId)
             }
             if (coverImagesIdMap.has(bgImgOldId)) {
               const newImageId = coverImagesIdMap.get(bgImgOldId)
@@ -231,9 +235,9 @@ const restorePage = async (targetId, targetFilename) => {
             } else if (linkTile.linkTile.type == 'reference') {
               if (
                 linkTile.linkTile.reference.value &&
-                pageMap.has(linkTile.linkTile.reference.value)
+                pageMap.has(linkTile.linkTile.reference.value.toString())
               ) {
-                const oldPage = pageMap.get(linkTile.linkTile.reference.value)
+                const oldPage = pageMap.get(linkTile.linkTile.reference.value.toString())
                 let existingPage = await payload
                   .findByID({
                     collection: 'pages',
@@ -277,8 +281,8 @@ const restorePage = async (targetId, targetFilename) => {
                 linkTile.linkTile.reference.value = restoreFileToml.page.id
               }
             } else if (linkTile.linkTile.type == 'mediaReference') {
-              if (linkTile.linkTile.linkedMedia && mediaMap.has(linkTile.linkTile.linkedMedia)) {
-                const oldMedia = mediaMap.get(linkTile.linkTile.linkedMedia)
+              if (linkTile.linkTile.linkedMedia && mediaMap.has(linkTile.linkTile.linkedMedia.toString())) {
+                const oldMedia = mediaMap.get(linkTile.linkTile.linkedMedia.toString())
                 const candidateNewMedia = await payload.find({
                   collection: 'media',
                   where: {
@@ -314,7 +318,7 @@ const restorePage = async (targetId, targetFilename) => {
                 // Something is wrong with the saved data. Set it to a self page reference.
                 linkTile.linkTile.type = 'reference'
                 linkTile.linkTile.reference = {
-                  referenceTo: 'page',
+                  relationTo: 'pages',
                   value: restoreFileToml.page.id,
                 }
               }
@@ -327,19 +331,6 @@ const restorePage = async (targetId, targetFilename) => {
       return layout
     }),
   )
-  /*
-  const updatedPage = await payload.update({
-    collection: 'pages',
-    id: targetId,
-    data: {
-      layout: layoutNew
-    }
-  })
-   */
-  //console.log(util.inspect(restoreFileToml.page, false, null, true))
-  //console.log(util.inspect(layoutNew, false, null, true))
-  //console.log(restoreFileToml.page.layout)
-  /*
   const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL
   const API_KEY = process.env.INTEGRATION_API_KEY
   const req = await fetch(`${baseUrl}/api/pages/${targetId}`, {
@@ -354,7 +345,6 @@ const restorePage = async (targetId, targetFilename) => {
   })
   const updatedPage = await req.json()
   console.log(util.inspect(updatedPage, false, null, true))
-   */
 }
 await restorePage(targetId, targetFilename)
 exit()
