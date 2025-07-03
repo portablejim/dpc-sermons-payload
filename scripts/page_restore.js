@@ -247,7 +247,10 @@ const restorePage = async (targetId, targetFilename) => {
               const newImageId = coverImagesIdMap.get(bgImgOldId)
               linkTile.linkTile.backgroundImage = newImageId
             } else {
-              linkTile.linkTile.backgroundImage = null
+              const globalDefaults = await payload.findGlobal({
+                slug: 'defaults',
+              })
+              linkTile.linkTile.backgroundImage = globalDefaults.defaultCoverImage
             }
 
             delete linkTile.id
