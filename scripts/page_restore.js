@@ -37,7 +37,9 @@ const findExistingSvgImage = async (payload, bgSvgImgOldObject) => {
       const candidateImages = await payload.find({
         collection: 'cover-image-svgs',
         where: {
-          guid: payload.guid,
+          guid: {
+            equals: bgSvgImgOldObject.guid
+          },
         },
         showHiddenFields: true,
       })
@@ -75,11 +77,12 @@ const findExistingImage = async (payload, bgImgOldObject) => {
       const candidateImages = await payload.find({
         collection: 'cover-images',
         where: {
-          guid: payload.guid,
+          guid: {
+            equals: bgImgOldObject.guid
+          },
         },
-        showHiddenFields: true,
+        overrideAccess: true,
       })
-      //console.log({candidateImages})
       if (candidateImages && candidateImages.docs.length > 0) {
         console.log('Found existing image')
         return candidateImages.docs[0].id
@@ -139,226 +142,222 @@ const restorePage = async (targetId, targetFilename) => {
   })
   const coverImagesIdMap = new Map()
 
-  //console.log(util.inspect(restoreFileToml.page, false, null, true))
-  let layoutNew = await Promise.all(
-    restoreFileToml.page.layout.map(async (layout) => {
-      if (layout.blockType === 'linkTileList') {
-        layout.linkTiles = await Promise.all(
-          layout.linkTiles.map(async (linkTile) => {
-            const bgImgOldId = linkTile.linkTile.backgroundImage
-            const bgImgOldObject = coverImagesMap.get(bgImgOldId.toString())
-            if (!coverImagesIdMap.has(bgImgOldId)) {
-              if (bgImgOldObject) {
-                const existingImageId = await findExistingImage(payload, bgImgOldObject)
-                if (existingImageId) {
-                  // If an image is found, no mapping needs to be done.
-                  coverImagesIdMap.set(bgImgOldObject.id, existingImageId)
+  let layoutsNew = []
+  for (const layout of restoreFileToml.page.layout) {
+    if (layout.blockType === 'linkTileList') {
+      for(const linkTile of layout.linkTiles) {
+        const bgImgOldId = linkTile.linkTile.backgroundImage
+        const bgImgOldObject = coverImagesMap.get(bgImgOldId.toString())
+        if (!coverImagesIdMap.has(bgImgOldId)) {
+          if (bgImgOldObject) {
+            const existingImageId = await findExistingImage(payload, bgImgOldObject)
+            if (existingImageId) {
+              // If an image is found, no mapping needs to be done.
+              coverImagesIdMap.set(bgImgOldObject.id, existingImageId, bgImgOldObject)
+            } else {
+              // Image not found, it needs to be added.
+
+              if (bgImgOldObject.squareSvg) {
+                const bgImgSvgOldObject = cov
+                const existingSquareSvgId = await findExistingSvgImage(
+                  payload,
+                  bgImgSvgOldObject,
+                )
+                if (existingSquareSvgId) {
+                  // If an svg image is found, no mapping needs to be done.
+                  coverSvgImagesIdMap.set(bgImgSvgObject.id, existingSquareSvgId)
                 } else {
-                  // Image not found, it needs to be added.
-
-                  if (bgImgOldObject.squareSvg) {
-                    const bgImgSvgOldObject = cov
-                    const existingSquareSvgId = await findExistingSvgImage(
-                      payload,
-                      bgImgSvgOldObject,
-                    )
-                    if (existingSquareSvgId) {
-                      // If an svg image is found, no mapping needs to be done.
-                      coverSvgImagesIdMap.set(bgImgSvgObject.id, existingSquareSvgId)
-                    } else {
-                      // Square SVG not found, it needs to be added.
-                      const bgSvgImageNewObject = await uploadFile(
-                        'cover-image-svgs',
-                        bgSvgImgOldObject.mimeType,
-                        bgSvgImgOldObject.filename,
-                        bgImgSvgOldObject.data,
-                        {
-                          alt: bgSvgImgOldObject.alt,
-                          svgFocalPoint: bgSvgImgOldObject.svgFocalPoint ?? null,
-                          mimeType: bgSvgImgOldObject.mimeType,
-                          guid: bgSvgImgOldObject.guid ?? null,
-                        },
-                      )
-
-                      coverSvgImagesIdMap.set(bgImgSvgOldObject.id, bgSvgImageNewObject.id)
-                    }
-                  }
-                  if (bgImgOldObject.coverSvg) {
-                    const bgImgSvgOldObject = cov
-                    const existingcoverSvgId = await findExistingSvgImage(
-                      payload,
-                      bgImgSvgOldObject,
-                    )
-                    if (existingcoverSvgId) {
-                      // If an svg image is found, no mapping needs to be done.
-                      coverSvgImagesIdMap.set(bgImgSvgObject.id, existingcoverSvgId)
-                    } else {
-                      // Cover SVG not found, it needs to be added.
-                      const bgSvgImageNewObject = await uploadFile(
-                        'cover-image-svgs',
-                        bgSvgImgOldObject.mimeType,
-                        bgSvgImgOldObject.filename,
-                        bgImgSvgOldObject.data,
-                        {
-                          alt: bgSvgImgOldObject.alt,
-                          svgFocalPoint: bgSvgImgOldObject.svgFocalPoint ?? null,
-                          mimeType: bgSvgImgOldObject.mimeType,
-                          guid: bgSvgImgOldObject.guid ?? null,
-                        },
-                      )
-
-                      coverSvgImagesIdMap.set(bgImgSvgOldObject.id, bgSvgImageNewObject.id)
-                    }
-                  }
-
-                  const bgImgNewObject = await uploadFile(
-                    'cover-images',
-                    bgImgOldObject.mimeType,
-                    bgImgOldObject.filename,
-                    bgImgOldObject.data,
+                  // Square SVG not found, it needs to be added.
+                  const bgSvgImageNewObject = await uploadFile(
+                    'cover-image-svgs',
+                    bgSvgImgOldObject.mimeType,
+                    bgSvgImgOldObject.filename,
+                    bgImgSvgOldObject.data,
                     {
-                      mimeType: bgImgOldObject.mimeType,
-                      name: bgImgOldObject.name ?? null,
-                      alt: bgImgOldObject.alt,
-                      purpose: bgImgOldObject.purpose ?? [],
-                      squareSvg:
-                        bgImgOldObject.squareSvg != null &&
-                        coverImagesMap.has(bgImgOldObject.squareSvg.toString())
-                          ? coverImagesMap.get(bgImgOldObject.squareSvg.toString())
-                          : null,
-                      coverSvg:
-                        bgImgOldObject.coverSvg != null &&
-                        coverImagesMap.has(bgImgOldObject.coverSvg.toString())
-                          ? coverImagesMap.get(bgImgOldObject.coverSvg.toString())
-                          : null,
-                      guid: bgImgOldObject.guid ?? null,
+                      alt: bgSvgImgOldObject.alt,
+                      svgFocalPoint: bgSvgImgOldObject.svgFocalPoint ?? null,
+                      mimeType: bgSvgImgOldObject.mimeType,
+                      guid: bgSvgImgOldObject.guid ?? null,
                     },
                   )
 
-                  coverImagesIdMap.set(bgImgOldId.id, bgImgNewObject.id)
+                  coverSvgImagesIdMap.set(bgImgSvgOldObject.id, bgSvgImageNewObject.id)
                 }
-              } else {
-                console.log('Error getting image id ' + bgImgOldId)
               }
-            } else {
-              console.log('Unmapped image id ' + bgImgOldId)
-            }
-            if (coverImagesIdMap.has(bgImgOldId)) {
-              const newImageId = coverImagesIdMap.get(bgImgOldId)
-              linkTile.linkTile.backgroundImage = newImageId
-            } else {
-              const globalDefaults = await payload.findGlobal({
-                slug: 'defaults',
-              })
-              linkTile.linkTile.backgroundImage = globalDefaults.defaultCoverImage
-            }
-
-            delete linkTile.id
-            if (linkTile.linkTile.type == 'custom') {
-              linkTile.linkTile.reference = null
-            } else if (linkTile.linkTile.type == 'reference') {
-              if (
-                linkTile.linkTile.reference.value &&
-                pageMap.has(linkTile.linkTile.reference.value.toString())
-              ) {
-                const oldPage = pageMap.get(linkTile.linkTile.reference.value.toString())
-                let existingPage = await payload
-                  .findByID({
-                    collection: 'pages',
-                    id: linkTile.linkTile.reference.value,
-                  })
-                  .catch(() => {
-                    return null
-                  })
-
-                if (existingPage && oldPage.slug === existingPage.slug) {
-                  // Existing page exists and has the same slug => consider them equal.
+              if (bgImgOldObject.coverSvg) {
+                const bgImgSvgOldObject = cov
+                const existingcoverSvgId = await findExistingSvgImage(
+                  payload,
+                  bgImgSvgOldObject,
+                )
+                if (existingcoverSvgId) {
+                  // If an svg image is found, no mapping needs to be done.
+                  coverSvgImagesIdMap.set(bgImgSvgObject.id, existingcoverSvgId)
                 } else {
-                  // Existing page does not exist or is not correct.
-                  const candidatePageQuery = await payload.find({
-                    collection: 'pages',
-                    where: {
-                      or: [
-                        {
-                          title: {
-                            equals: oldPage.title,
-                          },
-                        },
-                        {
-                          slug: {
-                            equals: oldPage.slug,
-                          },
-                        },
-                      ],
+                  // Cover SVG not found, it needs to be added.
+                  const bgSvgImageNewObject = await uploadFile(
+                    'cover-image-svgs',
+                    bgSvgImgOldObject.mimeType,
+                    bgSvgImgOldObject.filename,
+                    bgImgSvgOldObject.data,
+                    {
+                      alt: bgSvgImgOldObject.alt,
+                      svgFocalPoint: bgSvgImgOldObject.svgFocalPoint ?? null,
+                      mimeType: bgSvgImgOldObject.mimeType,
+                      guid: bgSvgImgOldObject.guid ?? null,
                     },
-                  })
-                  if (candidatePageQuery.docs.length > 0) {
-                    // Found a matching page.
-                    linkTile.linkTile.reference.value = candidatePageQuery.docs[0].id
-                  } else {
-                    // Matching page not found, link to itself.
-                    linkTile.linkTile.reference.value = parseInt(targetId)
-                  }
+                  )
+
+                  coverSvgImagesIdMap.set(bgImgSvgOldObject.id, bgSvgImageNewObject.id)
                 }
+              }
+
+              const bgImgNewObject = await uploadFile(
+                'cover-images',
+                bgImgOldObject.mimeType,
+                bgImgOldObject.filename,
+                bgImgOldObject.data,
+                {
+                  mimeType: bgImgOldObject.mimeType,
+                  name: bgImgOldObject.name ?? null,
+                  alt: bgImgOldObject.alt,
+                  purpose: bgImgOldObject.purpose ?? [],
+                  squareSvg:
+                    bgImgOldObject.squareSvg != null &&
+                    coverImagesMap.has(bgImgOldObject.squareSvg.toString())
+                      ? coverImagesMap.get(bgImgOldObject.squareSvg.toString())
+                      : null,
+                  coverSvg:
+                    bgImgOldObject.coverSvg != null &&
+                    coverImagesMap.has(bgImgOldObject.coverSvg.toString())
+                      ? coverImagesMap.get(bgImgOldObject.coverSvg.toString())
+                      : null,
+                  guid: bgImgOldObject.guid,
+                },
+              )
+
+              if(bgImgNewObject)
+              {
+                coverImagesIdMap.set(bgImgOldId.id, bgImgNewObject.id)
+              }
+            }
+          } else {
+            console.log('Error getting image id ' + bgImgOldId)
+          }
+        }
+        if (coverImagesIdMap.has(bgImgOldId)) {
+          const newImageId = coverImagesIdMap.get(bgImgOldId)
+          linkTile.linkTile.backgroundImage = newImageId
+        } else {
+          const globalDefaults = await payload.findGlobal({
+            slug: 'defaults',
+          })
+          linkTile.linkTile.backgroundImage = globalDefaults.defaultCoverImage
+        }
+
+        delete linkTile.id
+        if (linkTile.linkTile.type == 'custom') {
+          linkTile.linkTile.reference = null
+        } else if (linkTile.linkTile.type == 'reference') {
+          if (
+            linkTile.linkTile.reference.value &&
+            pageMap.has(linkTile.linkTile.reference.value.toString())
+          ) {
+            const oldPage = pageMap.get(linkTile.linkTile.reference.value.toString())
+            let existingPage = await payload
+              .findByID({
+                collection: 'pages',
+                id: linkTile.linkTile.reference.value,
+              })
+              .catch(() => {
+                return null
+              })
+
+            if (existingPage && oldPage.slug === existingPage.slug) {
+              // Existing page exists and has the same slug => consider them equal.
+            } else {
+              // Existing page does not exist or is not correct.
+              const candidatePageQuery = await payload.find({
+                collection: 'pages',
+                where: {
+                  or: [
+                    {
+                      title: {
+                        equals: oldPage.title,
+                      },
+                    },
+                    {
+                      slug: {
+                        equals: oldPage.slug,
+                      },
+                    },
+                  ],
+                },
+              })
+              if (candidatePageQuery.docs.length > 0) {
+                // Found a matching page.
+                linkTile.linkTile.reference.value = candidatePageQuery.docs[0].id
               } else {
-                // Something is wrong with the saved data. Set to itself.
+                // Matching page not found, link to itself.
                 linkTile.linkTile.reference.value = parseInt(targetId)
               }
-            } else if (linkTile.linkTile.type == 'mediaReference') {
-              if (
-                linkTile.linkTile.linkedMedia &&
-                mediaMap.has(linkTile.linkTile.linkedMedia.toString())
-              ) {
-                const oldMedia = mediaMap.get(linkTile.linkTile.linkedMedia.toString())
-                const candidateNewMedia = await payload.find({
-                  collection: 'media',
-                  where: {
-                    guid: {
-                      equals: oldMedia.guid,
-                    },
-                  },
-                })
-                if (candidateNewMedia.docs.length > 0) {
-                  // Found a matching doc.
-                  linkTile.linkTile.linkedMedia = candidateNewMedia.docs[0].id
-                  linkTile.linkTile.reference = null
-                } else {
-                  // No matching doc found => need to add it.
-                  const newMediaObject = await uploadFile(
-                    'media',
-                    oldMedia.mimeType,
-                    oldMedia.filename,
-                    oldMedia.data,
-                    {
-                      filename: oldMedia.filename,
-                      mimeType: oldMedia.mimeType,
-                      alt: oldMedia.alt,
-                      length: oldMedia.size,
-                      caption: JSON.parse(oldMedia.caption),
-                      guid: oldMedia.guid,
-                    },
-                  )
-                  if (newMediaObject?.id) {
-                    linkTile.linkTile.linkedMedia = newMediaObject.id
-                  }
-                  linkTile.linkTile.reference = null
-                }
-              } else {
-                // Something is wrong with the saved data. Set it to a self page reference.
-                linkTile.linkTile.type = 'reference'
-                linkTile.linkTile.reference = {
-                  relationTo: 'pages',
-                  value: parseInt(targetId)
-                }
-              }
             }
-            return linkTile
-          }),
-        )
+          } else {
+            // Something is wrong with the saved data. Set to itself.
+            linkTile.linkTile.reference.value = parseInt(targetId)
+          }
+        } else if (linkTile.linkTile.type == 'mediaReference') {
+          if (
+            linkTile.linkTile.linkedMedia &&
+            mediaMap.has(linkTile.linkTile.linkedMedia.toString())
+          ) {
+            const oldMedia = mediaMap.get(linkTile.linkTile.linkedMedia.toString())
+            const candidateNewMedia = await payload.find({
+              collection: 'media',
+              where: {
+                guid: {
+                  equals: oldMedia.guid,
+                },
+              },
+            })
+            if (candidateNewMedia.docs.length > 0) {
+              // Found a matching doc.
+              linkTile.linkTile.linkedMedia = candidateNewMedia.docs[0].id
+              linkTile.linkTile.reference = null
+            } else {
+              // No matching doc found => need to add it.
+              const newMediaObject = await uploadFile(
+                'media',
+                oldMedia.mimeType,
+                oldMedia.filename,
+                oldMedia.data,
+                {
+                  filename: oldMedia.filename,
+                  mimeType: oldMedia.mimeType,
+                  alt: oldMedia.alt,
+                  length: oldMedia.size,
+                  caption: JSON.parse(oldMedia.caption),
+                  guid: oldMedia.guid,
+                },
+              )
+              if (newMediaObject?.id) {
+                linkTile.linkTile.linkedMedia = newMediaObject.id
+              }
+              linkTile.linkTile.reference = null
+            }
+          } else {
+            // Something is wrong with the saved data. Set it to a self page reference.
+            linkTile.linkTile.type = 'reference'
+            linkTile.linkTile.reference = {
+              relationTo: 'pages',
+              value: parseInt(targetId)
+            }
+          }
+        }
       }
-      return layout
-    }),
-  )
+    }
+    layoutsNew.push(layout)
+  }
   const req = await fetch(`${baseUrl}/api/pages/${targetId}`, {
     method: 'PATCH',
     headers: {
@@ -366,11 +365,11 @@ const restorePage = async (targetId, targetFilename) => {
       Authorization: `users API-Key ${API_KEY}`,
     },
     body: JSON.stringify({
-      layout: layoutNew,
+      layout: layoutsNew,
     }),
   })
   const updatedPage = await req.json()
-  console.log(util.inspect(updatedPage, false, null, true))
+  console.log({updatedPage})
 }
 await restorePage(targetId, targetFilename)
 exit()
