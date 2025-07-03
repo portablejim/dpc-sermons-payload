@@ -102,7 +102,7 @@ const uploadFile = async (objectType, mimeType, fileName, fileData, fileMetadata
   const newMediaInput = new FormData()
   newMediaInput.append('file', await oldMediaBlobResult.blob(), fileName)
   newMediaInput.append('_payload', JSON.stringify(fileMetadata))
-  const newMediaReq = await fetch(`${baseUrl}/api/media`, {
+  const newMediaReq = await fetch(`${baseUrl}/api/${objectType}`, {
     method: 'POST',
     headers: {
       Authorization: `users API-Key ${API_KEY}`,
