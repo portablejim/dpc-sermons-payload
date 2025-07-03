@@ -42,6 +42,7 @@ import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 import { seedHandlerEpisodes } from './endpoints/seedHandlerEpisodes'
 import { CoverImageSvgs } from './collections/CoverImageSvgs'
+import { Defaults } from '@/Defaults/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -155,7 +156,7 @@ export default buildConfig({
       path: '/seedEpisodes',
     },
   ],
-  globals: [Header, Footer],
+  globals: [Header, Footer, Defaults],
   plugins: [
     redirectsPlugin({
       collections: ['pages'],

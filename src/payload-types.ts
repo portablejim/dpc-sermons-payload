@@ -115,10 +115,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    defaults: Default;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    defaults: DefaultsSelect<false> | DefaultsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -1732,6 +1734,17 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "defaults".
+ */
+export interface Default {
+  id: number;
+  defaultPage?: string | null;
+  defaultCoverImage?: (number | null) | CoverImage;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1784,6 +1797,17 @@ export interface FooterSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "defaults_select".
+ */
+export interface DefaultsSelect<T extends boolean = true> {
+  defaultPage?: T;
+  defaultCoverImage?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
