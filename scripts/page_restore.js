@@ -50,7 +50,7 @@ const findExistingSvgImage = async (payload, bgSvgImgOldObject) => {
       }
     }
   } catch (e) {
-    console.error(e)
+    console.error({e, f: 'findExistingSvgImage', bgSvgImgOldObject})
   }
   return null
 }
@@ -89,7 +89,7 @@ const findExistingImage = async (payload, bgImgOldObject) => {
       }
     }
   } catch (e) {
-    console.error(e)
+    console.error({e, f: 'findExistingImage', bgImgOldObject})
   }
   return null
 }
@@ -297,12 +297,12 @@ const restorePage = async (targetId, targetFilename) => {
                     linkTile.linkTile.reference.value = candidatePageQuery.docs[0].id
                   } else {
                     // Matching page not found, link to itself.
-                    linkTile.linkTile.reference.value = restoreFileToml.page.id
+                    linkTile.linkTile.reference.value = parseInt(targetId)
                   }
                 }
               } else {
                 // Something is wrong with the saved data. Set to itself.
-                linkTile.linkTile.reference.value = restoreFileToml.page.id
+                linkTile.linkTile.reference.value = parseInt(targetId)
               }
             } else if (linkTile.linkTile.type == 'mediaReference') {
               if (
@@ -321,6 +321,7 @@ const restorePage = async (targetId, targetFilename) => {
                 if (candidateNewMedia.docs.length > 0) {
                   // Found a matching doc.
                   linkTile.linkTile.linkedMedia = candidateNewMedia.docs[0].id
+                  linkTile.linkTile.reference = null
                 } else {
                   // No matching doc found => need to add it.
                   const newMediaObject = await uploadFile(
@@ -332,21 +333,22 @@ const restorePage = async (targetId, targetFilename) => {
                       filename: oldMedia.filename,
                       mimeType: oldMedia.mimeType,
                       alt: oldMedia.alt,
-                      length: newMediaFile.size,
+                      length: oldMedia.size,
                       caption: JSON.parse(oldMedia.caption),
                       guid: oldMedia.guid,
                     },
                   )
                   if (newMediaObject?.id) {
-                    linkTile.linkTile.linkedMedia = newMediaObject.doc.id
+                    linkTile.linkTile.linkedMedia = newMediaObject.id
                   }
+                  linkTile.linkTile.reference = null
                 }
               } else {
                 // Something is wrong with the saved data. Set it to a self page reference.
                 linkTile.linkTile.type = 'reference'
                 linkTile.linkTile.reference = {
                   relationTo: 'pages',
-                  value: restoreFileToml.page.id,
+                  value: parseInt(targetId)
                 }
               }
             }
