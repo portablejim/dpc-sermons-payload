@@ -9,6 +9,7 @@ import TOML from '@iarna/toml'
 import fs, { readFileSync, writeFileSync } from 'fs'
 import { createHash } from 'crypto'
 import { decodeFromBase64 } from 'next/dist/build/webpack/loaders/utils.js'
+import * as util from 'node:util'
 
 let targetId = process.argv[2]
 let targetFilename = process.argv[3]
@@ -93,23 +94,34 @@ const restorePage = async (targetId, targetFilename) => {
   const payload = await getPayload({ config })
   const restoreFileStr = fs.readFileSync(targetFilename)
   const restoreFileToml = TOML.parse(restoreFileStr)
-  //console.log(Object.entries(restoreFileToml.media))
-  let mediaMap = new Map()
+
+  const pageMap = new Map()
+  Object.entries(restoreFileToml.refPages).forEach(([key, value]) => {
+    pageMap.set(key, value)
+  })
+
+  const mediaMap = new Map()
   Object.entries(restoreFileToml.media).forEach(([key, value]) => {
     mediaMap.set(key, value)
   })
   const mediaIdMap = new Map()
 
-  let coverImagesMap = new Map()
+  const coverSvgImagesMap = new Map()
+  Object.entries(restoreFileToml.imageSvgs).forEach(([key, value]) => {
+    coverSvgImagesMap.set(key, value)
+  })
+  const coverSvgImagesIdMap = new Map()
+
+  const coverImagesMap = new Map()
   Object.entries(restoreFileToml.images).forEach(([key, value]) => {
     coverImagesMap.set(key, value)
   })
   const coverImagesIdMap = new Map()
 
-  await Promise.all(
+  let layoutNew = await Promise.all(
     restoreFileToml.page.layout.map(async (layout) => {
       if (layout.blockType === 'linkTileList') {
-        const newLinkTileList = await Promise.all(
+        layout.linkTiles =  await Promise.all(
           layout.linkTiles.map(async (linkTile) => {
             const bgImgOldId = linkTile.linkTile.backgroundImage
             const bgImgOldObject = coverImagesMap.get(bgImgOldId.toString())
@@ -118,20 +130,67 @@ const restorePage = async (targetId, targetFilename) => {
                 const existingImage = await findExistingImage(payload, bgImgOldObject)
                 if (existingImage) {
                   // If an image is found, no mapping needs to be done.
-                  coverImagesIdMap.set(existingImage.id, existingImage.id)
+                  coverImagesIdMap.set(bgImgOldObject.id, existingImage.id)
                 } else {
                   // Image not found, it needs to be added.
 
-                  if(bgImgOldObject.squareSvg) {
-                    const bgImgSvgObject = cov
-                    const existingSquareSvg = await findExistingSvgImage(payload, )
+                  if (bgImgOldObject.squareSvg) {
+                    const bgImgSvgOldObject = cov
+                    const existingSquareSvg = await findExistingSvgImage(payload, bgImgSvgOldObject)
+                    if (existingSquareSvg) {
+                      // If an svg image is found, no mapping needs to be done.
+                      coverSvgImagesIdMap.set(bgImgSvgObject.id, existingSquareSvg.id)
+                    } else {
+                      // Square SVG not found, it needs to be added.
+                      const newSvgImgFile = new File(
+                        Buffer.from(bgImgSvgOldObject.data, 'base64'),
+                        bgImgSvgOldObject.filename,
+                      )
+                      const bgSvgImageNewObject = await payload.create({
+                        collection: 'cover-image-svgs',
+                        data: {
+                          alt: bgSvgImgOldObject.alt,
+                          svgFocalPoint: bgSvgImgOldObject.svgFocalPoint ?? null,
+                          mimeType: bgSvgImgOldObject.mimeType,
+                          guid: bgSvgImgOldObject.guid ?? null,
+                        },
+                        file: newSvgImgFile,
+                      })
+
+                      coverSvgImagesIdMap.set(bgImgSvgOldObject.id, bgSvgImageNewObject.id)
+                    }
+                  }
+                  if (bgImgOldObject.coverSvg) {
+                    const bgImgSvgOldObject = cov
+                    const existingcoverSvg = await findExistingSvgImage(payload, bgImgSvgOldObject)
+                    if (existingcoverSvg) {
+                      // If an svg image is found, no mapping needs to be done.
+                      coverSvgImagesIdMap.set(bgImgSvgObject.id, existingcoverSvg.id)
+                    } else {
+                      // Cover SVG not found, it needs to be added.
+                      const newSvgImgFile = new File(
+                        Buffer.from(bgImgSvgOldObject.data, 'base64'),
+                        bgImgSvgOldObject.filename,
+                      )
+                      const bgSvgImageNewObject = await payload.create({
+                        collection: 'cover-image-svgs',
+                        data: {
+                          alt: bgSvgImgOldObject.alt,
+                          svgFocalPoint: bgSvgImgOldObject.svgFocalPoint ?? null,
+                          mimeType: bgSvgImgOldObject.mimeType,
+                          guid: bgSvgImgOldObject.guid ?? null,
+                        },
+                        file: newSvgImgFile,
+                      })
+
+                      coverSvgImagesIdMap.set(bgImgSvgOldObject.id, bgSvgImageNewObject.id)
+                    }
                   }
 
                   const newImgFile = new File(
                     Buffer.from(bgImgOldObject.data, 'base64'),
                     bgImgOldObject.filename,
                   )
-                  console.log({ bgImgOldObject, newImgFile })
                   const bgImgNewObject = await payload.create({
                     collection: 'cover-images',
                     data: {
@@ -139,11 +198,20 @@ const restorePage = async (targetId, targetFilename) => {
                       name: bgImgOldObject.name ?? null,
                       alt: bgImgOldObject.alt,
                       purpose: bgImgOldObject.purpose ?? [],
+                      squareSvg:
+                        bgImgOldObject.squareSvg != null &&
+                        coverImagesMap.has(bgImgOldObject.squareSvg)
+                          ? coverImagesMap.get(bgImgOldObject.squareSvg)
+                          : null,
+                      coverSvg:
+                        bgImgOldObject.coverSvg != null &&
+                        coverImagesMap.has(bgImgOldObject.coverSvg)
+                          ? coverImagesMap.get(bgImgOldObject.coverSvg)
+                          : null,
                       guid: bgImgOldObject.guid ?? null,
                     },
                     file: newImgFile,
                   })
-
                   coverImagesIdMap.set(bgImgOldId.id, bgImgNewObject.id)
                 }
               } else {
@@ -153,27 +221,140 @@ const restorePage = async (targetId, targetFilename) => {
             if (coverImagesIdMap.has(bgImgOldId)) {
               const newImageId = coverImagesIdMap.get(bgImgOldId)
               linkTile.linkTile.backgroundImage = newImageId
-            }
-            else {
-              linkTile.linkTile.backgroundImage = null;
+            } else {
+              linkTile.linkTile.backgroundImage = null
             }
 
-            linkTile.id = null;
-            if(linkTile.linkTile.type == 'custom') {
-              linkTile.linkTile.reference = null;
+            delete linkTile.id
+            if (linkTile.linkTile.type == 'custom') {
+              linkTile.linkTile.reference = null
+            } else if (linkTile.linkTile.type == 'reference') {
+              if (
+                linkTile.linkTile.reference.value &&
+                pageMap.has(linkTile.linkTile.reference.value)
+              ) {
+                const oldPage = pageMap.get(linkTile.linkTile.reference.value)
+                let existingPage = await payload
+                  .findByID({
+                    collection: 'pages',
+                    id: linkTile.linkTile.reference.value,
+                  })
+                  .catch(() => {
+                    return null
+                  })
+
+                if (existingPage && oldPage.slug === existingPage.slug) {
+                  // Existing page exists and has the same slug => consider them equal.
+                } else {
+                  // Existing page does not exist or is not correct.
+                  const candidatePageQuery = await payload.find({
+                    collection: 'pages',
+                    where: {
+                      or: [
+                        {
+                          title: {
+                            equals: oldPage.title,
+                          },
+                        },
+                        {
+                          slug: {
+                            equals: oldPage.slug,
+                          },
+                        },
+                      ],
+                    },
+                  })
+                  if (candidatePageQuery.docs.length > 0) {
+                    // Found a matching page.
+                    linkTile.linkTile.reference.value = candidatePageQuery.docs[0].id
+                  } else {
+                    // Matching page not found, link to itself.
+                    linkTile.linkTile.reference.value = restoreFileToml.page.id
+                  }
+                }
+              } else {
+                // Something is wrong with the saved data. Set to itself.
+                linkTile.linkTile.reference.value = restoreFileToml.page.id
+              }
+            } else if (linkTile.linkTile.type == 'mediaReference') {
+              if (linkTile.linkTile.linkedMedia && mediaMap.has(linkTile.linkTile.linkedMedia)) {
+                const oldMedia = mediaMap.get(linkTile.linkTile.linkedMedia)
+                const candidateNewMedia = await payload.find({
+                  collection: 'media',
+                  where: {
+                    guid: {
+                      equals: oldMedia.guid,
+                    },
+                  },
+                })
+                if (candidateNewMedia.docs.length > 0) {
+                  // Found a matching doc.
+                  linkTile.linkTile.linkedMedia = candidateNewMedia.docs[0].id
+                } else {
+                  // No matching doc found => need to add it.
+                  const newMediaFile = new File(
+                    Buffer.from(oldMedia.data, 'base64'),
+                    oldMedia.filename,
+                  )
+                  const newMediaObject = await payload.create({
+                    collection: 'media',
+                    data: {
+                      filename: oldMedia.filename,
+                      mimeType: oldMedia.mimeType,
+                      alt: oldMedia.alt,
+                      caption: JSON.parse(oldMedia.caption),
+                      guid: oldMedia.guid,
+                    },
+                    file: newMediaFile,
+                  })
+
+                  linkTile.linkTile.linkedMedia = newMediaObject.id
+                }
+              } else {
+                // Something is wrong with the saved data. Set it to a self page reference.
+                linkTile.linkTile.type = 'reference'
+                linkTile.linkTile.reference = {
+                  referenceTo: 'page',
+                  value: restoreFileToml.page.id,
+                }
+              }
             }
-            else if(linkTile.linkTile.type == 'reference') {
-              // TEMP - Link to itself - The resolving of pages is not yet built.
-              linkTile.linkTile.reference.value = restoreFileToml.page.id;
-            }
-            console.log({linkTile: linkTile.linkTile})
             return linkTile
           }),
         )
+
       }
+      return layout
     }),
   )
+  /*
+  const updatedPage = await payload.update({
+    collection: 'pages',
+    id: targetId,
+    data: {
+      layout: layoutNew
+    }
+  })
+   */
+  //console.log(util.inspect(restoreFileToml.page, false, null, true))
+  //console.log(util.inspect(layoutNew, false, null, true))
   //console.log(restoreFileToml.page.layout)
+  /*
+  const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL
+  const API_KEY = process.env.INTEGRATION_API_KEY
+  const req = await fetch(`${baseUrl}/api/pages/${targetId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `users API-Key ${API_KEY}`,
+    },
+    body: JSON.stringify({
+      layout: layoutNew
+    }),
+  })
+  const updatedPage = await req.json()
+  console.log(util.inspect(updatedPage, false, null, true))
+   */
 }
 await restorePage(targetId, targetFilename)
 exit()
