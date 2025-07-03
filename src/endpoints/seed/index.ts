@@ -8,13 +8,8 @@ import { CoverImageSvg } from '@/payload-types'
 // i.e. running `yarn seed` locally instead of using the admin UI within an active app
 // The app is not running to revalidate the pages and so the API routes are not available
 // These error messages can be ignored: `Error hitting revalidate route for...`
-// Next.js revalidation errors are normal when seeding the database without a server running
-// i.e. running `yarn seed` locally instead of using the admin UI within an active app
-// The app is not running to revalidate the pages and so the API routes are not available
-// These error messages can be ignored: `Error hitting revalidate route for...`
 export const seed = async ({
   payload,
-  req,
 }: {
   payload: Payload
   req: PayloadRequest
@@ -189,7 +184,6 @@ export const seed = async ({
 
 export const seedImages = async ({
   payload,
-  req,
 }: {
   payload: Payload
   req: PayloadRequest
@@ -216,11 +210,10 @@ export const seedImages = async ({
   if (defaultSquareSvgList?.docs?.length > 0) {
     defaultSquareSvg = defaultSquareSvgList.docs[0]
   } else {
-
-    const squareSvgBlob = await fetch(`${baseUrl}/static/dpcPodcastGenericLogo_plainSquare.svg`).then((r) =>
-      r.blob(),
-    )
-    const squareSvgBuffer = Buffer.from(await squareSvgBlob.bytes())
+    const squareSvgBlob = await fetch(
+      `${baseUrl}/static/dpcPodcastGenericLogo_plainSquare.svg`,
+    ).then((r) => r.blob())
+    const squareSvgBuffer = Buffer.from(await squareSvgBlob.arrayBuffer())
     defaultSquareSvg = await payload.create({
       collection: 'cover-image-svgs',
       data: {
@@ -250,10 +243,10 @@ export const seedImages = async ({
   if (defaultCardSvgList?.docs?.length > 0) {
     defaultCardSvg = defaultSquareSvgList.docs[0]
   } else {
-    const cardSvgBlob = await fetch(`${baseUrl}/static/dpcPodcastGenericLogo_plainCard.svg`).then((r) =>
+    const cardSvgBlob = await fetch(`${baseUrl}/static/dpcPodcastGenericLogo_plain.svg`).then((r) =>
       r.blob(),
     )
-    const cardSvgBuffer = Buffer.from(await cardSvgBlob.bytes())
+    const cardSvgBuffer = Buffer.from(await cardSvgBlob.arrayBuffer())
     defaultCardSvg = await payload.create({
       collection: 'cover-image-svgs',
       data: {
@@ -272,10 +265,10 @@ export const seedImages = async ({
   }
 
   if (defaultCardSvg !== null && defaultSquareSvg != null) {
-    const cardImageBlob = await fetch(`${baseUrl}/static/dpcPodcastGenericLogo_plainCard.svg`).then((r) =>
-      r.blob(),
+    const cardImageBlob = await fetch(`${baseUrl}/static/dpcPodcastGenericLogo_plain.png`).then(
+      (r) => r.blob(),
     )
-    const cardImageBuffer = Buffer.from(await cardImageBlob.bytes())
+    const cardImageBuffer = Buffer.from(await cardImageBlob.arrayBuffer())
     const defaultCardImage = await payload.create({
       collection: 'cover-images',
       data: {
@@ -300,9 +293,10 @@ export const seedImages = async ({
         defaultCoverImage: defaultCardImage.id,
       },
     })
+    payload.logger.info('Seeded images')
   }
 
-  //let genericLogo = await payload.q
+  return
 }
 
 type SeriesJson = {
@@ -424,10 +418,8 @@ export const seedEpisodes = async ({
       if (ep.vimeoUrl && ep.vimeoUrl.length > 0) {
         videoFormat = 'vimeo'
       }
-      const slug = slugFormat(ep.dateFormatted + '-' + episodeTitle)
-
       try {
-        const episodeCreateResult = await pl.create({
+        await pl.create({
           collection: 'episodes',
           data: {
             title: episodeTitle,
