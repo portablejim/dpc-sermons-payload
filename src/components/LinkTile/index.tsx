@@ -25,7 +25,7 @@ export const LinkTile: React.FC<Props> = props => {
   if (typeof linkTile.backgroundImage !== 'number') {
     ltImg = linkTile.backgroundImage
     if(ltImg) {
-      bgImage = `${process.env.NEXT_PUBLIC_SERVER_URL}/cover-images/${ltImg.filename}`
+      bgImage = `${process.env.NEXT_PUBLIC_SERVER_URL}/upload/cover-images/${ltImg.filename}`
     }
   }
 
