@@ -11,6 +11,9 @@ import { createHash } from 'crypto'
 import { decodeFromBase64 } from 'next/dist/build/webpack/loaders/utils.js'
 import * as util from 'node:util'
 
+const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL
+const API_KEY = process.env.INTEGRATION_API_KEY
+
 let targetId = process.argv[2]
 let targetFilename = process.argv[3]
 
@@ -91,6 +94,23 @@ const findExistingImage = async (payload, bgImgOldObject) => {
   return null
 }
 
+const uploadFile = async (objectType, mimeType, fileName, fileData, fileMetadata) => {
+  const oldMediaBlobResult = await fetch(`data:${mimeType};base64,${fileData}`)
+  const newMediaInput = new FormData()
+  newMediaInput.append('file', await oldMediaBlobResult.blob(), fileName)
+  newMediaInput.append('_payload', JSON.stringify(fileMetadata))
+  const newMediaReq = await fetch(`${baseUrl}/api/media`, {
+    method: 'POST',
+    headers: {
+      Authorization: `users API-Key ${API_KEY}`,
+    },
+    body: newMediaInput,
+  })
+  const newMediaObject = await newMediaReq.json()
+
+  return newMediaObject?.doc ? newMediaObject.doc : null
+}
+
 const restorePage = async (targetId, targetFilename) => {
   const payload = await getPayload({ config })
   const restoreFileStr = fs.readFileSync(targetFilename)
@@ -123,7 +143,7 @@ const restorePage = async (targetId, targetFilename) => {
   let layoutNew = await Promise.all(
     restoreFileToml.page.layout.map(async (layout) => {
       if (layout.blockType === 'linkTileList') {
-        layout.linkTiles =  await Promise.all(
+        layout.linkTiles = await Promise.all(
           layout.linkTiles.map(async (linkTile) => {
             const bgImgOldId = linkTile.linkTile.backgroundImage
             const bgImgOldObject = coverImagesMap.get(bgImgOldId.toString())
@@ -138,64 +158,65 @@ const restorePage = async (targetId, targetFilename) => {
 
                   if (bgImgOldObject.squareSvg) {
                     const bgImgSvgOldObject = cov
-                    const existingSquareSvgId = await findExistingSvgImage(payload, bgImgSvgOldObject)
+                    const existingSquareSvgId = await findExistingSvgImage(
+                      payload,
+                      bgImgSvgOldObject,
+                    )
                     if (existingSquareSvgId) {
                       // If an svg image is found, no mapping needs to be done.
                       coverSvgImagesIdMap.set(bgImgSvgObject.id, existingSquareSvgId)
                     } else {
                       // Square SVG not found, it needs to be added.
-                      const newSvgImgFile = new File(
-                        Buffer.from(bgImgSvgOldObject.data, 'base64'),
-                        bgImgSvgOldObject.filename,
-                      )
-                      const bgSvgImageNewObject = await payload.create({
-                        collection: 'cover-image-svgs',
-                        data: {
+                      const bgSvgImageNewObject = await uploadFile(
+                        'cover-image-svgs',
+                        bgSvgImgOldObject.mimeType,
+                        bgSvgImgOldObject.filename,
+                        bgImgSvgOldObject.data,
+                        {
                           alt: bgSvgImgOldObject.alt,
                           svgFocalPoint: bgSvgImgOldObject.svgFocalPoint ?? null,
                           mimeType: bgSvgImgOldObject.mimeType,
                           guid: bgSvgImgOldObject.guid ?? null,
                         },
-                        file: newSvgImgFile,
-                      })
+                      )
 
                       coverSvgImagesIdMap.set(bgImgSvgOldObject.id, bgSvgImageNewObject.id)
                     }
                   }
                   if (bgImgOldObject.coverSvg) {
                     const bgImgSvgOldObject = cov
-                    const existingcoverSvgId = await findExistingSvgImage(payload, bgImgSvgOldObject)
+                    const existingcoverSvgId = await findExistingSvgImage(
+                      payload,
+                      bgImgSvgOldObject,
+                    )
                     if (existingcoverSvgId) {
                       // If an svg image is found, no mapping needs to be done.
                       coverSvgImagesIdMap.set(bgImgSvgObject.id, existingcoverSvgId)
                     } else {
                       // Cover SVG not found, it needs to be added.
-                      const newSvgImgFile = new File(
-                        Buffer.from(bgImgSvgOldObject.data, 'base64'),
-                        bgImgSvgOldObject.filename,
-                      )
-                      const bgSvgImageNewObject = await payload.create({
-                        collection: 'cover-image-svgs',
-                        data: {
+                      const bgSvgImageNewObject = await uploadFile(
+                        'cover-image-svgs',
+                        bgSvgImgOldObject.mimeType,
+                        bgSvgImgOldObject.filename,
+                        bgImgSvgOldObject.data,
+                        {
                           alt: bgSvgImgOldObject.alt,
                           svgFocalPoint: bgSvgImgOldObject.svgFocalPoint ?? null,
                           mimeType: bgSvgImgOldObject.mimeType,
                           guid: bgSvgImgOldObject.guid ?? null,
                         },
-                        file: newSvgImgFile,
-                      })
+                      )
 
                       coverSvgImagesIdMap.set(bgImgSvgOldObject.id, bgSvgImageNewObject.id)
                     }
                   }
 
-                  const newImgFile = new File(
-                    Buffer.from(bgImgOldObject.data, 'base64'),
+                  const bgImgNewObject = await uploadFile(
+                    'cover-images',
+                    bgImgOldObject.mimeType,
                     bgImgOldObject.filename,
-                  )
-                  const bgImgNewObject = await payload.create({
-                    collection: 'cover-images',
-                    data: {
+                    bgImgOldObject.data,
+                    {
                       mimeType: bgImgOldObject.mimeType,
                       name: bgImgOldObject.name ?? null,
                       alt: bgImgOldObject.alt,
@@ -212,8 +233,8 @@ const restorePage = async (targetId, targetFilename) => {
                           : null,
                       guid: bgImgOldObject.guid ?? null,
                     },
-                    file: newImgFile,
-                  })
+                  )
+
                   coverImagesIdMap.set(bgImgOldId.id, bgImgNewObject.id)
                 }
               } else {
@@ -281,7 +302,10 @@ const restorePage = async (targetId, targetFilename) => {
                 linkTile.linkTile.reference.value = restoreFileToml.page.id
               }
             } else if (linkTile.linkTile.type == 'mediaReference') {
-              if (linkTile.linkTile.linkedMedia && mediaMap.has(linkTile.linkTile.linkedMedia.toString())) {
+              if (
+                linkTile.linkTile.linkedMedia &&
+                mediaMap.has(linkTile.linkTile.linkedMedia.toString())
+              ) {
                 const oldMedia = mediaMap.get(linkTile.linkTile.linkedMedia.toString())
                 const candidateNewMedia = await payload.find({
                   collection: 'media',
@@ -296,23 +320,23 @@ const restorePage = async (targetId, targetFilename) => {
                   linkTile.linkTile.linkedMedia = candidateNewMedia.docs[0].id
                 } else {
                   // No matching doc found => need to add it.
-                  const newMediaFile = new File(
-                    Buffer.from(oldMedia.data, 'base64'),
+                  const newMediaObject = await uploadFile(
+                    'media',
+                    oldMedia.mimeType,
                     oldMedia.filename,
-                  )
-                  const newMediaObject = await payload.create({
-                    collection: 'media',
-                    data: {
+                    oldMedia.data,
+                    {
                       filename: oldMedia.filename,
                       mimeType: oldMedia.mimeType,
                       alt: oldMedia.alt,
+                      length: newMediaFile.size,
                       caption: JSON.parse(oldMedia.caption),
                       guid: oldMedia.guid,
                     },
-                    file: newMediaFile,
-                  })
-
-                  linkTile.linkTile.linkedMedia = newMediaObject.id
+                  )
+                  if (newMediaObject?.id) {
+                    linkTile.linkTile.linkedMedia = newMediaObject.doc.id
+                  }
                 }
               } else {
                 // Something is wrong with the saved data. Set it to a self page reference.
@@ -326,13 +350,10 @@ const restorePage = async (targetId, targetFilename) => {
             return linkTile
           }),
         )
-
       }
       return layout
     }),
   )
-  const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL
-  const API_KEY = process.env.INTEGRATION_API_KEY
   const req = await fetch(`${baseUrl}/api/pages/${targetId}`, {
     method: 'PATCH',
     headers: {
@@ -340,7 +361,7 @@ const restorePage = async (targetId, targetFilename) => {
       Authorization: `users API-Key ${API_KEY}`,
     },
     body: JSON.stringify({
-      layout: layoutNew
+      layout: layoutNew,
     }),
   })
   const updatedPage = await req.json()
