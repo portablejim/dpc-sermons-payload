@@ -2,6 +2,7 @@ import fs, { readFileSync } from 'fs'
 import path from 'path'
 import { type Payload, type PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
+import { CoverImageSvg } from '@/payload-types'
 
 // Next.js revalidation errors are normal when seeding the database without a server running
 // i.e. running `yarn seed` locally instead of using the admin UI within an active app
@@ -184,6 +185,124 @@ export const seed = async ({
       payload.logger.info(err)
     }
   })
+}
+
+export const seedImages = async ({
+  payload,
+  req,
+}: {
+  payload: Payload
+  req: PayloadRequest
+}): Promise<void> => {
+  payload.logger.info('Seeding images...')
+
+  const globalDefaults = await payload.findGlobal({
+    slug: 'defaults',
+  })
+  if (globalDefaults.defaultCoverImage) {
+    payload.logger.info('Images already seeded.')
+  }
+  const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL!
+
+  const defaultSquareSvgList = await payload.find({
+    collection: 'cover-image-svgs',
+    where: {
+      guid: {
+        equals: '2f1b26ba-e4d6-450d-ae59-88441d2cae02',
+      },
+    },
+  })
+  let defaultSquareSvg: CoverImageSvg | null = null
+  if (defaultSquareSvgList?.docs?.length > 0) {
+    defaultSquareSvg = defaultSquareSvgList.docs[0]
+  } else {
+
+    const squareSvgBlob = await fetch(`${baseUrl}/static/dpcPodcastGenericLogo_plainSquare.svg`).then((r) =>
+      r.blob(),
+    )
+    const squareSvgBuffer = Buffer.from(await squareSvgBlob.bytes())
+    defaultSquareSvg = await payload.create({
+      collection: 'cover-image-svgs',
+      data: {
+        alt: 'DPC Sermons Generic Logo Square',
+        svgFocalPoint: 'center-center',
+        filename: 'dpcPodcastGenericLogo_plainSquare.svg',
+        guid: '2f1b26ba-e4d6-450d-ae59-88441d2cae02',
+      },
+      file: {
+        data: squareSvgBuffer,
+        mimetype: 'image/svg+xml',
+        name: 'dpcPodcastGenericLogo_plainSquare.svg',
+        size: squareSvgBlob.size,
+      },
+    })
+  }
+
+  const defaultCardSvgList = await payload.find({
+    collection: 'cover-image-svgs',
+    where: {
+      guid: {
+        equals: '4ffd2f86-ad90-4285-905a-0faee51d4c5b',
+      },
+    },
+  })
+  let defaultCardSvg: CoverImageSvg | null = null
+  if (defaultCardSvgList?.docs?.length > 0) {
+    defaultCardSvg = defaultSquareSvgList.docs[0]
+  } else {
+    const cardSvgBlob = await fetch(`${baseUrl}/static/dpcPodcastGenericLogo_plainCard.svg`).then((r) =>
+      r.blob(),
+    )
+    const cardSvgBuffer = Buffer.from(await cardSvgBlob.bytes())
+    defaultCardSvg = await payload.create({
+      collection: 'cover-image-svgs',
+      data: {
+        alt: 'DPC Sermons Generic Logo',
+        svgFocalPoint: 'center-center',
+        filename: 'dpcPodcastGenericLogo_plain.svg',
+        guid: '4ffd2f86-ad90-4285-905a-0faee51d4c5b',
+      },
+      file: {
+        data: cardSvgBuffer,
+        mimetype: 'image/svg+xml',
+        name: 'dpcPodcastGenericLogo_plainCard.svg',
+        size: cardSvgBlob.size,
+      },
+    })
+  }
+
+  if (defaultCardSvg !== null && defaultSquareSvg != null) {
+    const cardImageBlob = await fetch(`${baseUrl}/static/dpcPodcastGenericLogo_plainCard.svg`).then((r) =>
+      r.blob(),
+    )
+    const cardImageBuffer = Buffer.from(await cardImageBlob.bytes())
+    const defaultCardImage = await payload.create({
+      collection: 'cover-images',
+      data: {
+        name: 'DPC Sermons (generic logo)',
+        alt: 'DPC Sermons (generic logo)',
+        purpose: ['hub-image', 'series-image', 'other'],
+        squareSvg: defaultSquareSvg.id,
+        cardSvg: defaultCardSvg.id,
+        filename: 'dpcPodcastGenericLogo.png',
+        guid: '4ffd2f86-ad90-4285-905a-0faee51d4c5b',
+      },
+      file: {
+        data: cardImageBuffer,
+        mimetype: 'image/png',
+        name: 'dpcPodcastGenericLogo.png',
+        size: cardImageBlob.size,
+      },
+    })
+    await payload.updateGlobal({
+      slug: 'defaults',
+      data: {
+        defaultCoverImage: defaultCardImage.id,
+      },
+    })
+  }
+
+  //let genericLogo = await payload.q
 }
 
 type SeriesJson = {

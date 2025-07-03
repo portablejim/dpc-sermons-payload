@@ -43,6 +43,7 @@ import { beforeSyncWithSearch } from '@/search/beforeSync'
 import { seedHandlerEpisodes } from './endpoints/seedHandlerEpisodes'
 import { CoverImageSvgs } from './collections/CoverImageSvgs'
 import { Defaults } from '@/Defaults/config'
+import { seedHandlerImages } from '@/endpoints/seedHandlerImages'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -149,6 +150,11 @@ export default buildConfig({
       handler: seedHandler,
       method: 'get',
       path: '/seed',
+    },
+    {
+      handler: seedHandlerImages,
+      method: 'get',
+      path: '/seedImages',
     },
     {
       handler: seedHandlerEpisodes,
