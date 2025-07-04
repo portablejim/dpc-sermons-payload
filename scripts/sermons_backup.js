@@ -166,7 +166,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
 
   coverImageList.docs.forEach((coverImageInstance) => {
     try {
-      let filePath = 'public/cover-images/' + coverImageInstance.filename
+      let filePath = 'public/upload/cover-images/' + coverImageInstance.filename
       let fileData = readFileSync(filePath)
 
       if (coverImageInstance.squareSvg) {
@@ -214,7 +214,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
       : { docs: [], totalDocs: 0 }
   coverImageSvgList.docs.forEach((coverImageSvgInstance) => {
     try {
-      let filePath = 'public/cover-image-svg/' + coverImageSvgInstance.filename
+      let filePath = 'public/upload/cover-image-svg/' + coverImageSvgInstance.filename
       let fileData = readFileSync(filePath)
       let fileHash = createHash('sha1').update(fileData).digest('hex')
       let fileMeta = {
