@@ -93,6 +93,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
     episodeMap.set(episodeInstance.id, episodeInstance)
   })
 
+  console.log(`Getting ${audioFileSet.size} audio files`)
   let talkAudioList =
     audioFileSet.size > 0
       ? await payload.find({
@@ -128,6 +129,7 @@ const backupSermons = async (seriesListString, targetFilename) => {
             }
             audioFileMap.set(talkAudioInstance.id, fileMeta)
           } catch (e) {
+            console.error(e)
             audioFileMap.set(talkAudioInstance.id, {
               fileValid: false,
               filename: talkAudioInstance.filename,
