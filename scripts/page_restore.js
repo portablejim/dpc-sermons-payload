@@ -184,7 +184,7 @@ const restorePage = async (targetId, targetFilename) => {
                   coverSvgImagesIdMap.set(bgImgSvgOldObject.id, bgSvgImageNewObject.id)
                 }
               }
-              if (bgImgOldObject.coverSvg) {
+              if (bgImgOldObject.cardSvg) {
                 const bgImgSvgOldObject = cov
                 const existingcoverSvgId = await findExistingSvgImage(
                   payload,
@@ -227,10 +227,10 @@ const restorePage = async (targetId, targetFilename) => {
                     coverImagesMap.has(bgImgOldObject.squareSvg.toString())
                       ? coverImagesMap.get(bgImgOldObject.squareSvg.toString())
                       : null,
-                  coverSvg:
-                    bgImgOldObject.coverSvg != null &&
-                    coverImagesMap.has(bgImgOldObject.coverSvg.toString())
-                      ? coverImagesMap.get(bgImgOldObject.coverSvg.toString())
+                  cardSvg:
+                    bgImgOldObject.cardSvg != null &&
+                    coverImagesMap.has(bgImgOldObject.cardSvg.toString())
+                      ? coverImagesMap.get(bgImgOldObject.cardSvg.toString())
                       : null,
                   guid: bgImgOldObject.guid,
                 },
