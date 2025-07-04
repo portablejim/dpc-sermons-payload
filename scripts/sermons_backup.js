@@ -2,16 +2,24 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { exit } from 'process'
 import { spawn, execFile, execFileSync } from 'child_process'
+import sqlite from 'node:sqlite'
 
 // Running: pnpm run payload run scripts/sermon_backup.js -- -1 sermons.toml
 
 import TOML from '@iarna/toml'
 import { readFileSync, writeFileSync } from 'fs'
 import { createHash } from 'crypto'
+import { unlinkSync } from 'node:fs'
 
 let seriesListString = process.argv[2]
 let targetFilename = process.argv[3]
 
+/**
+ *
+ * @param {string} seriesListString Series List to use.
+ * @param {string} targetFilename Filename to output.
+ * @returns {Promise<void>}
+ */
 const backupSermons = async (seriesListString, targetFilename) => {
   const payload = await getPayload({ config })
 
@@ -27,6 +35,72 @@ const backupSermons = async (seriesListString, targetFilename) => {
   let seriesSet = new Set()
   let audioFileSet = new Set()
   let speakerSet = new Set()
+
+  const dbFilename = targetFilename.replace('.toml', '.sqlite')
+  unlinkSync(dbFilename)
+  const database = new sqlite.DatabaseSync(dbFilename)
+
+  database.exec(`
+    CREATE TABLE imageSvg
+    (
+      id       INTEGER PRIMARY KEY,
+      filename TEXT,
+      metadata TEXT,
+      data     BLOB,
+      guid     TEXT
+    ) STRICT
+  `)
+  database.exec(`
+    CREATE TABLE image
+    (
+      id        INTEGER PRIMARY KEY,
+      filename  TEXT,
+      squareSvg INTEGER,
+      coverSvg  INTEGER,
+      metadata  TEXT,
+      data      BLOB,
+      guid      TEXT
+    ) STRICT
+  `)
+  database.exec(`
+    CREATE TABLE audiofile
+    (
+      id       INTEGER PRIMARY KEY,
+      filename TEXT,
+      metadata TEXT,
+      data     BLOB,
+      guid     TEXT
+    ) STRICT
+  `)
+  database.exec(`
+    CREATE TABLE speaker
+    (
+      id   INTEGER PRIMARY KEY,
+      name TEXT,
+      guid TEXT
+    ) STRICT
+  `)
+  database.exec(`
+    CREATE TABLE series
+    (
+      id          INTEGER PRIMARY KEY,
+      title       TEXT,
+      metadata    TEXT,
+      seriesImage INTEGER,
+      guid        TEXT
+    ) STRICT
+  `)
+  database.exec(`
+    CREATE TABLE episode
+    (
+      id                INTEGER PRIMARY KEY,
+      title             TEXT,
+      series            INTEGER,
+      uploadedAudioFile INTEGER,
+      metadata          TEXT,
+      guid              TEXT
+    ) STRICT
+  `)
 
   let seriesList = null
   if (['all', '-1'].includes(seriesListString)) {
@@ -56,6 +130,9 @@ const backupSermons = async (seriesListString, targetFilename) => {
     showHiddenFields: true,
   })
 
+  const seriesInsert = database.prepare(
+    'INSERT INTO series (id, title, metadata, seriesImage, guid) VALUES (?,?,?,?,?)',
+  )
   seriesList.docs.forEach((seriesInstance) => {
     if (seriesInstance.seriesImage) {
       imageSet.add(seriesInstance.seriesImage)
@@ -63,6 +140,14 @@ const backupSermons = async (seriesListString, targetFilename) => {
     seriesSet.add(seriesInstance.id)
     seriesInstance.episodes = null
     seriesMap.set(seriesInstance.id, seriesInstance)
+
+    seriesInsert.run(
+      seriesInstance.id,
+      seriesInstance.title,
+      JSON.stringify(seriesInstance),
+      seriesInstance.seriesImage,
+      seriesInstance.guid,
+    )
   })
 
   let episodeList =
@@ -80,6 +165,12 @@ const backupSermons = async (seriesListString, targetFilename) => {
         })
       : { docs: [], totalDocs: 0 }
 
+  const episodeInsert = database.prepare(
+    'INSERT INTO episode (id, title, series, uploadedAudioFile, metadata, guid) VALUES (?,?,?,?,?,?)',
+  )
+  /**
+   * @param {Episode} episodeInstance
+   */
   episodeList.docs.forEach((episodeInstance) => {
     if (episodeInstance.episodeImage) {
       imageSet.add(episodeInstance.episodeImage)
@@ -91,6 +182,14 @@ const backupSermons = async (seriesListString, targetFilename) => {
       speakerSet.add(episodeInstance.speaker)
     }
     episodeMap.set(episodeInstance.id, episodeInstance)
+    episodeInsert.run(
+      episodeInstance.id,
+      episodeInstance.title,
+      episodeInstance.series,
+      episodeInstance.uploadedAudioFile,
+      JSON.stringify(episodeInstance),
+      episodeInstance.guid,
+    )
   })
 
   console.log(`Getting ${audioFileSet.size} audio files`)
@@ -108,6 +207,9 @@ const backupSermons = async (seriesListString, targetFilename) => {
           showHiddenFields: true,
         })
       : { docs: [], totalDocs: 0 }
+  const talkAudioInsert = database.prepare(
+    'INSERT INTO audiofile (id, filename, metadata, data, guid) VALUES (?,?,?,?,?)',
+  )
   talkAudioList.docs.forEach((talkAudioInstance) => {
     try {
       let filePath = 'public/upload/talkaudio/' + talkAudioInstance.filename
@@ -128,7 +230,14 @@ const backupSermons = async (seriesListString, targetFilename) => {
         hash: fileHash,
         guid: talkAudioInstance.guid,
       }
-      audioFileMap.set(talkAudioInstance.id, fileMeta)
+      audioFileMap.set(talkAudioInstance.id, Object.assign({}, fileMeta))
+      talkAudioInsert.run(
+        talkAudioInstance.id,
+        talkAudioInstance.filename,
+        JSON.stringify(fileMeta),
+        fileData,
+        talkAudioInstance.guid,
+      )
     } catch (e) {
       console.error(e)
       audioFileMap.set(talkAudioInstance.id, {
@@ -148,8 +257,10 @@ const backupSermons = async (seriesListString, targetFilename) => {
       },
     },
   })
+  const speakerInsert = database.prepare('INSERT INTO speaker (id, name, guid) VALUES (?,?,?)')
   speakerList.docs.forEach((speakerInstance) => {
     speakerMap.set(speakerInstance.id, speakerInstance)
+    speakerInsert.run(speakerInstance.id, speakerInstance.name, speakerInstance.guid)
   })
 
   let coverImageList =
@@ -167,6 +278,9 @@ const backupSermons = async (seriesListString, targetFilename) => {
         })
       : { docs: [], totalDocs: 0 }
 
+  const coverImageInsert = database.prepare(
+    'INSERT INTO image (id, filename, squareSvg, coverSvg, metadata, data, guid) VALUES (?,?,?,?,?,?,?)',
+  )
   coverImageList.docs.forEach((coverImageInstance) => {
     try {
       let filePath = 'public/upload/cover-images/' + coverImageInstance.filename
@@ -178,23 +292,38 @@ const backupSermons = async (seriesListString, targetFilename) => {
       if (coverImageInstance.cardSvg) {
         imageSvgSet.add(coverImageInstance.cardSvg)
       }
-      imageSvgMap.set(coverImageInstance.id, coverImageInstance)
 
       let fileHash = createHash('sha1').update(fileData).digest('hex')
       let fileMeta = {
         id: coverImageInstance.id,
+        name: coverImageInstance.name,
+        alt: coverImageInstance.alt,
+        purpose: coverImageInstance.purpose,
         filename: coverImageInstance.filename,
         mimeType: coverImageInstance.mimeType,
+        width: coverImageInstance.width,
+        height: coverImageInstance.height,
+        squareSvg: coverImageInstance.squareSvg,
+        cardSvg: coverImageInstance.cardSvg,
         focusX: coverImageInstance.focusX,
         focusY: coverImageInstance.focusY,
-        alt: coverImageInstance.alt,
-        caption: coverImageInstance.caption,
         data: fileData.toString('base64'),
         hash: fileHash,
         guid: coverImageInstance.guid,
       }
-      imageMap.set(coverImageInstance.id, fileMeta)
+      imageMap.set(coverImageInstance.id, Object.assign({}, fileMeta))
+      delete fileMeta.data
+      coverImageInsert.run(
+        coverImageInstance.id,
+        coverImageInstance.filename,
+        coverImageInstance.squareSvg,
+        coverImageInstance.cardSvg,
+        JSON.stringify(coverImageInstance),
+        fileData,
+        coverImageInstance.guid,
+      )
     } catch (e) {
+      console.error(e)
       imageMap.set(coverImageInstance.id, {
         fileValid: false,
         filename: coverImageInstance.filename,
@@ -213,8 +342,12 @@ const backupSermons = async (seriesListString, targetFilename) => {
               in: Array.from(imageSvgSet).join(','),
             },
           },
+          showHiddenFields: true,
         })
       : { docs: [], totalDocs: 0 }
+  const coverImageSvgInsert = database.prepare(
+    'INSERT INTO imageSvg (id, filename, metadata, data, guid) VALUES (?,?,?,?,?)',
+  )
   coverImageSvgList.docs.forEach((coverImageSvgInstance) => {
     try {
       let filePath = 'public/upload/cover-image-svg/' + coverImageSvgInstance.filename
@@ -223,15 +356,26 @@ const backupSermons = async (seriesListString, targetFilename) => {
       let fileMeta = {
         id: coverImageSvgInstance.id,
         alt: coverImageSvgInstance.alt,
-        svgFocusPoint: coverImageSvgInstance.svgFocusPoint,
+        svgFocalPoint: coverImageSvgInstance.svgFocalPoint,
         filename: coverImageSvgInstance.filename,
         mimeType: coverImageSvgInstance.mimeType,
+        width: coverImageSvgInstance.width,
+        height: coverImageSvgInstance.height,
         data: fileData.toString('base64'),
         hash: fileHash,
         guid: coverImageSvgInstance.guid,
       }
-      imageSvgMap.set(coverImageSvgInstance.id, coverImageSvgInstance)
+      imageSvgMap.set(coverImageSvgInstance.id, Object.assign({}, fileMeta))
+      delete fileMeta.data
+      coverImageSvgInsert.run(
+        coverImageSvgInstance.id,
+        coverImageSvgInstance.filename,
+        JSON.stringify(fileMeta),
+        fileData,
+        coverImageSvgInstance.guid ?? null,
+      )
     } catch (e) {
+      console.error(e)
       imageSvgMap.set(coverImageSvgInstance.id, {
         fileValid: false,
         filename: coverImageSvgInstance.filename,
