@@ -107,35 +107,36 @@ const backupSermons = async (seriesListString, targetFilename) => {
           },
           showHiddenFields: true,
         })
-      : talkAudioList.docs.forEach((talkAudioInstance) => {
-          try {
-            let filePath = 'public/upload/talkaudio/' + talkAudioInstance.filename
-            let fileData = readFileSync(filePath)
-            let fileHash = createHash('sha1').update(fileData).digest('hex')
-            let fileMeta = {
-              fileValid: true,
-              id: talkAudioInstance.id,
-              originalFilename: talkAudioInstance.originalFilename,
-              alt: talkAudioInstance.alt,
-              uploadedQuality: talkAudioInstance.uploadedQuality,
-              lengthDisplay: talkAudioInstance.lengthDisplay,
-              status: talkAudioInstance.status,
-              guid: talkAudioInstance.guid,
-              filename: talkAudioInstance.filename,
-              mimeType: talkAudioInstance.mimeType,
-              data: fileData.toString('base64'),
-              hash: fileHash,
-              guid: talkAudioInstance.guid,
-            }
-            audioFileMap.set(talkAudioInstance.id, fileMeta)
-          } catch (e) {
-            console.error(e)
-            audioFileMap.set(talkAudioInstance.id, {
-              fileValid: false,
-              filename: talkAudioInstance.filename,
-            })
-          }
-        })
+      : { docs: [], totalDocs: 0 }
+  talkAudioList.docs.forEach((talkAudioInstance) => {
+    try {
+      let filePath = 'public/upload/talkaudio/' + talkAudioInstance.filename
+      let fileData = readFileSync(filePath)
+      let fileHash = createHash('sha1').update(fileData).digest('hex')
+      let fileMeta = {
+        fileValid: true,
+        id: talkAudioInstance.id,
+        originalFilename: talkAudioInstance.originalFilename,
+        alt: talkAudioInstance.alt,
+        uploadedQuality: talkAudioInstance.uploadedQuality,
+        lengthDisplay: talkAudioInstance.lengthDisplay,
+        status: talkAudioInstance.status,
+        guid: talkAudioInstance.guid,
+        filename: talkAudioInstance.filename,
+        mimeType: talkAudioInstance.mimeType,
+        data: fileData.toString('base64'),
+        hash: fileHash,
+        guid: talkAudioInstance.guid,
+      }
+      audioFileMap.set(talkAudioInstance.id, fileMeta)
+    } catch (e) {
+      console.error(e)
+      audioFileMap.set(talkAudioInstance.id, {
+        fileValid: false,
+        filename: talkAudioInstance.filename,
+      })
+    }
+  })
 
   let speakerList = await payload.find({
     collection: 'speakers',
