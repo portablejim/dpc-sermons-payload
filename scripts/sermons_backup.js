@@ -1,13 +1,11 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { exit } from 'process'
-import { spawn, execFile, execFileSync } from 'child_process'
 import sqlite from 'node:sqlite'
 
-// Running: pnpm run payload run scripts/sermon_backup.js -- -1 sermons.toml
+// Running: pnpm run payload run scripts/sermon_backup.js -- -1 sermons.sqlite
 
-import TOML from '@iarna/toml'
-import { readFileSync, writeFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import { createHash } from 'crypto'
 import { unlinkSync } from 'node:fs'
 
@@ -22,13 +20,6 @@ let targetFilename = process.argv[3]
  */
 const backupSermons = async (seriesListString, targetFilename) => {
   const payload = await getPayload({ config })
-
-  let imageMap = new Map()
-  let imageSvgMap = new Map()
-  let seriesMap = new Map()
-  let episodeMap = new Map()
-  let audioFileMap = new Map()
-  let speakerMap = new Map()
 
   let imageSet = new Set()
   let imageSvgSet = new Set()
@@ -139,7 +130,6 @@ const backupSermons = async (seriesListString, targetFilename) => {
     }
     seriesSet.add(seriesInstance.id)
     seriesInstance.episodes = null
-    seriesMap.set(seriesInstance.id, seriesInstance)
 
     seriesInsert.run(
       seriesInstance.id,
@@ -181,7 +171,6 @@ const backupSermons = async (seriesListString, targetFilename) => {
     if (episodeInstance.speaker) {
       speakerSet.add(episodeInstance.speaker)
     }
-    episodeMap.set(episodeInstance.id, episodeInstance)
     episodeInsert.run(
       episodeInstance.id,
       episodeInstance.title,
@@ -226,11 +215,9 @@ const backupSermons = async (seriesListString, targetFilename) => {
         guid: talkAudioInstance.guid,
         filename: talkAudioInstance.filename,
         mimeType: talkAudioInstance.mimeType,
-        data: fileData.toString('base64'),
         hash: fileHash,
         guid: talkAudioInstance.guid,
       }
-      audioFileMap.set(talkAudioInstance.id, Object.assign({}, fileMeta))
       talkAudioInsert.run(
         talkAudioInstance.id,
         talkAudioInstance.filename,
@@ -240,10 +227,6 @@ const backupSermons = async (seriesListString, targetFilename) => {
       )
     } catch (e) {
       console.error(e)
-      audioFileMap.set(talkAudioInstance.id, {
-        fileValid: false,
-        filename: talkAudioInstance.filename,
-      })
     }
   })
 
@@ -259,7 +242,6 @@ const backupSermons = async (seriesListString, targetFilename) => {
   })
   const speakerInsert = database.prepare('INSERT INTO speaker (id, name, guid) VALUES (?,?,?)')
   speakerList.docs.forEach((speakerInstance) => {
-    speakerMap.set(speakerInstance.id, speakerInstance)
     speakerInsert.run(speakerInstance.id, speakerInstance.name, speakerInstance.guid)
   })
 
@@ -307,27 +289,20 @@ const backupSermons = async (seriesListString, targetFilename) => {
         cardSvg: coverImageInstance.cardSvg,
         focusX: coverImageInstance.focusX,
         focusY: coverImageInstance.focusY,
-        data: fileData.toString('base64'),
         hash: fileHash,
         guid: coverImageInstance.guid,
       }
-      imageMap.set(coverImageInstance.id, Object.assign({}, fileMeta))
-      delete fileMeta.data
       coverImageInsert.run(
         coverImageInstance.id,
         coverImageInstance.filename,
         coverImageInstance.squareSvg,
         coverImageInstance.cardSvg,
-        JSON.stringify(coverImageInstance),
+        JSON.stringify(fileMeta),
         fileData,
         coverImageInstance.guid,
       )
     } catch (e) {
       console.error(e)
-      imageMap.set(coverImageInstance.id, {
-        fileValid: false,
-        filename: coverImageInstance.filename,
-      })
     }
   })
 
@@ -361,12 +336,9 @@ const backupSermons = async (seriesListString, targetFilename) => {
         mimeType: coverImageSvgInstance.mimeType,
         width: coverImageSvgInstance.width,
         height: coverImageSvgInstance.height,
-        data: fileData.toString('base64'),
         hash: fileHash,
         guid: coverImageSvgInstance.guid,
       }
-      imageSvgMap.set(coverImageSvgInstance.id, Object.assign({}, fileMeta))
-      delete fileMeta.data
       coverImageSvgInsert.run(
         coverImageSvgInstance.id,
         coverImageSvgInstance.filename,
@@ -376,25 +348,8 @@ const backupSermons = async (seriesListString, targetFilename) => {
       )
     } catch (e) {
       console.error(e)
-      imageSvgMap.set(coverImageSvgInstance.id, {
-        fileValid: false,
-        filename: coverImageSvgInstance.filename,
-      })
     }
   })
-
-  let outputObj = {
-    images: Object.fromEntries(imageMap),
-    imageSvgs: Object.fromEntries(imageSvgMap),
-    series: Object.fromEntries(seriesMap),
-    episodes: Object.fromEntries(episodeMap),
-    audioFiles: Object.fromEntries(audioFileMap),
-    speakers: Object.fromEntries(speakerMap),
-  }
-
-  let outputStr = TOML.stringify(outputObj)
-
-  writeFileSync(targetFilename, outputStr)
 
   return
 }
