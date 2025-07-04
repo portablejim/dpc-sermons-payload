@@ -24,7 +24,7 @@ export const fetchEpisodeMetadata = async (
   tempDir: string,
 ): Promise<EpisodeMetadata | null> => {
   if (
-    ep.audioFormat == 'linked' &&
+    ep.audioFormat === 'linked' &&
     ((ep.linkedAudioFiletype &&
       ep.linkedAudioFiletype.length > 1 &&
       ep.linkedAudioFileSize &&
@@ -33,25 +33,11 @@ export const fetchEpisodeMetadata = async (
       ep.linkedAudioLength > 0) ||
       !isValidHttpUrl(ep.linkedAudioUrl))
   ) {
-    if (
-      ep.hasValidMedia == false &&
-      ep.linkedAudioFiletype &&
-      ep.linkedAudioFiletype.length > 1 &&
-      ep.linkedAudioFileSize &&
-      ep.linkedAudioFileSize > 0 &&
-      ep.linkedAudioLength &&
-      ep.linkedAudioLength > 0
-    ) {
-      return {
-        fileType: ep.linkedAudioFiletype,
-        fileSize: ep.linkedAudioFileSize,
-        audioLength: ep.linkedAudioLength,
-      }
-    }
+    // Just return null to stop an update when it is already set.
     return null
   }
 
-  if (ep.linkedAudioUrl !== null && ep.linkedAudioUrl !== undefined) {
+  if (ep.audioFormat == 'linked' && ep.linkedAudioUrl !== null && ep.linkedAudioUrl !== undefined) {
     const audioDataResponse = await fetch(ep.linkedAudioUrl)
     if (!audioDataResponse.ok) {
       console.log('Response not ok')
@@ -88,7 +74,7 @@ export const fetchEpisodeMetadata = async (
       })
       const fileTypeParts = formatOutput.toString('utf-8').split(' ')
       const fileType =
-        fileTypeParts.length > 0 ? fileTypeParts[fileTypeParts.length - 1] : fileTypeParts[0]
+        fileTypeParts.length > 0 ? fileTypeParts[fileTypeParts.length - 1].trim() : fileTypeParts[0].trim()
       const fileSize = audioData.byteLength
       let audioLength = 0
       const lengthOutputStr = lengthOutput.toString('utf8')
@@ -110,7 +96,6 @@ export const fetchEpisodeMetadata = async (
       fs.unlink(audioDataPath, () => {})
     }
   }
-  //return { fileType: ep.linkedAudioFiletype ?? null, fileSize: ep.linkedAudioFileSize ?? null, audioLength: ep.linkedAudioLength ?? null}
   return null
 }
 // Revalidate the post in the background, so the user doesn't have to wait
@@ -173,6 +158,7 @@ export const processEpisodesRaw = (payload: BasePayload) => {
 export const processEpisode: AfterChangeHook = (inputArgs) => {
   const doc = inputArgs.doc
   const payload = inputArgs.req.payload
+  console.log({op: inputArgs.operation})
   if (doc.hasValidMedia === false && doc.linkedAudioUrl && doc.linkedAudioUrl?.length > 1) {
     payload.logger.debug('Validating metadata')
     const tempDir = os.tmpdir()
