@@ -158,7 +158,6 @@ export const processEpisodesRaw = (payload: BasePayload) => {
 export const processEpisode: AfterChangeHook = (inputArgs) => {
   const doc = inputArgs.doc
   const payload = inputArgs.req.payload
-  console.log({op: inputArgs.operation})
   if (doc.hasValidMedia === false && doc.linkedAudioUrl && doc.linkedAudioUrl?.length > 1) {
     payload.logger.debug('Validating metadata')
     const tempDir = os.tmpdir()

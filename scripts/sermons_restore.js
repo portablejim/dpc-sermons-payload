@@ -481,6 +481,7 @@ const restoreSermons = async (targetFilename) => {
         videoFormat: fileMeta.videoFormat,
         videoUrl: fileMeta.videoUrl,
         guid: fileMeta.guid,
+        _status: fileMeta._status,
       }
 
       const req = await fetch(`${baseUrl}/api/episodes`, {
