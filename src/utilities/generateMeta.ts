@@ -82,9 +82,9 @@ export const generateEpisodeMeta = async (args: { doc: Episode }): Promise<Metad
   const title = doc?.fullTitle
 
   return {
-    description: doc.fullTitle,
+    description: doc?.fullTitle || '',
     openGraph: mergeOpenGraph({
-      description: doc.fullTitle || '',
+      description: doc?.fullTitle || '',
       images: ogImage
         ? [
             {
