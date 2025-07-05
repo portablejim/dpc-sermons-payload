@@ -206,6 +206,7 @@ export async function GET(
       await payload
     ).find({
       collection: 'episodes',
+      draft: false,
       where: {
         and: [
           {

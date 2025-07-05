@@ -17,16 +17,5 @@ export const updateValidMedia: CollectionBeforeChangeHook = ({ data, req: { payl
     else {
     }
   }
-  console.log({tests: [
-      dataObject?.audioFormat === "linked",
-      !!dataObject?.linkedAudioUrl,
-      dataObject?.linkedAudioUrl && dataObject?.linkedAudioUrl.length > 0,
-      dataObject?.linkedAudioFiletype
-      && dataObject?.linkedAudioFiletype.length > 1,
-      dataObject?.linkedAudioFileSize
-      && dataObject?.linkedAudioFileSize > 0,
-      dataObject?.linkedAudioLength
-      && dataObject?.linkedAudioLength > 0
-    ], hasValidMedia: dataObject?.hasValidMedia})
   return dataObject;
 }

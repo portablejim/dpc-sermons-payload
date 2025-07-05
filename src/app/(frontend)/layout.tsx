@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link href={getStaticFile('favicon.ico')} rel="icon" sizes="256x256" />
         <link href={getStaticFile('favicon.svg')} rel="icon" type="image/svg+xml" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" html-crossorigin />
+        <link rel="preconnect" href="https://fonts.gstatic.com" html-crossorigin="true" />
         <link
           href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet"
