@@ -12,6 +12,7 @@ import { generateSeriesMeta } from '@/utilities/generateMeta'
 import notFound from '../../not-found'
 import { getStaticFile } from '@/utilities/getStaticFile'
 import { getPayload } from 'payload'
+import { SetNav } from '@/Header/SetNav'
 
 type Args = {
   params: Promise<{
@@ -47,6 +48,7 @@ export default async function Page({ params: paramsPromise }: Args) {
           fallbackPng={fallbackImageUrlPng}
         />
       </div>
+      <SetNav primaryNav={'talks'} secondaryNav={null} />
     </>
   )
 }

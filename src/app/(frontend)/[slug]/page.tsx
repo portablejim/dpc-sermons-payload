@@ -11,6 +11,7 @@ import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { getPayload } from 'payload'
+import { SetNav } from '@/Header/SetNav'
 
 export async function generateStaticParams() {
   return []
@@ -36,6 +37,23 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   const { layout, title } = page
 
+  let primaryNavText = 'members-hub'
+  let secondaryNavText: string | null = null
+  if(
+    slug === '' ||
+    slug === 'home' ||
+    slug === 'talks-main'
+  ) {
+    primaryNavText = 'talks'
+    secondaryNavText = 'regular'
+  }
+  if(
+    slug === 'talks-other'
+  ) {
+    primaryNavText = 'talks'
+    secondaryNavText = 'special'
+  }
+
   return (
     <article className="pt-8 pb-16">
       <PageClient />
@@ -45,6 +63,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       <div className="container">
         <h1 className="text-xl md:text-3xl">{title}</h1>
       </div>
+      <SetNav primaryNav={primaryNavText} secondaryNav={secondaryNavText} />
 
       <RenderBlocks blocks={layout} />
     </article>
