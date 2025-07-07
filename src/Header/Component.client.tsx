@@ -9,12 +9,15 @@ import type { Header } from '@/payload-types'
 import { Logo } from '@/components/Logo/Logo'
 import { HeaderNav } from './Nav'
 
+import './module.css'
+
 interface HeaderClientProps {
   header: Header
   logoUrl: string
+  pageType: string
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl }) => {
+export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl, pageType }) => {
   /* Storing the value in a useState to avoid hydration errors */
   const [theme, setTheme] = useState<string | null>(null)
   const { headerTheme, setHeaderTheme, primaryNavigation, secondaryNavigation } = useHeaderTheme()
@@ -40,45 +43,12 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl }) =
     setHeaderTheme(theme === 'dark' ? 'dark' : 'light')
   }, [setHeaderTheme, theme])
 
-  let navLinks = <></>
-  const commonClasses =
-    'inline-block p-2 mx-2 hover:text-gray-300 grow md:grow-0 w-1/2 md:whitespace-nowrap'
-  const currentClasses = 'current border-b-white border-b-3 hover:border-b-gray-300'
-  const nonCurrentClasses = 'm-b-3'
-  if (isTalks) {
-    navLinks = (
-      <>
-        <Link
-          href="/talks-main"
-          aria-current={'page'}
-          className={`${commonClasses} ${currentClasses}`}
-        >
-          Talks
-        </Link>
-        <Link href="/members-hub" className={`${commonClasses} ${nonCurrentClasses}`}>
-          Members Hub
-        </Link>
-      </>
-    )
-  } else {
-    navLinks = (
-      <>
-        <Link href="/talks-main" className={`${commonClasses} ${nonCurrentClasses}`}>
-          Talks
-        </Link>
-        <Link
-          href="/members-hub"
-          aria-current={'page'}
-          className={`${commonClasses} ${currentClasses}`}
-        >
-          Members Hub
-        </Link>
-      </>
-    )
-  }
-
   let secondaryLinksOuter = <></>
-  if (primaryNavigation === 'talks') {
+  if (pageType === 'talks') {
+    let talksPrefix = ''
+    if(pathname.startsWith('/talks')) {
+      talksPrefix = 'talks'
+    }
     const commonSecondaryClasses = 'inline-block hover:text-gray-300 flex-grow w-1/2'
     const currentSecondaryClasses =
       'p-2 mx-2 current border-b-white dark:border-b-gray-400 border-t-black font-bold border-y-4 hover:border-b-gray-300'
@@ -88,14 +58,14 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl }) =
       secondaryLinks = (
         <>
           <Link
-            href="/talks-main"
+            href={talksPrefix + '/main'}
             aria-current={'page'}
             className={`${commonSecondaryClasses} ${currentSecondaryClasses}`}
           >
             Main Talk Library
           </Link>
           <Link
-            href="/talks-other"
+            href={talksPrefix + '/other'}
             className={`${commonSecondaryClasses} ${nonCurrentSecondaryClasses}`}
           >
             Other Talks
@@ -106,13 +76,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl }) =
       secondaryLinks = (
         <>
           <Link
-            href="/talks-main"
+            href={talksPrefix + '/main'}
             className={`${commonSecondaryClasses} ${nonCurrentSecondaryClasses}`}
           >
             Main Talk Library
           </Link>
           <Link
-            href="/talks-other"
+            href={talksPrefix + '/other'}
             aria-current={'page'}
             className={`${commonSecondaryClasses} ${currentSecondaryClasses}`}
           >
@@ -154,16 +124,14 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl }) =
       <div className="bg-black text-white text-large montserrat-regular py-4">
         <nav
           aria-label={'Primary Navigation'}
-          className={'container flex flex-col md:flex-row justify-between'}
+          className={'container flex flex-col justify-between'}
         >
+          <p className={'mainBackButton'}><a href="https://dubbo.church">&lt; Main <span className={"shortName"}>DPC</span><span className={"longName"}>Dubbo Presbtyerian Church</span> Website </a> </p>
           <p
             className={'flex-grow flex items-center text-center m-auto pb-4 md:text-left text-2xl'}
           >
             <a href="https://dubbo.church">Dubbo Presbtyerian Church</a>
           </p>
-          <div className={'navLinks align-middle justify-center flex flex-row text-center'}>
-            {navLinks}
-          </div>
         </nav>
       </div>
       {secondaryLinksOuter}

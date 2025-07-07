@@ -1,0 +1,18 @@
+
+.mainBackButton {
+  padding: 0.2em 0 0.75em;
+}
+
+.mainBackButton span.longName {
+  display: none;
+}
+
+@media screen and (min-width: 500px) {
+  .mainBackButton span.shortName {
+    display: none;
+  }
+
+  .mainBackButton span.longName {
+    display: inline;
+  }
+}

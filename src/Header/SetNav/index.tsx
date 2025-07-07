@@ -15,11 +15,11 @@ export const SetNav: React.FC<{ primaryNav: string | null, secondaryNav: string 
 
   useEffect(() => {
     setPrimaryNavigation(primaryNav)
-  }, [setPrimaryNavigation])
+  }, [primaryNav, setPrimaryNavigation])
 
   useEffect(() => {
     setSecondaryNavigation(secondaryNav)
-  }, [setSecondaryNavigation])
+  }, [secondaryNav, setSecondaryNavigation])
 
   return <React.Fragment />
 }

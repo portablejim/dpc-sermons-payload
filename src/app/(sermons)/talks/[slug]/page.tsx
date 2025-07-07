@@ -24,11 +24,12 @@ type Args = {
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  const { slug = 'home' } = await paramsPromise
-  const url = '/' + slug
+  const { slug = 'main' } = await paramsPromise
+  const fullSlug = 'talks-' + slug
+  const url = '/-' + fullSlug
 
  const page: PageType | null = await queryPageBySlug({
-    slug,
+    slug: fullSlug,
   })
 
   if (!page) {
@@ -41,14 +42,13 @@ export default async function Page({ params: paramsPromise }: Args) {
   let secondaryNavText: string | null = null
   if(
     slug === '' ||
-    slug === 'home' ||
-    slug === 'talks-main'
+    slug === 'main'
   ) {
     primaryNavText = 'talks'
     secondaryNavText = 'regular'
   }
   if(
-    slug === 'talks-other'
+    slug === 'other'
   ) {
     primaryNavText = 'talks'
     secondaryNavText = 'special'
@@ -72,8 +72,9 @@ export default async function Page({ params: paramsPromise }: Args) {
 
 export async function generateMetadata({ params: paramsPromise }): Promise<Metadata> {
   const { slug = 'home' } = await paramsPromise
+  const fullSlug = 'talks-' + slug
   const page = await queryPageBySlug({
-    slug,
+    slug: fullSlug,
   })
 
   return generateMeta({ doc: page })
