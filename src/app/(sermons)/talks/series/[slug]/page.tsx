@@ -6,10 +6,10 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
 import type { Series as SeriesType } from '@/payload-types'
-import { SeriesShow } from '../../../../components/SeriesShow'
+import { SeriesShow } from '../../../../../components/SeriesShow'
 
 import { generateSeriesMeta } from '@/utilities/generateMeta'
-import notFound from '../../not-found'
+import notFound from '../../../not-found'
 import { getStaticFile } from '@/utilities/getStaticFile'
 import { getPayload } from 'payload'
 import { SetNav } from '@/Header/SetNav'
