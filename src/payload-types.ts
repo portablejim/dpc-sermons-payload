@@ -89,6 +89,9 @@ export interface Config {
     series: {
       episodes: 'episodes';
     };
+    speakers: {
+      talks: 'episodes';
+    };
   };
   collectionsSelect: {
     'bible-books': BibleBooksSelect<false> | BibleBooksSelect<true>;
@@ -859,6 +862,11 @@ export interface Speaker {
   id: number;
   name?: string | null;
   guid?: string | null;
+  talks?: {
+    docs?: (number | Episode)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1452,6 +1460,7 @@ export interface SeriesSelect<T extends boolean = true> {
 export interface SpeakersSelect<T extends boolean = true> {
   name?: T;
   guid?: T;
+  talks?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -30,6 +30,12 @@ const TalkSpeakers: CollectionConfig = {
         beforeValidate: [ensureGuid]
       }
     },
+    {
+      name: 'talks',
+      type: 'join',
+      collection: 'episodes',
+      on: 'speaker',
+    },
   ],
 }
 
