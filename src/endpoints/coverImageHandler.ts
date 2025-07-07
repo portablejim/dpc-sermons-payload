@@ -49,7 +49,6 @@ export const coverImage: PayloadHandler = async (req): Promise<Response> => {
       fileData?.sizes?.thumbnail_webp?.filename != null
     ) {
       const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/upload/cover-images/${fileData?.sizes?.thumbnail_webp?.filename}`
-      payload.logger.info({ candidateFilePath })
       if (existsSync(candidateFilePath)) {
         const fileBytes = readFileSync(candidateFilePath)
         return new Response(fileBytes, {

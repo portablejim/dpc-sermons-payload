@@ -1,5 +1,6 @@
-import { getPayload, type CollectionConfig } from 'payload'
+import payload, { getPayload, type CollectionConfig } from 'payload'
 import config from '@payload-config'
+import {BookLookup} from '../../utilities/bookLookup'
 
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { populateAuthors } from './hooks/populateAuthors'
@@ -10,6 +11,7 @@ import { ensureGuid } from '@/hooks/ensureGuid'
 import { validBooks, episodeByBookList } from '@/endpoints/episodeBookHandler'
 import { processEpisode } from '@/collections/TalkEpisodes/hooks/processEpisodes'
 import { updateValidMedia } from '@/collections/TalkEpisodes/hooks/updateValidMedia'
+import { BibleBook, BibleChapter } from '@/payload-types'
 
 export const TalkEpisodes: CollectionConfig = {
   slug: 'episodes',
@@ -77,6 +79,15 @@ export const TalkEpisodes: CollectionConfig = {
             outputParts.push(seriesTitle)
           }
           data.fullTitle = outputParts.join(' | ')
+        }
+        if(data?.biblePassages) {
+          for (const passage of data.biblePassages) {
+            if(passage.chapter && passage.verseStart && !passage.verseEnd) {
+              const passageRef = BookLookup.chapters[passage.chapter.toString()] as BibleChapter
+              passage.verseEnd = passageRef.verses
+            }
+          }
+          console.log({passages: data.biblePassages})
         }
 
         return data
