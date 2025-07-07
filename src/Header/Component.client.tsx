@@ -23,17 +23,6 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl, pag
   const { headerTheme, setHeaderTheme, primaryNavigation, secondaryNavigation } = useHeaderTheme()
   const pathname = usePathname()
 
-  let isTalks = false
-  if (
-    pathname === '' ||
-    pathname === '/home' ||
-    pathname === '/talks-main' ||
-    pathname === '/talks-other' ||
-    pathname.startsWith('/series')
-  ) {
-    isTalks = true
-  }
-
   useEffect(() => {
     setHeaderTheme(null)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,7 +36,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl, pag
   if (pageType === 'talks') {
     let talksPrefix = ''
     if(pathname.startsWith('/talks')) {
-      talksPrefix = 'talks'
+      talksPrefix = '/talks'
     }
     const commonSecondaryClasses = 'inline-block hover:text-gray-300 flex-grow w-1/2'
     const currentSecondaryClasses =
@@ -94,13 +83,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl, pag
       secondaryLinks = (
         <>
           <Link
-            href="/talks-main"
+            href={talksPrefix + '/main'}
             className={`${commonSecondaryClasses} ${nonCurrentSecondaryClasses}`}
           >
             Main Talk Library
           </Link>
           <Link
-            href="/talks-other"
+            href={talksPrefix + '/other'}
             className={`${commonSecondaryClasses} ${nonCurrentSecondaryClasses}`}
           >
             Other Talks
