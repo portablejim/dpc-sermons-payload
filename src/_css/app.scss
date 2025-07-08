@@ -133,3 +133,15 @@ svg {
   font-weight: 400;
   font-style: normal;
 }
+
+@media screen and (max-width: #{$breakpoint-xs-width}) {
+  .hidden-xs-only {
+    display: none;
+  }
+}
+
+@media screen and (min-width: #{$breakpoint-xs-width}) {
+  .hidden-sm-and-up {
+    display: none;
+  }
+}

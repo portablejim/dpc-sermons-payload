@@ -8,6 +8,7 @@ import type { CoverImage, Page, Series } from '@/payload-types'
 import { LinkTileListTileProps } from '../../blocks/LinkTileList/types'
 
 import classes from './index.module.scss'
+import { usePathname } from 'next/navigation'
 
 export type Props = {
   linkTile: LinkTileListTileProps
@@ -19,6 +20,8 @@ export type Props = {
 
 export const LinkTile: React.FC<Props> = props => {
   const { linkTile, className, limit = 10, showPageRange, sort = '-createdAt' } = props
+
+  const pathname = usePathname();
 
   let bgImage = ''
   let ltImg: CoverImage | null = null
@@ -37,7 +40,11 @@ export const LinkTile: React.FC<Props> = props => {
       targetUrl = `/api/media/download/${linkTile.linkedMedia?.id}`
     }
   } else if (typeof linkTile === 'object' && linkTile.type == 'reference' && typeof linkTile?.reference?.value !== 'number') {
-    targetUrl = `/${linkTile?.reference?.value?.slug}`
+    let pathPrefix = ''
+    if(pathname && pathname.startsWith('/hub')) {
+      pathPrefix = '/hub'
+    }
+    targetUrl = `${pathPrefix}/${linkTile?.reference?.value?.slug}`
   } else {
     targetUrl = linkTile.url ?? ''
   }
