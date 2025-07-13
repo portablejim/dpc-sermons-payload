@@ -120,6 +120,9 @@ export const TalkEpisodes: CollectionConfig = {
       name: 'series',
       type: 'relationship',
       relationTo: 'series',
+      admin: {
+        sortOptions: '-seriesDate'
+      }
     },
     {
       name: 'episodeType',
@@ -174,6 +177,9 @@ export const TalkEpisodes: CollectionConfig = {
       name: 'speaker',
       type: 'relationship',
       relationTo: 'speakers',
+      admin: {
+        sortOptions: 'name'
+      }
     },
     {
       name: 'sermonDate',
@@ -338,6 +344,7 @@ export const TalkEpisodes: CollectionConfig = {
       relationTo: 'talk-audio',
       //required: true,
       admin: {
+        sortOptions: '-createdDate',
         condition: (_, siblingData) => siblingData?.audioFormat === 'uploaded',
       },
     },
