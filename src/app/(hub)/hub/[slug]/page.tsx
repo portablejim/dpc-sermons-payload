@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
-import { draftMode } from 'next/headers'
+import { draftMode, headers } from 'next/headers'
 import React, { cache } from 'react'
 
 import type { Page as PageType } from '@/payload-types'
@@ -25,6 +25,9 @@ export default async function Page({ params: paramsPromise }: Args) {
   const { slug = 'members-hub' } = await paramsPromise
   const url = '/' + slug
   const pathname = '.';
+
+  const pageHeaders = await headers()
+  const erasePath = pageHeaders.get('X-Erase-Path') === '1'
 
  const page: PageType | null = await queryPageBySlug({
     slug,
@@ -80,7 +83,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       </div>
       <SetNav primaryNav={primaryNavText} secondaryNav={secondaryNavText} />
 
-      <RenderBlocks blocks={layout} />
+      <RenderBlocks blocks={layout} erasePrefix={erasePath} />
     </article>
   )
 }

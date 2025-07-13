@@ -27,6 +27,7 @@ const blockComponents = {
 
 export const RenderBlocks: React.FC<{
   blocks: Page['layout'][0][]
+  erasePrefix: boolean
 }> = (props) => {
   const { blocks } = props
 

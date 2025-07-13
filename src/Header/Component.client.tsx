@@ -10,14 +10,16 @@ import { Logo } from '@/components/Logo/Logo'
 import { HeaderNav } from './Nav'
 
 import './module.css'
+import { headers } from 'next/headers'
 
 interface HeaderClientProps {
   header: Header
   logoUrl: string
   pageType: string
+  erasePrefix: boolean
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl, pageType }) => {
+export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl, pageType, erasePrefix }) => {
   /* Storing the value in a useState to avoid hydration errors */
   const [theme, setTheme] = useState<string | null>(null)
   const { headerTheme, setHeaderTheme, primaryNavigation, secondaryNavigation } = useHeaderTheme()
@@ -35,7 +37,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl, pag
   let secondaryLinksOuter = <></>
   if (pageType === 'talks') {
     let talksPrefix = ''
-    if(pathname.startsWith('/talks')) {
+    if(pathname.startsWith('/talks') && !erasePrefix) {
       talksPrefix = '/talks'
     }
     const commonSecondaryClasses = 'inline-block hover:text-gray-300 flex-grow w-1/2'
