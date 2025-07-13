@@ -15,10 +15,6 @@ import { SetNav } from '@/Header/SetNav'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
-export async function generateStaticParams() {
-  return []
-}
-
 type Args = {
   params: Promise<{
     slug?: string

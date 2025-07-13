@@ -13,10 +13,6 @@ import PageClient from './page.client'
 import { getPayload } from 'payload'
 import { SetNav } from '@/Header/SetNav'
 
-export async function generateStaticParams() {
-  return []
-}
-
 type Args = {
   params: Promise<{
     slug?: string

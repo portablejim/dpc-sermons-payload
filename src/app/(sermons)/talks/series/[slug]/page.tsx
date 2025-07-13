@@ -53,10 +53,6 @@ export default async function Page({ params: paramsPromise }: Args) {
   )
 }
 
-export async function generateStaticParams() {
-  return []
-}
-
 export async function generateMetadata({ params: paramsPromise }): Promise<Metadata | null> {
   const { slug = 'home' } = await paramsPromise
   const page = await querySeriesBySlug({
