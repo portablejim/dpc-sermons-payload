@@ -66,6 +66,10 @@ export default buildConfig({
     },
     user: Users.slug,
     livePreview: {
+      url: ({data, collectionConfig, locale}) => {
+        console.log({data})
+        return '/testing'
+      },
       breakpoints: [
         {
           label: 'Mobile',

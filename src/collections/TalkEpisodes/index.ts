@@ -11,7 +11,7 @@ import { ensureGuid } from '@/hooks/ensureGuid'
 import { validBooks, episodeByBookList } from '@/endpoints/episodeBookHandler'
 import { processEpisode } from '@/collections/TalkEpisodes/hooks/processEpisodes'
 import { updateValidMedia } from '@/collections/TalkEpisodes/hooks/updateValidMedia'
-import { BibleBook, BibleChapter } from '@/payload-types'
+import { BibleBook, BibleChapter, Episode as EpisodeType } from '@/payload-types'
 
 export const TalkEpisodes: CollectionConfig = {
   slug: 'episodes',
@@ -23,10 +23,12 @@ export const TalkEpisodes: CollectionConfig = {
     useAsTitle: 'title',
     group: 'Sermons',
     defaultColumns: ['title', 'sermonDate', 'series'],
-    preview: (doc) => {
-      return `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/next/preview?url=${encodeURIComponent(
-        `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/posts/${doc?.slug}`,
-      )}&secret=${process.env.PAYLOAD_PUBLIC_DRAFT_SECRET}`
+    preview: (doc: Record<string, EpisodeType>) => {
+      let outputPath = `${process.env.APP_URL_TALKS}/sermon/${doc?.slug}`
+      if(doc?.series?.slug) {
+        outputPath = `${process.env.APP_URL_TALKS}/series/${doc?.series?.slug}/sermon/${doc?.slug}`
+      }
+      return `${process.env.APP_URL_HUB}/next/preview?collection=episodes&slug=${doc?.slug}&path=${encodeURIComponent(outputPath)}&secret=${process.env.PAYLOAD_PUBLIC_DRAFT_SECRET}`
     },
   },
   defaultSort: 'sermonDate',
