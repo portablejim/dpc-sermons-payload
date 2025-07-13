@@ -1,4 +1,4 @@
-import { getPayload, type CollectionConfig } from 'payload'
+import { getPayload, type CollectionConfig, FieldHookArgs } from 'payload'
 import config from '@payload-config'
 
 import {
@@ -13,6 +13,7 @@ import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { ensureGuid } from '@/hooks/ensureGuid'
 import { getFileData } from '@/hooks/getFileData'
+import { TalkAudio as TalkAudioType } from '@/payload-types'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -27,7 +28,7 @@ export const TalkAudio: CollectionConfig = {
   },
   admin: {
     group: 'Media',
-    useAsTitle: 'originalFilename',
+    useAsTitle: 'alt',
   },
   hooks: {
     beforeOperation: [
@@ -60,8 +61,18 @@ export const TalkAudio: CollectionConfig = {
     },
     {
       name: 'alt',
+      label: 'Name',
       type: 'text',
       required: false,
+      hooks: {
+        beforeValidate: [
+          ({data, value}: FieldHookArgs<TalkAudioType, string, string>) => {
+            if((!value || value.length === 0) && data && data.originalFilename && data.originalFilename.length > 0) {
+              return data.originalFilename
+            }
+          }
+        ]
+      }
     },
     {
       name: 'uploadQuality',
