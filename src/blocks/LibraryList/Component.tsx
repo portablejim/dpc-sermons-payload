@@ -24,7 +24,7 @@ export type Props = {
   className?: string
   episodeType?: string
   limit?: number
-  onResultChange?: (result: Result) => void  
+  onResultChange?: (result: Result) => void
   showPageRange?: boolean
   sort?: string
 }
@@ -41,7 +41,9 @@ export const LibraryList: React.FC<Props> = async (props) => {
     const yearsRaw = await fetch(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/yearList/${episodeType}`,
     )
-    const yearsJson = (await yearsRaw.json()) as string[]
+    const yearsJson = (await yearsRaw.json().catch(() => {
+      return []
+    })) as string[]
     if (yearsJson && Array.isArray(yearsJson)) {
       return yearsJson.filter((y) => !yearsToRemove.includes(y))
     } else {
@@ -52,7 +54,7 @@ export const LibraryList: React.FC<Props> = async (props) => {
   const latestEpisodesRaw = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/byYear/${episodeType}/latest`,
   )
-  const latestEpisodesJson = (await latestEpisodesRaw.json()) as Episode[]
+  const latestEpisodesJson = (await latestEpisodesRaw.json().catch(() => [])) as Episode[]
 
   let latestEpisodes: Episode[] = []
   if (latestEpisodesJson && Array.isArray(latestEpisodesJson)) {
