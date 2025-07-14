@@ -38,8 +38,6 @@ import { revalidateRedirects } from './hooks/revalidateRedirects'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { Page } from 'src/payload-types'
 
-import { searchFields } from '@/search/fieldOverrides'
-import { beforeSyncWithSearch } from '@/search/beforeSync'
 import { seedHandlerEpisodes } from './endpoints/seedHandlerEpisodes'
 import { CoverImageSvgs } from './collections/CoverImageSvgs'
 import { Defaults } from '@/Defaults/config'
@@ -53,9 +51,15 @@ const generateTitle: GenerateTitle<Page> = ({ doc }) => {
 }
 
 const generateURL: GenerateURL<Page> = ({ doc }) => {
-  return doc?.slug
-    ? `${process.env.NEXT_PUBLIC_SERVER_URL!}/${doc.slug}`
-    : process.env.NEXT_PUBLIC_SERVER_URL!
+  if (doc.slug) {
+    if (doc.slug.startsWith('talks')) {
+      return `${process.env.APP_URL_TALKS!}/${doc.slug}`
+    } else {
+      return `${process.env.APP_URL_HUB!}/${doc.slug}`
+    }
+  } else {
+    return process.env.NEXT_PUBLIC_SERVER_URL!
+  }
 }
 
 export default buildConfig({
@@ -66,10 +70,6 @@ export default buildConfig({
     },
     user: Users.slug,
     livePreview: {
-      url: ({data, collectionConfig, locale}) => {
-        console.log({data})
-        return '/testing'
-      },
       breakpoints: [
         {
           label: 'Mobile',
@@ -103,7 +103,7 @@ export default buildConfig({
           enabledCollections: ['pages'],
           fields: ({ defaultFields }) => {
             const defaultFieldsWithoutUrl = defaultFields.filter((field) => {
-              return !('name' in field && field.name === 'url');
+              return !('name' in field && field.name === 'url')
             })
 
             return [
