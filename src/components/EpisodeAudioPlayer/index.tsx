@@ -139,7 +139,7 @@ export const EpisodeAudioPlayer: React.FC<Props> = (props) => {
     targetEpisode.uploadedAudioFile !== undefined
   ) {
     audioPlayerType = 'uploaded'
-    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? ''
+    const baseUrl = process.env.APP_URL_TALKS ?? ''
     mp3Url = baseUrl + '/upload/talkaudio/' + (targetEpisode.uploadedAudioFile?.filename ?? '')
   }
 

@@ -1,22 +1,28 @@
 import { desc, eq } from 'drizzle-orm'
-import { type PayloadHandler } from 'payload'
+import { BasePayload, PaginatedDocs, type PayloadHandler } from 'payload'
+import { Episode } from '@/payload-types'
 
 export const validYears: PayloadHandler = async (req): Promise<Response> => {
   const { payload, routeParams } = req
 
-  const episodeType = routeParams?.type ?? ''
+  const episodeType: string = (routeParams?.type as string) ?? ''
+  const output = validYearsInternal(payload, episodeType)
 
+  return Response.json(output)
+}
+
+export const validYearsInternal = async (
+  payload: BasePayload,
+  episodeType: string,
+): Promise<string[]> => {
   const episodesTable = payload.db.tables.episodes
-
   const yearSelect = await payload.db.drizzle
     .selectDistinct({ year: episodesTable.sermonDateYear })
     .from(episodesTable)
     .where(eq(episodesTable.episodeType, episodeType))
     .orderBy(desc(episodesTable.sermonDateYear))
 
-  const output = yearSelect.filter((ys) => typeof ys.year === 'string').map((ys) => ys.year as string)
-
-  return Response.json(output)
+  return yearSelect.filter((ys) => typeof ys.year === 'string').map((ys) => ys.year as string)
 }
 
 export const episodeList: PayloadHandler = async (req): Promise<Response> => {
@@ -25,6 +31,11 @@ export const episodeList: PayloadHandler = async (req): Promise<Response> => {
   const currentRange = <string | undefined>routeParams?.year ?? 'latest'
   const episodeType = <string | undefined>routeParams?.type ?? ''
 
+  const episodeList = await episodeListInternal(payload, currentRange, episodeType)
+  return Response.json(episodeList.data, episodeList.init)
+}
+
+export const episodeListInternal = async (payload: BasePayload, currentRange: string, episodeType: string): Promise<{data: Episode[], init: ResponseInit | undefined}> => {
   if (currentRange === 'all') {
     const episodeFind = await payload.find({
       collection: 'episodes',
@@ -37,7 +48,7 @@ export const episodeList: PayloadHandler = async (req): Promise<Response> => {
       sort: '-sermonDate',
       limit: 0,
     })
-    return Response.json(episodeFind.docs)
+    return {data: episodeFind.docs, init: undefined}
   } else {
     let validYears: number[] = []
     if (currentRange === 'latest') {
@@ -49,13 +60,13 @@ export const episodeList: PayloadHandler = async (req): Promise<Response> => {
     } else {
       const parsedRange = parseInt(currentRange)
       if (isNaN(parsedRange)) {
-        return Response.json(
-          {},
-          {
-            status: 404,
-            statusText: 'Year not found',
-          },
-        )
+        return {
+          data: [],
+          init: {
+              status: 404,
+              statusText: 'Year not found',
+            },
+        }
       }
       validYears.push(parsedRange)
     }
@@ -80,6 +91,7 @@ export const episodeList: PayloadHandler = async (req): Promise<Response> => {
       sort: '-sermonDate',
       limit: 0,
     })
-    return Response.json(episodeFind.docs)
+    return {data: episodeFind.docs, init: undefined }
   }
+
 }

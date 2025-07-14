@@ -11,7 +11,7 @@ const nextConfig = {
   allowedDevOrigins: ['localhost', 'l.pjim.au', '*.pjim.au'],
   images: {
     remotePatterns: [
-      ...[NEXT_PUBLIC_SERVER_URL, APP_URL_HUB, APP_URL_TALKS /* 'https://example.com' */]
+      ...[NEXT_PUBLIC_SERVER_URL, APP_URL_HUB, APP_URL_TALKS]
         .filter((v) => v && v.length > 0)
         .map((item) => {
           const url = new URL(item)

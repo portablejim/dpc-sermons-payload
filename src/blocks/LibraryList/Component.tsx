@@ -8,6 +8,9 @@ import { EpisodeGroupsList } from '@/components/EpisodeGroupsList'
 import { LibraryList as LibraryListComponent } from '@/components/LibraryList'
 import { BooksGroupsList, BooksListPreload } from '@/components/BooksGroupsList'
 import { getStaticFile } from '@/utilities/getStaticFile'
+import { episodeListInternal, validYearsInternal } from '@/endpoints/episodeHandler'
+import payload, { getPayload } from 'payload'
+import configPromise from '@payload-config'
 
 type Result = {
   docs: (Series | string)[]
@@ -32,18 +35,16 @@ export type Props = {
 export const LibraryList: React.FC<Props> = async (props) => {
   const { className, episodeType = 'regular' } = props
 
+  const payload = await getPayload({ config: configPromise })
+
   const yearListPromise = (async () => {
     const timestamp = new Date()
     const yearsToRemove = [timestamp.getFullYear().toFixed(0)]
     if (timestamp.getMonth() < 7) {
       yearsToRemove.push((timestamp.getFullYear() - 1).toFixed(0))
     }
-    const yearsRaw = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/yearList/${episodeType}`,
-    )
-    const yearsJson = (await yearsRaw.json().catch(() => {
-      return []
-    })) as string[]
+
+    const yearsJson = await validYearsInternal(payload, episodeType) as string[]
     if (yearsJson && Array.isArray(yearsJson)) {
       return yearsJson.filter((y) => !yearsToRemove.includes(y))
     } else {
@@ -51,10 +52,7 @@ export const LibraryList: React.FC<Props> = async (props) => {
     }
   })()
 
-  const latestEpisodesRaw = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/byYear/${episodeType}/latest`,
-  )
-  const latestEpisodesJson = (await latestEpisodesRaw.json().catch(() => [])) as Episode[]
+  const latestEpisodesJson = await episodeListInternal(payload, 'latest', episodeType).then(d => d.data)
 
   let latestEpisodes: Episode[] = []
   if (latestEpisodesJson && Array.isArray(latestEpisodesJson)) {

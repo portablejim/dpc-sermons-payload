@@ -11,7 +11,7 @@ import { BooksGroupList } from '../BooksGroupList'
 import * as Accordion from '@radix-ui/react-accordion'
 
 export const getBooksList = (episodeType: string): Promise<BooksResult[]> => {
-  return fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/bookList/${episodeType}`, {
+  return fetch(`${process.env.APP_RELATIVE_URL}/api/episodes/bookList/${episodeType}`, {
     next: {
       revalidate: 600,
     },
@@ -109,7 +109,7 @@ export const BooksGroupsList: React.FC<Props> = (props) => {
             setIsLoading(false)
           }
         } catch (err) {
-          console.warn(err)  
+          console.warn(err)
           setIsLoading(false)
           setError(`Unable to load "series" data at this time.`)
         }

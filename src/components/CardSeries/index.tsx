@@ -51,7 +51,7 @@ export const CardSeries: React.FC<{
   const sanitizedDescription = doc?.subtitle?.replace(/\s/g, ' ') // replace non-breaking space with white space
   const href = `/series/${slug}`
   const imageSrc =
-    typeof targetImage !== 'string' ? `${process.env.NEXT_PUBLIC_SERVER_URL}${targetImage.url}` : ''
+    typeof targetImage !== 'string' ? `${process.env.APP_URL_TALKS}${targetImage.url}` : ''
 
   return (
     <div
@@ -76,7 +76,7 @@ export const CardSeries: React.FC<{
             fill={true}
             quality={90}
             placeholder={svgToDataURI(BACKGROUND_LOGO_SVG_WIDE)}
-            src={`${process.env.NEXT_PUBLIC_SERVER_URL}${targetImage.url}`}
+            src={`${process.env.APP_URL_TALKS}${targetImage.url}`}
           />
         )}
       </Link>

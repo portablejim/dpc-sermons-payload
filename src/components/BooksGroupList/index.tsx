@@ -37,7 +37,7 @@ export type Props = {
   episodeType: string
   episodeRange: string
   accordionsOpen?: string[]
-  onResultChange?: (result: Result) => void  
+  onResultChange?: (result: Result) => void
   fallbackSvg: string
   fallbackPng: string
 }
@@ -83,7 +83,7 @@ export const BooksGroupList: React.FC<Props> = (props) => {
       const makeRequest = async () => {
         try {
           const req = await fetch(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/episodes/byBook/${episodeType}/${episodeRange}`,
+            `${process.env.APP_RELATIVE_URL}/api/episodes/byBook/${episodeType}/${episodeRange}`,
           )
 
           const json = (await req.json()) as Episode[]
@@ -101,7 +101,7 @@ export const BooksGroupList: React.FC<Props> = (props) => {
             */
           }
         } catch (err) {
-          console.warn(err)  
+          console.warn(err)
           setIsLoading(false)
           setError(`Unable to load "series" data at this time.`)
         }

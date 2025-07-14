@@ -23,7 +23,7 @@ export const getSeriesList = (seriesType: string): Promise<Result> => {
     { encode: false },
   )
 
-  return fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/series?${searchQuery}`, {
+  return fetch(`${process.env.APP_URL_TALKS}/api/series?${searchQuery}`, {
     next: {
       revalidate: 300,
     },
