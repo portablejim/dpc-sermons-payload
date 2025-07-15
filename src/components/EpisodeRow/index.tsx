@@ -146,7 +146,7 @@ export const EpisodeRow: React.FC<{
   let hasSeries = false
   let seriesTitle = '(no series)'
   let seriesLink = ''
-  let href = `${process.env.APP_URL_TALKS}/sermon/${slug}`
+  let href = `${process.env.APP_URL_TALKS || ''}/sermon/${slug}`
   if (
     targetSeries !== undefined &&
     typeof targetSeries !== 'number' &&
@@ -156,7 +156,7 @@ export const EpisodeRow: React.FC<{
   ) {
     hasSeries = true
     seriesTitle = targetSeries.title
-    seriesLink = `${process.env.APP_URL_TALKS}/series/${targetSeries.slug}`
+    seriesLink = `${process.env.APP_URL_TALKS || ''}/series/${targetSeries.slug}`
     href = `${seriesLink}/sermon/${slug}`
   }
 

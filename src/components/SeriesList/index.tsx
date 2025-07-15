@@ -24,7 +24,7 @@ export const getSeriesList = async (seriesType: string): Promise<Result> => {
   )
 
   try {
-    const r = await fetch(`${process.env.APP_URL_TALKS}/api/series?${searchQuery}`, {
+    const r = await fetch(`/api/series?${searchQuery}`, {
       next: {
         revalidate: 300,
       },
