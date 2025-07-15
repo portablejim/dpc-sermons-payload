@@ -12,6 +12,7 @@ import RichText from '../RichText'
 import classes from './index.module.scss'
 import { EpisodeAudioPlayer } from '../EpisodeAudioPlayer'
 import { svgToDataURI, BACKGROUND_LOGO_SVG_WIDE } from '@/utilities/iconsSvg'
+import Link from 'next/link'
 
 type Result = {
   docs: (Series | string)[]
@@ -29,7 +30,7 @@ const BackButton = ({ series }: { series: number | Series }) => {
     const label = '< ' + series.title
     return (
       <>
-        <Button className={classes.backButton} appearance="default" href=".." label={label} />
+        <Link className={classes.backButton} href="..">{label}</Link>
       </>
     )
   } else {
