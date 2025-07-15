@@ -82,7 +82,7 @@ export const EpisodeGroupList: React.FC<Props> = (props) => {
       const makeRequest = async () => {
         try {
           const req = await fetch(
-            `${process.env.APP_RELATIVE_URL}/api/episodes/byYear/${episodeType}/${episodeRange}`,
+            `${process.env.APP_RELATIVE_URL ?? ''}/api/episodes/byYear/${episodeType}/${episodeRange}`,
           )
 
           const json = (await req.json()) as Episode[]

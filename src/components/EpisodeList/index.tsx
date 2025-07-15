@@ -82,7 +82,7 @@ export const EpisodeList: React.FC<Props> = (props) => {
 
       const makeRequest = async () => {
         try {
-          const req = await fetch(`${process.env.APP_RELATIVE_URL}/api/episodes?${searchQuery}`)
+          const req = await fetch(`${process.env.APP_RELATIVE_URL ?? ''}/api/episodes?${searchQuery}`)
 
           const json = await req.json()
           if (timer != null) {

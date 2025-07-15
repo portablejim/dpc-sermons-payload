@@ -223,9 +223,6 @@ export async function GET(
       showHiddenFields: true,
     })
   } else if (typeof filter === 'number') {
-    const startDate = filter.toFixed(0).padStart(4, '0') + '-01-01'
-    const endDate = filter.toFixed(0).padStart(4, '0') + '-12-31'
-
     podcastTitle = `DPC ${titleTalkType} Talks (${filter}${titleTalkTypeSuffix})`
     podcastFilename = `dpc-${filenameTalkType}-talks-${filter}${filenameTalkTypeSuffix}`
 
@@ -284,7 +281,7 @@ export async function GET(
       ) {
         const audioFile: TalkAudio = e.uploadedAudioFile
         audioMimetype = audioFile.mimeType ?? ''
-        audioUrl = baseUrl + '/' + (audioFile.url ?? '')
+        audioUrl = baseUrl + (audioFile.url ?? '')
         audioLength = Math.round(audioFile.filesize ?? 0).toFixed(0)
         audioDuration = new Date((audioFile.lengthSeconds ?? 0) * 1000).toISOString().slice(11, 19)
       }
@@ -366,7 +363,7 @@ xmlns:content="http://purl.org/rss/1.0/modules/content/"
 xmlns:podcast="https://podcastindex.org/namespace/1.0"
 xmlns:atom="http://www.w3.org/2005/Atom" >
   <channel>
-    <title>DPC Bible Talks</title>
+    <title>${podcastTitle}</title>
     <link>http://www.dubbo.church</link>
     <language>en-au</language>
     <copyright>℗ &amp; © Dubbo Presbyterian Church</copyright>

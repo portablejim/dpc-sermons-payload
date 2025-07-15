@@ -7,7 +7,7 @@ import { BooksGroupList } from '../BooksGroupList'
 import * as Accordion from '@radix-ui/react-accordion'
 
 export const getBooksList = (episodeType: string): Promise<BooksResult[]> => {
-  return fetch(`${process.env.APP_RELATIVE_URL}/api/episodes/bookList/${episodeType}`, {
+  return fetch(`${process.env.APP_RELATIVE_URL ?? ''}/api/episodes/bookList/${episodeType}`, {
     next: {
       revalidate: 600,
     },
