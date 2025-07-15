@@ -1,4 +1,3 @@
-import { desc, eq } from 'drizzle-orm'
 import { existsSync, readFileSync } from 'fs'
 import { type PayloadHandler } from 'payload'
 
@@ -6,9 +5,7 @@ export const coverImage: PayloadHandler = async (req): Promise<Response> => {
   const { payload, routeParams } = req
 
   const imageId: string = <string>routeParams?.id ?? ''
-  const imageVersion = routeParams?.versionId ?? ''
   const imageType = routeParams?.type ?? ''
-  const filename = routeParams?.filename ?? ''
 
   const fileData = await payload.findByID({
     collection: 'cover-images',
@@ -190,12 +187,10 @@ export const coverImage: PayloadHandler = async (req): Promise<Response> => {
       const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/upload/cover-images/${fileData?.sizes?.largeSquare?.filename}`
       if (existsSync(candidateFilePath)) {
         const fileBytes = readFileSync(candidateFilePath)
-        const fileByteLength = fileBytes.byteLength
         return new Response(fileBytes, {
           status: 200,
           headers: new Headers({
             'Content-Type': fileData?.sizes?.largeSquare?.mimeType ?? 'octet/stream',
-            //'Content-Length': `${fileBytes.byteLength}`,
             'Cache-Control': 'public, max-age=86400, stale-if-error=302400',
           }),
         })
@@ -220,8 +215,6 @@ export const coverImageSvg: PayloadHandler = async (req): Promise<Response> => {
   const { payload, routeParams } = req
 
   const imageId: string = <string>routeParams?.id ?? ''
-  const imageVersion = routeParams?.versionId ?? ''
-  const filename = routeParams?.filename ?? ''
 
   const fileData = await payload.findByID({
     collection: 'cover-image-svgs',
@@ -231,12 +224,10 @@ export const coverImageSvg: PayloadHandler = async (req): Promise<Response> => {
   const candidateFilePath = `${process.env.APP_PUBLIC__DIR_PATH}/upload/cover-image-svg/${fileData?.filename}`
   if (existsSync(candidateFilePath)) {
     const fileBytes = readFileSync(candidateFilePath)
-    const fileByteLength = fileBytes.byteLength
     return new Response(fileBytes, {
       status: 200,
       headers: new Headers({
         'Content-Type': fileData?.mimeType ?? 'octet/stream',
-        //'Content-Length': `${fileBytes.byteLength}`,
         'Cache-Control': 'public, max-age=86400, stale-if-error=302400',
       }),
     })
@@ -246,6 +237,4 @@ export const coverImageSvg: PayloadHandler = async (req): Promise<Response> => {
       statusText: 'Image not found',
     })
   }
-
-  return Response.json({ error: 'Other error' })
 }

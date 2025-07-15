@@ -6,11 +6,7 @@ import React, { useEffect, useState } from 'react'
 
 import type { Header } from '@/payload-types'
 
-import { Logo } from '@/components/Logo/Logo'
-import { HeaderNav } from './Nav'
-
 import './module.css'
-import { headers } from 'next/headers'
 
 interface HeaderClientProps {
   header: Header
@@ -19,10 +15,10 @@ interface HeaderClientProps {
   erasePrefix: boolean
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl, pageType, erasePrefix }) => {
+export const HeaderClient: React.FC<HeaderClientProps> = ({ pageType, erasePrefix }) => {
   /* Storing the value in a useState to avoid hydration errors */
-  const [theme, setTheme] = useState<string | null>(null)
-  const { headerTheme, setHeaderTheme, primaryNavigation, secondaryNavigation } = useHeaderTheme()
+  const [theme] = useState<string | null>(null)
+  const { setHeaderTheme, secondaryNavigation } = useHeaderTheme()
   const pathname = usePathname()
 
   useEffect(() => {
@@ -37,7 +33,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl, pag
   let secondaryLinksOuter = <></>
   if (pageType === 'talks') {
     let talksPrefix = ''
-    if(pathname.startsWith('/talks') && !erasePrefix) {
+    if (pathname.startsWith('/talks') && !erasePrefix) {
       talksPrefix = '/talks'
     }
     const commonSecondaryClasses = 'inline-block hover:text-gray-300 flex-grow w-1/2'
@@ -102,7 +98,10 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl, pag
     secondaryLinksOuter = (
       <>
         <div className="bg-[#27272a] text-white text-large montserrat-regular mb-4">
-          <nav aria-label="Talk Libary options" className="container flex flex-row text-center items-center">
+          <nav
+            aria-label="Talk Libary options"
+            className="container flex flex-row text-center items-center"
+          >
             {secondaryLinks}
           </nav>
         </div>
@@ -117,7 +116,12 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header, logoUrl, pag
           aria-label={'Primary Navigation'}
           className={'container flex flex-col justify-between'}
         >
-          <p className={'mainBackButton'}><a href="https://dubbo.church">&lt; Main <span className={"shortName"}>DPC</span><span className={"longName"}>Dubbo Presbtyerian Church</span> Website </a> </p>
+          <p className={'mainBackButton'}>
+            <a href="https://dubbo.church">
+              &lt; Main <span className={'shortName'}>DPC</span>
+              <span className={'longName'}>Dubbo Presbtyerian Church</span> Website{' '}
+            </a>
+          </p>
           <p
             className={'flex-grow flex items-center text-center m-auto pb-4 md:text-left text-2xl'}
           >

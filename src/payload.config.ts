@@ -5,7 +5,6 @@ import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
-import { searchPlugin } from '@payloadcms/plugin-search'
 import {
   AlignFeature,
   BoldFeature,
@@ -96,6 +95,7 @@ export default buildConfig({
   editor: lexicalEditor({
     features: () => {
       return [
+        AlignFeature(),
         UnderlineFeature(),
         BoldFeature(),
         ItalicFeature(),

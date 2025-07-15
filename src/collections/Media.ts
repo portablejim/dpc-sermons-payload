@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
-import { open, openSync, readFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import { ensureGuid } from '@/hooks/ensureGuid'
 
 const filename = fileURLToPath(import.meta.url)

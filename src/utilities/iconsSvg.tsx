@@ -1,7 +1,7 @@
 import { JSX } from 'react'
 
 // this function is from the work of Taylor Hunt found at https://codepen.io/tigt/post/optimizing-svgs-in-data-uris
-export function encodeSvg(svgString) {
+export function encodeSvg(svgString: string) {
   return (
     svgString
       .replace(
@@ -68,6 +68,7 @@ export const ICON_SVG_REACT = ({
     className={className}
     role={role}
     aria-label={label}
+    aria-hidden={ariaHidden}
   >
     {svgInner.paths}
   </svg>

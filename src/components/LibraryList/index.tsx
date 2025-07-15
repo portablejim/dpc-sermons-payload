@@ -1,20 +1,8 @@
 'use client'
 
-import React, { Fragment, ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 import { Tab, Tabs } from "@heroui/react"
 
-import type { Episode, Series } from '@/payload-types'
-
-type Result = {
-  docs: (Series | string)[]
-  hasNextPage: boolean
-  hasPrevPage: boolean
-  nextPage: number
-  page: number
-  prevPage: number
-  totalDocs: number
-  totalPages: number
-}
 
 export type Props = {
   byDateTab: ReactNode,

@@ -1,4 +1,3 @@
-import linkTile from '@/fields/linkTile'
 import type { Page } from '@/payload-types'
 
 export type LinkTileListProps = Extract<Page['layout'][0], { blockType: 'linkTileList' }>

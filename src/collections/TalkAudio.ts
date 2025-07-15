@@ -1,11 +1,5 @@
-import { getPayload, type CollectionConfig, FieldHookArgs } from 'payload'
-import config from '@payload-config'
+import { type CollectionConfig, FieldHookArgs } from 'payload'
 
-import {
-  FixedToolbarFeature,
-  InlineToolbarFeature,
-  lexicalEditor,
-} from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { fileURLToPath } from 'url'
 

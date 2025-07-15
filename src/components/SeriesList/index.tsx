@@ -1,14 +1,14 @@
 'use client'
 
-import React, { Fragment, use, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import qs from 'qs'
 
-import type { Page, Series } from '@/payload-types'
+import type { Series } from '@/payload-types'
 import { CardSeries } from '../../components/CardSeries'
 
 import classes from './index.module.scss'
 
-export const getSeriesList = (seriesType: string): Promise<Result> => {
+export const getSeriesList = async (seriesType: string): Promise<Result> => {
   const searchQuery = qs.stringify(
     {
       depth: 1,
@@ -23,24 +23,25 @@ export const getSeriesList = (seriesType: string): Promise<Result> => {
     { encode: false },
   )
 
-  return fetch(`${process.env.APP_URL_TALKS}/api/series?${searchQuery}`, {
-    next: {
-      revalidate: 300,
-    },
-  })
-    .then((r) => r.json())
-    .catch(() => {
-      return {
-        docs: [],
-        hasNextPage: false,
-        hasPrevPage: false,
-        nextPage: 1,
-        page: 1,
-        prevPage: 1,
-        totalDocs: 0,
-        totalPages: 1,
-      }
+  try {
+    const r = await fetch(`${process.env.APP_URL_TALKS}/api/series?${searchQuery}`, {
+      next: {
+        revalidate: 300,
+      },
     })
+    return await r.json()
+  } catch {
+    return {
+      docs: [],
+      hasNextPage: false,
+      hasPrevPage: false,
+      nextPage: 1,
+      page: 1,
+      prevPage: 1,
+      totalDocs: 0,
+      totalPages: 1,
+    }
+  }
 }
 
 export const SeriesListPreload: React.FC<Props> = (props) => {
@@ -67,14 +68,13 @@ export type Props = {
 }
 
 export const SeriesList: React.FC<Props> = (props) => {
-  const { className, episodeType = 'regular' } = props
+  const { episodeType = 'regular' } = props
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | undefined>(undefined)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const [, setIsLoading] = useState(false)
+  const [, setError] = useState<string | undefined>(undefined)
   const hasHydrated = useRef(false)
   const isRequesting = useRef(false)
-  const [page, setPage] = useState(1)
+  const [page] = useState(1)
 
   const [results, setResults] = useState<Result>({
     docs: [],
@@ -101,17 +101,6 @@ export const SeriesList: React.FC<Props> = (props) => {
           setIsLoading(true)
         }
       }, 500)
-
-      const searchQuery = qs.stringify(
-        {
-          depth: 1,
-          page,
-          sort: '-seriesDate',
-          where: {},
-          limit: 0,
-        },
-        { encode: false },
-      )
 
       const makeRequest = async () => {
         try {

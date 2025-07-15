@@ -3,6 +3,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { createRequire } from 'module'
+
 const require = createRequire(import.meta.url)
 
 const ffmpeg = require('fluent-ffmpeg')
@@ -28,6 +29,7 @@ export const getFileData: AfterChangeHook = ({ doc, previousDoc, req: { payload 
   const dirname = path.dirname(filename)
   const targetFilename = path.resolve(dirname, '../../public/upload/talkaudio', doc.filename)
   payload.logger.info(targetFilename)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const ffprobeOutput = ffmpeg.ffprobe(targetFilename, function (err, metadata) {
     if (!err) {
       let fileDuration = parseInt(metadata.format.duration)

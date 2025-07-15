@@ -9,7 +9,6 @@ import { EpisodeShow } from '../../../../../../../components/EpisodeShow'
 import configPromise from '@payload-config'
 import { generateEpisodeMeta } from '@/utilities/generateMeta'
 import { getStaticFile } from '@/utilities/getStaticFile'
-import { useHeaderTheme } from '@/providers/HeaderTheme'
 import { SetNav } from '@/Header/SetNav'
 
 // Payload Cloud caches all files through Cloudflare, so we don't need Next.js to cache them as well
@@ -28,7 +27,7 @@ type Args = {
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  const { slug, episodeSlug } = await paramsPromise
+  const { episodeSlug } = await paramsPromise
   let episode: Episode | null = null
 
   try {
@@ -61,7 +60,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 }
 
 export async function generateMetadata({ params: paramsPromise }): Promise<Metadata> {
-  const { slug, episodeSlug } = await paramsPromise
+  const { episodeSlug } = await paramsPromise
   const page = await queryEpisodeBySlug({
     slug: episodeSlug,
   })

@@ -7,7 +7,8 @@ export const isValidHttpUrl = (candidateString: string | URL | null | undefined)
 
   try {
     url = new URL(candidateString)
-  } catch (_) {
+  } catch (e) {
+    console.log(e)
     return false
   }
 

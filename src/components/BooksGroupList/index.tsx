@@ -1,23 +1,13 @@
 'use client'
 
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import type { Episode, Page, Series } from '@/payload-types'
+import type { Episode } from '@/payload-types'
 import { EpisodeRow } from '../EpisodeRow'
 
 import classes from './index.module.scss'
 import { Spinner } from "@heroui/react"
-import {
-  ICON_SVG_MINUS,
-  ICON_SVG_MINUS_REACT,
-  ICON_SVG_PLUS,
-  ICON_SVG_PLUS_REACT,
-  ICON_SVG_PODCAST,
-  ICON_SVG_PODCAST_REACT,
-  ICON_SVG_REACT,
-  svgToDataURI,
-} from '@/utilities/iconsSvg'
-import Image from 'next/image'
+import { ICON_SVG_MINUS_REACT, ICON_SVG_PLUS_REACT, ICON_SVG_REACT } from '@/utilities/iconsSvg'
 import * as Accordion from '@radix-ui/react-accordion'
 import useOnScreen from '@/utilities/useInteraction'
 
@@ -43,18 +33,10 @@ export type Props = {
 }
 
 export const BooksGroupList: React.FC<Props> = (props) => {
-  const {
-    title,
-    episodeType,
-    episodeRange,
-    accordionsOpen = [],
-    onResultChange,
-    fallbackSvg,
-    fallbackPng,
-  } = props
+  const { title, episodeType, episodeRange, accordionsOpen = [], fallbackSvg, fallbackPng } = props
 
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | undefined>(undefined)
+  const [, setError] = useState<string | undefined>(undefined)
   const hasHydrated = useRef(false)
   const isRequesting = useRef(false)
 

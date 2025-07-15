@@ -1,5 +1,4 @@
-import { statSync, openSync, fstat } from 'fs'
-import path from 'path'
+import { statSync } from 'fs'
 
 export const getStaticFile = (fileName: string) => {
   const basePathName = process.env.APP_PUBLIC__DIR_PATH + '/static'

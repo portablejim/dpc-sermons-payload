@@ -1,6 +1,5 @@
 import type { CollectionConfig } from 'payload'
 
-//import buildDependentFieldUpdater from '../components/ui/buildDependantFieldUpdater'
 import type { Series } from '@/payload-types'
 import { authenticated } from '@/access/authenticated'
 import { ensureGuid } from '@/hooks/ensureGuid'

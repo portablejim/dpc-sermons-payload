@@ -1,23 +1,18 @@
 'use client'
 
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import type { Episode, Page, Series } from '@/payload-types'
+import type { Episode } from '@/payload-types'
 import { EpisodeRow } from '../EpisodeRow'
 
 import classes from './index.module.scss'
-import { Spinner } from "@heroui/react"
+import { Spinner } from '@heroui/react'
 import {
-  ICON_SVG_MINUS,
   ICON_SVG_MINUS_REACT,
-  ICON_SVG_PLUS,
   ICON_SVG_PLUS_REACT,
-  ICON_SVG_PODCAST,
   ICON_SVG_PODCAST_REACT,
   ICON_SVG_REACT,
-  svgToDataURI,
 } from '@/utilities/iconsSvg'
-import Image from 'next/image'
 import * as Accordion from '@radix-ui/react-accordion'
 import useOnScreen from '@/utilities/useInteraction'
 
@@ -51,16 +46,14 @@ export const EpisodeGroupList: React.FC<Props> = (props) => {
     rssUrl,
     episodeType,
     episodeRange,
-    defaultOpen,
     accordionsOpen = [],
     initialEpisodeList = [],
-    onResultChange,
     fallbackSvg,
     fallbackPng,
   } = props
 
   const [isLoading, setIsLoading] = useState(initialEpisodeList.length === 0)
-  const [error, setError] = useState<string | undefined>(undefined)
+  const [, setError] = useState<string | undefined>(undefined)
   const hasHydrated = useRef(false)
   const isRequesting = useRef(false)
 

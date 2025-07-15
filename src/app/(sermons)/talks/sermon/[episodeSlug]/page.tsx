@@ -26,7 +26,7 @@ type Args = {
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  const { slug, episodeSlug } = await paramsPromise
+  const { episodeSlug } = await paramsPromise
   let episode: Episode | null = null
 
   try {

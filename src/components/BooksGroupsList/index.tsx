@@ -1,12 +1,8 @@
 'use client'
 
-import React, { Fragment, use, useEffect, useRef, useState } from 'react'
-import qs from 'qs'
+import React, { useEffect, useRef, useState } from 'react'
 
-import type { Page, Series } from '@/payload-types'
-import { CardSeries } from '../CardSeries'
 
-import classes from './index.module.scss'
 import { BooksGroupList } from '../BooksGroupList'
 import * as Accordion from '@radix-ui/react-accordion'
 
@@ -28,20 +24,12 @@ export type BookListPreloadProps = {
 
 export const BooksListPreload: React.FC<BookListPreloadProps> = (props) => {
   const { episodeType = 'regular' } = props
+  // This is a preload, so not using the result is fine.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const booksListRef = useRef(getBooksList(episodeType))
   return <></>
 }
 
-type Result = {
-  docs: (Series | string)[]
-  hasNextPage: boolean
-  hasPrevPage: boolean
-  nextPage: number
-  page: number
-  prevPage: number
-  totalDocs: number
-  totalPages: number
-}
 
 type BooksResult = {
   book: string
@@ -58,14 +46,13 @@ export type Props = {
 }
 
 export const BooksGroupsList: React.FC<Props> = (props) => {
-  const { className, episodeType = 'regular', fallbackSvg, fallbackPng } = props
+  const { episodeType = 'regular', fallbackSvg, fallbackPng } = props
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | undefined>(undefined)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const [, setIsLoading] = useState(false)
+  const [, setError] = useState<string | undefined>(undefined)
   const hasHydrated = useRef(false)
   const isRequesting = useRef(false)
-  const [page, setPage] = useState(1)
+  const [page] = useState(1)
 
   const [results, setResults] = useState<BooksResult[]>([])
 
@@ -83,17 +70,6 @@ export const BooksGroupsList: React.FC<Props> = (props) => {
           setIsLoading(true)
         }
       }, 500)
-
-      const searchQuery = qs.stringify(
-        {
-          depth: 1,
-          page,
-          sort: '-seriesDate',
-          where: {},
-          limit: 0,
-        },
-        { encode: false },
-      )
 
       const makeRequest = async () => {
         try {

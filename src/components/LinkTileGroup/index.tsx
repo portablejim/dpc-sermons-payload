@@ -1,8 +1,7 @@
 'use client'
 
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React from 'react'
 
-import type { Page, Series } from '@/payload-types'
 import { LinkTileListProps } from '../../blocks/LinkTileList/types'
 import { LinkTile } from '../LinkTile'
 import RichText from '../RichText'
@@ -16,24 +15,15 @@ export type Props = {
   sort?: string
 }
 
-export const LinkTileGroup: React.FC<Props & LinkTileListProps> = props => {
-  const {
-    title,
-    description,
-    linkTiles,
-    className,
-    limit = 10,
-    showPageRange,
-    sort = '-createdAt',
-  } = props
+export const LinkTileGroup: React.FC<Props & LinkTileListProps> = (props) => {
+  const { title, description, linkTiles, className } = props
 
   let showTitle = false
   if (title && title?.length > 0) {
     showTitle = true
   }
 
-  const linkTileNum = linkTiles?.length ?? 0
-  const tileList = linkTiles?.map(lt => <LinkTile key={lt.id} linkTile={lt.linkTile} />) ?? []
+  const tileList = linkTiles?.map((lt) => <LinkTile key={lt.id} linkTile={lt.linkTile} />) ?? []
   const descriptionRichText = description ?? []
 
   return (

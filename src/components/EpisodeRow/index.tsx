@@ -1,18 +1,13 @@
-import React, { Fragment } from 'react'
-import Image, { StaticImageData } from 'next/image'
+import React from 'react'
+import { StaticImageData } from 'next/image'
 import Link from 'next/link'
 
-import { CoverImage, Episode, Page, Series } from '@/payload-types'
-import { Media } from '../Media'
-import { ImageMedia } from '../Media/ImageMedia'
+import { CoverImage, Episode, Series } from '@/payload-types'
 
 import classes from './index.module.scss'
 import {
   BACKGROUND_LOGO_SVG_WIDE,
-  ICON_SVG_CHEVRON_RIGHT,
   ICON_SVG_CHEVRON_RIGHT_REACT,
-  ICON_SVG_MUSIC,
-  ICON_SVG_MUSIC_REACT,
   ICON_SVG_REACT,
   svgToDataURI,
 } from '@/utilities/iconsSvg'
@@ -31,19 +26,16 @@ export const EpisodeRow: React.FC<{
   fallbackPng: string
 }> = (props) => {
   const {
-    showCategories,
     title: titleFromProps,
     doc,
     paramSeries,
     className,
     orientation = 'vertical',
     fallbackSvg,
-    fallbackPng,
   } = props
 
-  const { slug, title, sermonDate, speaker, series } = doc || {}
+  const { slug, title, sermonDate, series } = doc || {}
 
-  const hasCoverImage = false
   let targetImage: CoverImage | string = ''
   let targetImageUrl: StaticImageData | undefined = {
     src: fallbackSvg,
@@ -173,7 +165,6 @@ export const EpisodeRow: React.FC<{
     detailsButtonText = 'Details / Watch'
   }
 
-  const hasCategories = false
   const titleToUse = titleFromProps || title
   const sanitizedDescription = doc?.biblePassageText?.replace(/\s/g, ' ') // replace non-breaking space with white space
 
@@ -203,7 +194,7 @@ export const EpisodeRow: React.FC<{
               <span tabIndex={0}>{displayDate}</span>
               <span className="hidden px-1 sm:inline"> | </span>
               <Link href={href}>
-                <span className="font-bold">{doc?.title}</span>
+                <span className="font-bold">{titleToUse}</span>
               </Link>
             </span>
             <span className="flex flex-col sm:block">

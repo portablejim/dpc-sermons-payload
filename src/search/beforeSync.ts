@@ -1,11 +1,11 @@
 import { BeforeSync, DocToSync } from '@payloadcms/plugin-search/types'
 
-export const beforeSyncWithSearch: BeforeSync = async ({ originalDoc, searchDoc, payload }) => {
+export const beforeSyncWithSearch: BeforeSync = async ({ originalDoc, searchDoc }) => {
   const {
     doc: { relationTo: collection },
   } = searchDoc
 
-  const { slug, id, categories, title, meta, excerpt } = originalDoc
+  const { slug, id, categories, title, meta } = originalDoc
 
   const modifiedDoc: DocToSync = {
     ...searchDoc,
@@ -33,6 +33,7 @@ export const beforeSyncWithSearch: BeforeSync = async ({ originalDoc, searchDoc,
       })
 
       modifiedDoc.categories = mappedCategories
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       console.error(
         `Failed. Category not found when syncing collection '${collection}' with id: '${id}' to search.`,

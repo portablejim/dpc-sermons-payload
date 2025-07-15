@@ -12,7 +12,6 @@ import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { getPayload } from 'payload'
 import { SetNav } from '@/Header/SetNav'
-import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 type Args = {
@@ -24,7 +23,6 @@ type Args = {
 export default async function Page({ params: paramsPromise }: Args) {
   const { slug = 'members-hub' } = await paramsPromise
   const url = '/' + slug
-  const pathname = '.';
 
   const pageHeaders = await headers()
   const erasePath = pageHeaders.get('X-Erase-Path') === '1'
@@ -35,11 +33,6 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   if (!page) {
     return <PayloadRedirects url={url} />
-  }
-
-  let pathPrefix = ''
-  if(pathname && pathname.startsWith('/hub')) {
-    pathPrefix = '/hub'
   }
 
   const { layout, title } = page

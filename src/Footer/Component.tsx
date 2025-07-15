@@ -12,7 +12,6 @@ export async function Footer() {
   const footer: Footer = await getCachedGlobal('footer')()
 
   const navItems = footer?.navItems || []
-  const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL!
 
   return (
     <footer className="border-t border-border bg-black dark:bg-card text-white">

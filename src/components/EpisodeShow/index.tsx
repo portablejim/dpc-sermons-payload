@@ -1,19 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { StaticImageData } from 'next/image'
 import NextImage from 'next/image'
 
-import type { CoverImage, Episode, Page, Series } from '@/payload-types'
+import type { CoverImage, Episode, Series } from '@/payload-types'
 import { Button } from '../Button'
-import { EpisodeRow } from '../EpisodeRow'
-import { ImageMedia } from '../Media/ImageMedia'
 import RichText from '../RichText'
 
 import classes from './index.module.scss'
 import { EpisodeAudioPlayer } from '../EpisodeAudioPlayer'
-import { getStaticFile } from '@/utilities/getStaticFile'
 import { svgToDataURI, BACKGROUND_LOGO_SVG_WIDE } from '@/utilities/iconsSvg'
 
 type Result = {
@@ -47,7 +44,6 @@ const PlayerSection = ({
   videoType,
   doPlay,
   targetImageUrl,
-  targetImage,
   vimeoUrl,
   onPlayClick,
 }: {
@@ -184,7 +180,7 @@ export type Props = {
   targetEpisode: Episode
   className?: string
   limit?: number
-  onResultChange?: (result: Result) => void  
+  onResultChange?: (result: Result) => void
   showPageRange?: boolean
   sort?: string
   fallbackSvg: string
@@ -192,9 +188,8 @@ export type Props = {
 }
 
 export const EpisodeShow: React.FC<Props> = (props) => {
-  const { targetEpisode, sort = '-createdAt', fallbackSvg, fallbackPng } = props
+  const { targetEpisode, fallbackSvg } = props
 
-  let hasCoverImage = false
   let targetImage: CoverImage | string = ''
   let targetImageUrl: StaticImageData | undefined = {
     src: fallbackSvg,
@@ -223,7 +218,6 @@ export const EpisodeShow: React.FC<Props> = (props) => {
 
   if (targetEpisode.episodeImage && typeof targetEpisode.episodeImage !== 'number') {
     targetImage = targetEpisode.episodeImage
-    hasCoverImage = true
   } else if (
     targetSeries &&
     typeof targetSeries !== 'number' &&
@@ -231,7 +225,6 @@ export const EpisodeShow: React.FC<Props> = (props) => {
     targetSeries?.seriesImage?.url
   ) {
     targetImage = targetSeries?.seriesImage
-    hasCoverImage = true
   }
 
   if (typeof targetImage != 'string' && targetImage.sizes?.card !== undefined) {
@@ -241,7 +234,6 @@ export const EpisodeShow: React.FC<Props> = (props) => {
       src: targetImage.sizes?.card?.url ?? '',
     }
   }
-  console.log({ targetImageUrl })
 
   if (targetImageUrl === undefined || targetImageUrl === null) {
     targetImageUrl = {

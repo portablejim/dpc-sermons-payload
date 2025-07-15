@@ -1,9 +1,8 @@
 'use client'
 
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React from 'react'
 
-import type { CoverImage, Episode, Page, Series } from '@/payload-types'
-import { ImageMedia as Image } from '../Media/ImageMedia'
+import type { Series } from '@/payload-types'
 import { EpisodeRow } from '../EpisodeRow'
 
 import classes from './index.module.scss'
@@ -23,7 +22,7 @@ export type Props = {
   targetSeries: Series
   className?: string
   limit?: number
-  onResultChange?: (result: Result) => void  
+  onResultChange?: (result: Result) => void
   showPageRange?: boolean
   sort?: string
   fallbackSvg: string
@@ -31,7 +30,7 @@ export type Props = {
 }
 
 export const SeriesShow: React.FC<Props> = (props) => {
-  const { targetSeries, sort = '-createdAt', fallbackSvg, fallbackPng } = props
+  const { targetSeries, fallbackSvg, fallbackPng } = props
 
   return (
     <div>

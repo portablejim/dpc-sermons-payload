@@ -22,16 +22,16 @@ type Result = {
 export type Props = {
   className?: string
   limit?: number
-  onResultChange?: (result: Result) => void  
+  onResultChange?: (result: Result) => void
   showPageRange?: boolean
   sort?: string
 }
 
 export const SeriesList: React.FC<Props> = props => {
-  const { className, limit = 10, onResultChange, showPageRange, sort = '-createdAt' } = props
+  const { className } = props
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | undefined>(undefined)
+  const [isLoading] = useState(false)
+  const [error] = useState<string | undefined>(undefined)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   return (

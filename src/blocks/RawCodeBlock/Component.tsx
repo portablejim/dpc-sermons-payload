@@ -1,4 +1,4 @@
-import React, { createElement } from 'react'
+import React from 'react'
 
 export type RawCodeBlockProps = {
   bodyCode: string
@@ -11,18 +11,7 @@ type Props = RawCodeBlockProps & {
   className?: string
 }
 
-export const RawCodeBlock: React.FC<Props> = ({
-  className,
-  bodyCode,
-  cssCode,
-  limitWidth = true,
-}) => {
-  function htmlDecode(input) {
-    const e = document.createElement('div')
-    e.innerHTML = input
-    return e.childNodes.length === 0 ? '' : e.childNodes[0].nodeValue
-  }
-
+export const RawCodeBlock: React.FC<Props> = ({ bodyCode, cssCode, limitWidth = true }) => {
   const bodyCodeSet = bodyCode || ''
   const cssCodeSet = cssCode || ''
 

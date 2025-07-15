@@ -1,4 +1,3 @@
-import { cn } from 'src/utilities/cn'
 import React, { Fragment } from 'react'
 
 import type { Page } from '@/payload-types'
@@ -10,7 +9,6 @@ import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { SeriesList } from '@/blocks/SeriesList/Component'
 import { LibraryList } from '@/blocks/LibraryList/Component'
 import { LinkTileList } from '@/blocks/LinkTileList/Component'
-import { CodeBlock } from '@/blocks/Code/Component'
 import { RawCodeBlock } from '@/blocks/RawCodeBlock/Component'
 
 const blockComponents = {

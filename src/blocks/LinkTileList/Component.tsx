@@ -1,11 +1,9 @@
 import React, { Fragment } from 'react'
-import payload from 'payload'
 
 import { LinkTileGroup } from '../../components/LinkTileGroup'
 import { LinkTileListProps } from './types'
 
 import classes from './index.module.scss'
-import { Gutter } from '@payloadcms/ui/elements/Gutter'
 
 export type Props = {
   className?: string

@@ -1,10 +1,10 @@
 'use client'
 
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import type { CoverImage, Page, Series } from '@/payload-types'
+import type { CoverImage } from '@/payload-types'
 import { LinkTileListTileProps } from '../../blocks/LinkTileList/types'
 
 import classes from './index.module.scss'
@@ -19,7 +19,7 @@ export type Props = {
 }
 
 export const LinkTile: React.FC<Props> = props => {
-  const { linkTile, className, limit = 10, showPageRange, sort = '-createdAt' } = props
+  const { linkTile, className } = props
 
   const pathname = usePathname();
 

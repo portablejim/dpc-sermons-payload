@@ -6,12 +6,8 @@ import path from 'path'
 import fs from 'fs'
 import * as child_process from 'node:child_process'
 import { isValidHttpUrl } from '@/utilities/isValidHttpUrl'
-import {
-  revalidateEpisode,
-  revalidateEpisodeRaw,
-} from '@/collections/TalkEpisodes/hooks/revalidateEpisode'
+import { revalidateEpisode } from '@/collections/TalkEpisodes/hooks/revalidateEpisode'
 import { BasePayload } from 'payload'
-import { text } from 'node:stream/consumers'
 
 export type EpisodeMetadata = {
   fileType: string

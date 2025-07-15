@@ -1,5 +1,5 @@
 import { desc, eq } from 'drizzle-orm'
-import { BasePayload, PaginatedDocs, type PayloadHandler } from 'payload'
+import { BasePayload, type PayloadHandler } from 'payload'
 import { Episode } from '@/payload-types'
 
 export const validYears: PayloadHandler = async (req): Promise<Response> => {

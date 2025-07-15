@@ -1,13 +1,12 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import NextImage from 'next/image'
 
-import { CoverImage, Episode, Page, Series } from '@/payload-types'
-import { Media } from '../Media'
+import { CoverImage, Series } from '@/payload-types'
 import type { Media as MediaType } from '@/payload-types'
 
 import classes from './index.module.scss'
-import { BACKGROUND_LOGO_SVG_WIDE, encodeSvg, svgToDataURI } from '@/utilities/iconsSvg'
+import { BACKGROUND_LOGO_SVG_WIDE, svgToDataURI } from '@/utilities/iconsSvg'
 
 export const CardSeries: React.FC<{
   alignItems?: 'center'
@@ -19,14 +18,7 @@ export const CardSeries: React.FC<{
   doc?: Series
   orientation?: 'horizontal' | 'vertical'
 }> = (props) => {
-  const {
-    showCategories,
-    title: titleFromProps,
-    doc,
-    className,
-    orientation = 'vertical',
-    mediaType,
-  } = props
+  const { showCategories, title: titleFromProps, doc, className, orientation = 'vertical' } = props
 
   const { slug, title } = doc || {}
 

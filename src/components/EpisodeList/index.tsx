@@ -32,21 +32,17 @@ export type Props = {
 
 export const EpisodeList: React.FC<Props> = (props) => {
   const {
-    className,
-    limit = 10,
     onResultChange,
-    showPageRange,
-    sort = '-createdAt',
+    sort = '-sermonDate',
     fallbackSvg,
     fallbackPng,
   } = props
 
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | undefined>(undefined)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const [, setError] = useState<string | undefined>(undefined)
   const hasHydrated = useRef(false)
   const isRequesting = useRef(false)
-  const [page, setPage] = useState(1)
+  const [page] = useState(1)
 
   const [results, setResults] = useState<Result>({
     docs: [],
@@ -78,7 +74,7 @@ export const EpisodeList: React.FC<Props> = (props) => {
         {
           depth: 1,
           page,
-          sort: '-sermonDate',
+          sort: sort,
           where: {},
         },
         { encode: false },
@@ -86,9 +82,7 @@ export const EpisodeList: React.FC<Props> = (props) => {
 
       const makeRequest = async () => {
         try {
-          const req = await fetch(
-            `${process.env.APP_RELATIVE_URL}/api/episodes?${searchQuery}`,
-          )
+          const req = await fetch(`${process.env.APP_RELATIVE_URL}/api/episodes?${searchQuery}`)
 
           const json = await req.json()
           if (timer != null) {
@@ -120,7 +114,7 @@ export const EpisodeList: React.FC<Props> = (props) => {
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [page, onResultChange])
+  }, [page, onResultChange, sort])
 
   return (
     <div>

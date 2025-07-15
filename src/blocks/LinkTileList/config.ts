@@ -1,7 +1,11 @@
 import type { Block } from 'payload'
 
 import linkTile from '../../fields/linkTile'
-import { lexicalEditor, HeadingFeature, FixedToolbarFeature, InlineToolbarFeature } from '@payloadcms/richtext-lexical'
+import {
+  lexicalEditor,
+  FixedToolbarFeature,
+  InlineToolbarFeature,
+} from '@payloadcms/richtext-lexical'
 
 export const LinkTileList: Block = {
   slug: 'linkTileList',

@@ -9,7 +9,7 @@ import { LibraryList as LibraryListComponent } from '@/components/LibraryList'
 import { BooksGroupsList, BooksListPreload } from '@/components/BooksGroupsList'
 import { getStaticFile } from '@/utilities/getStaticFile'
 import { episodeListInternal, validYearsInternal } from '@/endpoints/episodeHandler'
-import payload, { getPayload } from 'payload'
+import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
 type Result = {
