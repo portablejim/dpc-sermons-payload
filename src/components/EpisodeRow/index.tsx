@@ -191,14 +191,14 @@ export const EpisodeRow: React.FC<{
           </div>
           <div className={classes.generalRowDescription}>
             <span className="flex flex-col sm:flex-row">
-              <span tabIndex={0}>{displayDate}</span>
-              <span className="hidden px-1 sm:inline"> | </span>
+              <span aria-description="Date">{displayDate}</span>
+              <span className="hidden px-1 sm:inline" aria-hidden="true"> | </span>
               <Link href={href}>
                 <span className="font-bold">{titleToUse}</span>
               </Link>
             </span>
             <span className="flex flex-col sm:block">
-              <span>{sanitizedDescription}</span>
+              <span aria-description="">{sanitizedDescription}</span>
               <span className="hidden px-1 sm:inline"> | </span>
               <span>
                 {hasSeries ? (
