@@ -78,8 +78,8 @@
   border-radius: 1rem;
   overflow: hidden;
 
-  @media screen and (max-width: 384px) {
-    min-height: 100px;
+  @media screen and (max-width: 350px) {
+    min-height: 150px;
   }
 }
 
@@ -111,7 +111,7 @@ a:hover .overlay {
 .tileInner {
   position: relative;
   z-index: 5;
-  margin-top: 1rem;
+  margin-top: 3rem;
   padding: 0.25rem 0.5rem 0.5rem 0.5rem;
   background-color: rgba(0, 0, 0, 0.6);
   color: rgb(235, 235, 235);
