@@ -23,12 +23,13 @@ export const LinkTile: React.FC<Props> = props => {
 
   const pathname = usePathname();
 
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : process.env.APP_URL_HUB ?? ''
   let bgImage = ''
   let ltImg: CoverImage | null = null
   if (typeof linkTile.backgroundImage !== 'number') {
     ltImg = linkTile.backgroundImage
     if(ltImg) {
-      bgImage = `/upload/cover-images/${ltImg.filename}`
+      bgImage = `${baseUrl}/upload/cover-images/${ltImg.filename}`
     }
   }
 
