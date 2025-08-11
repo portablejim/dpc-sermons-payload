@@ -3,12 +3,12 @@ import { type NextRequest, NextResponse } from 'next/server';
 function extractSubdomain(request: NextRequest): string | null {
   const host = request.headers.get('host') || '';
 
-  if(host.startsWith('hub'))
+  if(host === 'hub.l.pjim.au:3000')
   {
     return 'hub'
   }
 
-  if(host.startsWith('talks'))
+  if(host === 'talks.l.pjim.au:3000')
   {
     return 'talks'
   }
