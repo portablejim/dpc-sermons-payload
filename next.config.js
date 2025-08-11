@@ -8,7 +8,7 @@ const APP_URL_TALKS = process.env.APP_URL_TALKS || ''
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  allowedDevOrigins: ['localhost', 'l.pjim.au', '*.pjim.au'],
+  allowedDevOrigins: ['localhost', 'l.pjim.au', '*.pjim.au', 'talks.l.pjim.au', 'hub.l.pjim.au'],
   images: {
     remotePatterns: [
       ...[NEXT_PUBLIC_SERVER_URL, APP_URL_HUB, APP_URL_TALKS]
