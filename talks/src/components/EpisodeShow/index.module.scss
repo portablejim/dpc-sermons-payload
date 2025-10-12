@@ -1,0 +1,92 @@
+@import '../../_css/common';
+
+h1.heading {
+  text-align: center;
+  font-weight: bold;
+  font-size: 3rem;
+}
+
+.subheading {
+  text-align: center;
+  font-size: 2.5rem;
+}
+
+.seriesList {
+  list-style: none;
+}
+
+.playerCoverImage {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.videoBgImage {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.videoPlayer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.videoPlayer .playerInner {
+  max-width: calc(80vh * 1.77);
+  position: relative;
+}
+
+.playerInner img {
+  z-index: 10;
+}
+
+.playerIframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 1;
+  border: 0;
+}
+
+.playerPlayButton {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.playerPlayButton button {
+  background-color: black;
+  color: white;
+  border: 4px solid white;
+}
+
+.audioPlayer {
+  width: 100%;
+}
+
+.audioPlayer audio {
+  width: 100%;
+}
+
+.belowEpisode {
+  height: 4rem;
+}
+
+.partHeading {
+  font-size: 1.5rem;
+  padding: 1rem 0;
+}
+
+.backButton span {
+  font-size: 1rem;
+}
