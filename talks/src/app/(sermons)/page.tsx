@@ -1,10 +1,7 @@
-import { redirect } from 'next/navigation'
+import PageTemplate, { generateMetadata } from './[slug]/page'
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page() {
-  redirect('/talks/')
-}
+export default PageTemplate
 
-//export { generateMetadata }
-
+export { generateMetadata }

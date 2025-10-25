@@ -5,7 +5,7 @@ import { notFound, redirect } from 'next/navigation'
 import payload, { getPayload } from 'payload'
 
 import { Episode } from '@/payload-types'
-import { EpisodeShow } from '../../../../../components/EpisodeShow'
+import { EpisodeShow } from '../../../../components/EpisodeShow'
 import configPromise from '@payload-config'
 import { generateEpisodeMeta } from '@/utilities/generateMeta'
 import { getStaticFile } from '@/utilities/getStaticFile'

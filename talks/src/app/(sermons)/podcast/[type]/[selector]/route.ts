@@ -67,7 +67,7 @@ export async function GET(
   const { headers } = request
   const selectorParts = selectorRaw.split('.', 2)
 
-  const baseUrl = process.env.APP_URL_TALKS ?? ''
+  const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL ?? ''
 
   const acceptHeaders = headers
     .get('Accept')
