@@ -12,6 +12,7 @@ import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { getPayload } from 'payload'
 import { SetNav } from '@/Header/SetNav'
+import Link from 'next/link'
 
 type Args = {
   params: Promise<{
@@ -20,15 +21,14 @@ type Args = {
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  const { slug = 'main' } = await paramsPromise
-  const fullSlug = 'talks-' + slug
-  const url = '/' + fullSlug
+  const { slug = 'members-hub' } = await paramsPromise
+  const url = '/' + slug
 
   const pageHeaders = await headers()
   const erasePath = pageHeaders.get('X-Erase-Path') === '1'
 
  const page: PageType | null = await queryPageBySlug({
-    slug: fullSlug,
+    slug,
   })
 
   if (!page) {
@@ -37,20 +37,18 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   const { layout, title } = page
 
-  let primaryNavText = 'members-hub'
-  let secondaryNavText: string | null = null
-  if(
-    slug === '' ||
-    slug === 'main'
-  ) {
-    primaryNavText = 'talks'
-    secondaryNavText = 'regular'
-  }
-  if(
-    slug === 'other'
-  ) {
-    primaryNavText = 'talks'
-    secondaryNavText = 'special'
+  const primaryNavText = 'members-hub'
+  const secondaryNavText: string | null = null
+
+  let backLink = <></>
+  if(slug !== "members-hub") {
+    backLink = <div className="container">
+      <Link href={'./'} className={'pb-4 mb-2 inline-block capitalize'}>
+        <svg className={"backlinkIcon icon w-5 dark:fill-white inline-block align-middle pr-1"} aria-label={"Back"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-providedby="Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.">
+          <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+        Members Hub
+      </Link>
+    </div>
   }
 
   return (
@@ -58,7 +56,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       <PageClient />
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
-
+      {backLink}
       <div className="container">
         <h1 className="text-xl md:text-3xl">{title}</h1>
       </div>
@@ -70,10 +68,9 @@ export default async function Page({ params: paramsPromise }: Args) {
 }
 
 export async function generateMetadata({ params: paramsPromise }): Promise<Metadata> {
-  const { slug = 'main' } = await paramsPromise
-  const fullSlug = 'talks-' + slug
+  const { slug = 'home' } = await paramsPromise
   const page = await queryPageBySlug({
-    slug: fullSlug,
+    slug,
   })
 
   return generateMeta({ doc: page })

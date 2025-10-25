@@ -23,13 +23,12 @@ export const LinkTile: React.FC<Props> = props => {
 
   const pathname = usePathname();
 
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : process.env.APP_URL_HUB ?? ''
   let bgImage = ''
   let ltImg: CoverImage | null = null
   if (typeof linkTile.backgroundImage !== 'number') {
     ltImg = linkTile.backgroundImage
     if(ltImg) {
-      bgImage = `${baseUrl}/upload/cover-images/${ltImg.filename}`
+      bgImage = `/upload/cover-images/${ltImg.filename}`
     }
   }
 
@@ -55,7 +54,7 @@ export const LinkTile: React.FC<Props> = props => {
   return (
     <Link href={targetUrl} target={linkTile.newTab ? '_blank' : ''}>
       <div className={[classes.tileOuter, className].filter(Boolean).join(' ')}>
-        <Image src={bgImage} layout="fill" className="object-cover" alt="Background image" />
+        <Image src={bgImage} fill className="object-cover" alt="Background image" />
         <div className={classes.overlay} style={overlayStyle}></div>
         <div className={[classes.tileInner, className].filter(Boolean).join(' ')}>
           <p>
