@@ -6,15 +6,11 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { readFileSync } from 'fs'
 import { ensureGuid } from '@/hooks/ensureGuid'
-
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -57,7 +53,9 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
-    staticDir: path.resolve(dirname, '../../public/upload/media'),
+    //staticDir: path.resolve(dirname, '../../public/upload/media'),
+    //staticDir: "public/upload/media",
+    staticDir: path.resolve(process.env.APP_PUBLIC__DIR_PATH ?? 'public/', 'upload/media'),
   },
   endpoints: [
     {
@@ -74,7 +72,7 @@ export const Media: CollectionConfig = {
         if(typeof mediaFind.filename != 'string') {
           return Response.error()
         }
-        const filePath = path.resolve(dirname, '../../public/upload/media', mediaFind.filename)
+        const filePath = path.resolve(process.env.APP_PUBLIC__DIR_PATH ?? 'public/', 'upload/media', mediaFind.filename)
         const mediaBody = readFileSync(filePath)
         const fileNameSafe = encodeURIComponent(mediaFind.filename)
         return new Response(mediaBody, {
@@ -99,7 +97,7 @@ export const Media: CollectionConfig = {
         if(typeof mediaFind.filename != 'string') {
           return Response.error()
         }
-        const filePath = path.resolve(dirname, '../../public/upload/media', mediaFind.filename)
+        const filePath = path.resolve(process.env.APP_PUBLIC__DIR_PATH ?? 'public/', 'upload/media', mediaFind.filename)
         const mediaBody = readFileSync(filePath)
         const fileNameSafe = encodeURIComponent(mediaFind.filename)
         return new Response(mediaBody, {
