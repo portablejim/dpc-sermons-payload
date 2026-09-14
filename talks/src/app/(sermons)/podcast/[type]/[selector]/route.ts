@@ -280,6 +280,8 @@ export async function GET(
       let audioLength = ''
       let audioDuration = ''
 
+      const safeFullTitle = escapeXml(e.fullTitle)
+
       if (e.audioFormat === 'linked') {
         audioMimetype = e.linkedAudioFiletype ?? ''
         audioUrl = e.linkedAudioUrl ?? ''
@@ -297,6 +299,8 @@ export async function GET(
         audioLength = Math.round(audioFile.filesize ?? 0).toFixed(0)
         audioDuration = new Date((audioFile.lengthSeconds ?? 0) * 1000).toISOString().slice(11, 19)
       }
+
+      const safeAudioUrl = escapeXml(audioUrl);
 
       let isPermaLink = 'false'
       let itemUuid = uuidv5(urlUUID, `${e.id}`)
@@ -326,12 +330,14 @@ export async function GET(
       if (typeof e.speaker !== 'number' && e.speaker?.name) {
         speakerName = e.speaker?.name
       }
+      const safeSpeakerName = escapeXml(speakerName);
       let seriesName = ''
       if (typeof e.series !== 'number') {
         seriesName = encodeURIComponent(e.series?.title ?? '')
         const seriesDate = e.series?.seriesDate.substring(0, 10) ?? ''
         const seriesNum = parseInt(seriesDate.replaceAll('-', ''))
-        seriesMarkup = `<podcast:season name="${e.series?.title}">${seriesNum}</podcast:season>`
+        const safeSpeakerName = escapeXml(e.series?.title);
+        seriesMarkup = `<podcast:season name="${safeSpeakerName}">${seriesNum}</podcast:season>`
       }
 
       let videoMarkup = ''
@@ -345,20 +351,21 @@ export async function GET(
         videoMarkup = `<podcast:contentLink>${safeVideoUrl}</podcast:contentLink>`
       }
 
-      const subtitle = e.subtitle ?? ''
+      const subtitle = escapeXml(e.subtitle ?? '')
 
       let itunesImageStr = ''
       if (itemImage.trim().length > 0) {
-        itunesImageStr = `<itunes:image href="${itemImage}" />`
+        const safeItemImage = escapeXml(itemImage);
+        itunesImageStr = `<itunes:image href="${safeItemImage}" />`
       }
 
       return `
     <item>
-      <title>${e.fullTitle}</title>
-      <itunes:author>${speakerName}</itunes:author>
+      <title>${safeFullTitle}</title>
+      <itunes:author>${safeSpeakerName}</itunes:author>
       <itunes:summary></itunes:summary>
       <description></description>
-      <enclosure type="${audioMimetype}" length="${audioLength}" url="${audioUrl}" />
+      <enclosure type="${audioMimetype}" length="${audioLength}" url="${safeAudioUrl}" />
       <itunes:duration>${audioDuration}</itunes:duration>
       <guid isPermaLink="${true}">${itemGuid}</guid>
       ${itunesImageStr}
