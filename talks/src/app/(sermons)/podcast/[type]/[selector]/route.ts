@@ -59,6 +59,18 @@ function buildRFC822Date(dateString: string): string {
   return `${day}, ${dayNumber} ${month} ${year} ${time} ${timezone}`
 }
 
+function escapeXml(unsafe) {
+  return unsafe.replace(/[<>&'"]/g, function (c) {
+    switch (c) {
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';
+      case '\'': return '&apos;';
+      case '"': return '&quot;';
+    }
+  });
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ selector: string; type: string }> },
@@ -329,7 +341,8 @@ export async function GET(
         e.videoUrl !== null &&
         e.videoUrl.length > 0
       ) {
-        videoMarkup = `<podcast:contentLink>${e.videoUrl}</podcast:contentLink>`
+        const safeVideoUrl = escapeXml(e.videoUrl)
+        videoMarkup = `<podcast:contentLink>${safeVideoUrl}</podcast:contentLink>`
       }
 
       const subtitle = e.subtitle ?? ''
