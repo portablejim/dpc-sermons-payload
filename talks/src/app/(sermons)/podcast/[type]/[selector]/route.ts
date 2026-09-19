@@ -271,7 +271,8 @@ export async function GET(
     }
   }
 
-  const podcastImage = getStaticFile('dpcPodcast.png')
+  const podcastImage = getStaticFile('dpcPodcast.png');
+  const podcastImageUrl = baseUrl + podcastImage;
 
   if (selectorParts[1] !== 'atom') {
     const episodeRssList = episodes?.docs.map((e) => {
@@ -397,7 +398,7 @@ xmlns:atom="http://www.w3.org/2005/Atom" >
       <itunes:name>Dubbo Presbyterian Church</itunes:name>
       <itunes:email>wayne@dpc.org.au</itunes:email>
     </itunes:owner>
-    <itunes:image href="${podcastImage}"/>
+    <itunes:image href="${podcastImageUrl}"/>
     <itunes:explicit>false</itunes:explicit>
     <atom:link href="${parsedUrl}" rel="self" type="application/rss+xml" />
     ${episodesBody}
