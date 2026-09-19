@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 
-import { cn } from 'src/utilities/cn'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import React from 'react'
@@ -16,6 +15,7 @@ import { draftMode } from 'next/headers'
 
 import './globals.css'
 import { getStaticFile } from '@/utilities/getStaticFile'
+import { cn } from '@/utilities/cn'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()

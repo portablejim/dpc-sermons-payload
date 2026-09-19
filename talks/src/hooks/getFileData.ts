@@ -1,8 +1,8 @@
-import { AfterChangeHook } from 'node_modules/payload/dist/collections/config/types'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { createRequire } from 'module'
+import { CollectionAfterChangeHook } from 'payload'
 
 const require = createRequire(import.meta.url)
 
@@ -12,7 +12,7 @@ const ffmpeg = require('fluent-ffmpeg')
 // Notice that the hook itself is not async and we are not awaiting `revalidate`
 // Only revalidate existing docs that are published
 // Don't scope to `operation` in order to purge static demo posts
-export const getFileData: AfterChangeHook = ({ doc, previousDoc, req: { payload } }) => {
+export const getFileData: CollectionAfterChangeHook = ({ doc, previousDoc, req: { payload } }) => {
   if (doc._status === 'published') {
     //revalidate({ payload, collection: 'posts', slug: doc.slug })
   }

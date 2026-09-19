@@ -1,5 +1,3 @@
-import { AfterChangeHook } from 'node_modules/payload/dist/collections/config/types'
-
 import { Episode } from '@/payload-types'
 import * as os from 'node:os'
 import path from 'path'
@@ -7,7 +5,7 @@ import fs from 'fs'
 import * as child_process from 'node:child_process'
 import { isValidHttpUrl } from '@/utilities/isValidHttpUrl'
 import { revalidateEpisode } from '@/collections/TalkEpisodes/hooks/revalidateEpisode'
-import { BasePayload } from 'payload'
+import { BasePayload, CollectionAfterChangeHook } from 'payload'
 
 export type EpisodeMetadata = {
   fileType: string
@@ -96,7 +94,7 @@ export const fetchEpisodeMetadata = async (
 }
 // Revalidate the post in the background, so the user doesn't have to wait
 // Notice that the hook itself is not async and we are not awaiting `revalidate`
-export const processEpisodes: AfterChangeHook = (inputArgs) => {
+export const processEpisodes: CollectionAfterChangeHook = (inputArgs) => {
   return processEpisodesRaw(inputArgs.req.payload)
 }
 
@@ -151,7 +149,7 @@ export const processEpisodesRaw = (payload: BasePayload) => {
     })
 }
 
-export const processEpisode: AfterChangeHook = (inputArgs) => {
+export const processEpisode: CollectionAfterChangeHook = (inputArgs) => {
   const doc = inputArgs.doc
   const payload = inputArgs.req.payload
   if (doc.hasValidMedia === false && doc.linkedAudioUrl && doc.linkedAudioUrl?.length > 1) {
