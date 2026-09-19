@@ -7,10 +7,16 @@ node_modules
 .next
 .vercel
 
+old/
+
 # Payload default media upload directory
 public/media/
 public/cover-images/
 public/cover-image-svg/
 public/talkaudio/
-upload/
 public/upload/
+media/
+cover-images/
+cover-image-svg/
+talkaudio/
+upload/
