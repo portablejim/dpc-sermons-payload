@@ -90,8 +90,8 @@ importers:
         specifier: 9.0.3
         version: 9.0.3
       lexical:
-        specifier: 0.51.0
-        version: 0.51.0(typescript@7.0.2)
+        specifier: 0.50.0
+        version: 0.50.0(typescript@7.0.2)
       lucide-react:
         specifier: ^1.47.0
         version: 1.47.0(react@19.3.0)
@@ -1314,14 +1314,6 @@ packages:
 
   '@lexical/internal@0.50.0':
     resolution: {integrity: sha512-FGfEKY1L1aIHEh/O+RcRxeLRQV0g95MuU5b26YuzGGyd0IX90pliK9bVph54OaqDdS1AQ0MEVEFGXfSXaGJzxg==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/internal@0.51.0':
-    resolution: {integrity: sha512-4f0k20V92koqXFpYPiu9MobSQuhTXtSL6RvQSjGKq4QOUMaNl+P5nNtvf2PN732ch/hEkWM7ZBw0WVlAmg9pxg==}
     peerDependencies:
       typescript: '>=5.2'
     peerDependenciesMeta:
@@ -3922,14 +3914,6 @@ packages:
       typescript:
         optional: true
 
-  lexical@0.51.0:
-    resolution: {integrity: sha512-uwThveE7nnR3ewETt9q7KBgbXVwtx7ZntJXWbonI/IrrdF7VtIbAGgqJcYxPchkQVjIppIzNoWaFolDd9Yph0g==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   lib0@0.2.117:
     resolution: {integrity: sha512-DeXj9X5xDCjgKLU/7RR+/HQEVzuuEUiwldwOGsHK/sfAfELGWEyTcf0x+uOvCvK3O2zPmZePXWL85vtia6GyZw==}
     engines: {node: '>=16'}
@@ -6192,10 +6176,6 @@ snapshots:
       typescript: 7.0.2
 
   '@lexical/internal@0.50.0(typescript@7.0.2)':
-    optionalDependencies:
-      typescript: 7.0.2
-
-  '@lexical/internal@0.51.0(typescript@7.0.2)':
     optionalDependencies:
       typescript: 7.0.2
 
@@ -9323,12 +9303,6 @@ snapshots:
   lexical@0.50.0(typescript@7.0.2):
     dependencies:
       '@lexical/internal': 0.50.0(typescript@7.0.2)
-    optionalDependencies:
-      typescript: 7.0.2
-
-  lexical@0.51.0(typescript@7.0.2):
-    dependencies:
-      '@lexical/internal': 0.51.0(typescript@7.0.2)
     optionalDependencies:
       typescript: 7.0.2
 

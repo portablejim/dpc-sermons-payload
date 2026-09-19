@@ -9,6 +9,7 @@ import * as migration_20250630_075435 from './20250630_075435';
 import * as migration_20250701_131354_adminApiKey from './20250701_131354_adminApiKey';
 import * as migration_20250702_055220_cover_image_purpose from './20250702_055220_cover_image_purpose';
 import * as migration_20250703_044932_global_defaults from './20250703_044932_global_defaults';
+import * as migration_20260919_000302_payloadUpdate_260919 from './20260919_000302_payloadUpdate_260919';
 
 export const migrations = [
   {
@@ -64,6 +65,11 @@ export const migrations = [
   {
     up: migration_20250703_044932_global_defaults.up,
     down: migration_20250703_044932_global_defaults.down,
-    name: '20250703_044932_global_defaults'
+    name: '20250703_044932_global_defaults',
+  },
+  {
+    up: migration_20260919_000302_payloadUpdate_260919.up,
+    down: migration_20260919_000302_payloadUpdate_260919.down,
+    name: '20260919_000302_payloadUpdate_260919'
   },
 ];
