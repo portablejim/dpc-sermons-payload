@@ -13,7 +13,7 @@ import {
   IS_SUBSCRIPT,
   IS_SUPERSCRIPT,
   IS_UNDERLINE,
-} from './nodeFormat'
+} from 'lexical'
 import type { Page } from '@/payload-types'
 
 export type NodeTypes =
@@ -75,9 +75,7 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
         // https://github.com/facebook/lexical/blob/d10c4e6e55261b2fdd7d1845aed46151d0f06a8c/packages/lexical-list/src/LexicalListItemNode.ts#L133
         // which does not return checked: false (only true - i.e. there is no prop for false)
         const serializedChildrenFn = (node: NodeTypes): JSX.Element | null => {
-          if (node.children == null) {
-            return null
-          } else {
+          if (node && typeof node === 'object' && 'children' in node && Array.isArray(node.children)) {
             if (node?.type === 'list' && node?.listType === 'check') {
               for (const item of node.children) {
                 if ('checked' in item) {
@@ -88,6 +86,8 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
               }
             }
             return serializeLexical({ nodes: node.children as NodeTypes[] })
+          } else {
+            return null;
           }
         }
 

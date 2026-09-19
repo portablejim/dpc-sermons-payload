@@ -35,7 +35,7 @@ import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { revalidateRedirects } from './hooks/revalidateRedirects'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
-import { Page } from 'src/payload-types'
+import { Page } from './payload-types'
 
 import { seedHandlerEpisodes } from './endpoints/seedHandlerEpisodes'
 import { CoverImageSvgs } from './collections/CoverImageSvgs'
